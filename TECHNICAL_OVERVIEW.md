@@ -154,9 +154,17 @@ A good engineer knows what their tool *doesn't* do:
 - **Not a substitute for a professional cryptographic audit** — it's an
   awareness/triage tool.
 
-## 6. Possible future work
+## 6. Ecosystem integration (shipped)
+
+- **SARIF 2.1.0 output** (`--output report.sarif`) so findings load into GitHub's
+  code-scanning **Security tab**, with per-rule `security-severity`.
+- **Reusable GitHub Action** (`action.yml`) + a self-scan workflow that uploads
+  SARIF on every push.
+- **False-positive controls:** inline `# quantumsafe: ignore` suppression and
+  `--exclude` glob patterns.
+
+## 7. Possible future work
 
 - AST/Tree-sitter parsing for JS/Go/Java (precision across all languages).
 - CBOM (Cryptography Bill of Materials) export.
 - Reachability analysis to rank findings by exploitability.
-- A GitHub Action so scans run on every pull request.

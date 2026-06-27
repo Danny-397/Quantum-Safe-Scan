@@ -118,12 +118,19 @@ quantumsafe scan --path ./myproject
 # Scan a public GitHub repo (shallow-cloned to a temp dir, then cleaned up)
 quantumsafe scan --repo https://github.com/org/app
 
-# Write a JSON or standalone HTML report
+# Write a JSON, standalone HTML, or SARIF report
 quantumsafe scan --path ./myproject --output report.json
 quantumsafe scan --path ./myproject --output report.html
+quantumsafe scan --path ./myproject --output report.sarif   # GitHub code scanning
+
+# Skip paths with glob patterns (repeatable)
+quantumsafe scan --path . --exclude 'tests/*' --exclude 'vendor/*'
 
 # Fail the process (exit 1) if any HIGH finding exists — handy in CI
 quantumsafe scan --path . --fail-on-high
+
+# Try it on the bundled examples
+quantumsafe scan --path examples
 
 # Link the CLI to your paid dashboard account (key from Settings page)
 quantumsafe auth --key qs_live_xxxxxxxx
@@ -136,8 +143,28 @@ quantumsafe version
 |------|-------------|
 | `--path` | Local directory or file to scan |
 | `--repo` | Public `https://github.com/<org>/<repo>` URL |
-| `--output` | Write to `report.json` or `report.html` (terminal summary still printed) |
+| `--output` | Write to `report.json`, `report.html`, or `report.sarif` (terminal summary still printed) |
+| `--exclude` | Glob of paths to skip (repeatable) |
 | `--fail-on-high` | Exit non-zero on any HIGH finding (CI gate) |
+
+**Suppressing a finding:** add `# quantumsafe: ignore` (any comment style) to the
+line. Useful for a known-safe, non-security use of an algorithm.
+
+### Use in CI (GitHub Action)
+
+QuantumSafe ships a reusable action that scans and uploads results to your
+repo's **Security tab**:
+
+```yaml
+- uses: Danny-397/Quantamn-Safe@main
+  with:
+    path: .
+    exclude: tests/*,vendor/*
+    fail-on-high: "true"
+- uses: github/codeql-action/upload-sarif@v3
+  with:
+    sarif_file: quantumsafe.sarif
+```
 
 ---
 

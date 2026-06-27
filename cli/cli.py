@@ -70,13 +70,14 @@ def cmd_scan(args: argparse.Namespace) -> int:
         print("Error: provide exactly one of --path or --repo.", file=sys.stderr)
         return 2
 
+    exclude = args.exclude or None
     try:
         if args.repo:
             target = args.repo
-            findings = scan_repo(args.repo)
+            findings = scan_repo(args.repo, exclude=exclude)
         else:
             target = os.path.abspath(args.path)
-            findings = scan_path(args.path)
+            findings = scan_path(args.path, exclude=exclude)
     except (FileNotFoundError, ValueError, RuntimeError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return 1
@@ -89,8 +90,10 @@ def cmd_scan(args: argparse.Namespace) -> int:
             content = reporter.to_json(report)
         elif ext in (".html", ".htm"):
             content = reporter.to_html(report)
+        elif ext == ".sarif":
+            content = reporter.to_sarif(report)
         else:
-            print("Error: --output must end in .json or .html", file=sys.stderr)
+            print("Error: --output must end in .json, .html, or .sarif", file=sys.stderr)
             return 2
         with open(args.output, "w", encoding="utf-8") as fh:
             fh.write(content)
@@ -129,7 +132,9 @@ def build_parser() -> argparse.ArgumentParser:
     p_scan = sub.add_parser("scan", help="Scan a local path or GitHub repo.")
     p_scan.add_argument("--path", help="Local directory or file to scan.")
     p_scan.add_argument("--repo", help="Public GitHub repository URL to scan.")
-    p_scan.add_argument("--output", help="Write report to this file (.json or .html).")
+    p_scan.add_argument("--output", help="Write report to this file (.json, .html, or .sarif).")
+    p_scan.add_argument("--exclude", action="append", metavar="GLOB",
+                        help="Glob of paths to skip (repeatable), e.g. --exclude 'tests/*'.")
     p_scan.add_argument("--fail-on-high", action="store_true",
                         help="Exit with code 1 if any HIGH-risk finding is present (for CI).")
     p_scan.set_defaults(func=cmd_scan)

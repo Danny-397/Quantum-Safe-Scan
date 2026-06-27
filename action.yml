@@ -1,0 +1,45 @@
+name: "QuantumSafe"
+description: "Scan a codebase for quantum-vulnerable cryptography and upload SARIF to code scanning."
+author: "QuantumSafe"
+branding:
+  icon: "shield"
+  color: "green"
+
+inputs:
+  path:
+    description: "Directory to scan."
+    required: false
+    default: "."
+  output:
+    description: "SARIF output file."
+    required: false
+    default: "quantumsafe.sarif"
+  exclude:
+    description: "Comma-separated glob(s) of paths to skip (e.g. tests/*,vendor/*)."
+    required: false
+    default: ""
+  fail-on-high:
+    description: "Fail the job if any HIGH-risk finding is present."
+    required: false
+    default: "false"
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+
+    - name: Install QuantumSafe
+      shell: bash
+      # Once published: pip install quantumsafe
+      run: pip install quantumsafe
+
+    - name: Run QuantumSafe scan
+      shell: bash
+      run: |
+        ARGS=(scan --path "${{ inputs.path }}" --output "${{ inputs.output }}")
+        if [ "${{ inputs.fail-on-high }}" = "true" ]; then ARGS+=(--fail-on-high); fi
+        IFS=',' read -ra EX <<< "${{ inputs.exclude }}"
+        for g in "${EX[@]}"; do [ -n "$g" ] && ARGS+=(--exclude "$g"); done
+        quantumsafe "${ARGS[@]}"

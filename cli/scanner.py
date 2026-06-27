@@ -315,11 +315,33 @@ def scan_file(abs_path: str, rel_path: str) -> list[Finding]:
     findings = _regex_scan(lines, lang, rel_path)
     if lang == "python":
         findings += _ast_scan_python(source, rel_path, lines)
+
+    # Honor inline suppressions: a line containing "quantumsafe: ignore".
+    if findings:
+        findings = [
+            f for f in findings
+            if not (0 < f.line_number <= len(lines) and _SUPPRESS_RE.search(lines[f.line_number - 1]))
+        ]
     return _dedupe(findings)
 
 
-def scan_path(path: str) -> list[Finding]:
-    """Recursively scan a local directory (or single file) for vulnerabilities."""
+# Inline suppression marker, e.g.  key = rsa.generate(...)  # quantumsafe: ignore
+_SUPPRESS_RE = re.compile(r"quantumsafe:\s*ignore", re.IGNORECASE)
+
+
+def _is_excluded(rel_path: str, patterns: list[str] | None) -> bool:
+    if not patterns:
+        return False
+    import fnmatch
+    return any(fnmatch.fnmatch(rel_path, pat) for pat in patterns)
+
+
+def scan_path(path: str, exclude: list[str] | None = None) -> list[Finding]:
+    """Recursively scan a local directory (or single file) for vulnerabilities.
+
+    ``exclude`` is an optional list of glob patterns (matched against the path
+    relative to ``path``, using forward slashes) to skip.
+    """
     path = os.path.abspath(path)
     if not os.path.exists(path):
         raise FileNotFoundError(f"Path does not exist: {path}")
@@ -333,6 +355,8 @@ def scan_path(path: str) -> list[Finding]:
             for name in files:
                 abs_path = os.path.join(root, name)
                 rel_path = os.path.relpath(abs_path, path).replace(os.sep, "/")
+                if _is_excluded(rel_path, exclude):
+                    continue
                 findings.extend(scan_file(abs_path, rel_path))
 
     findings = _dedupe(findings)
@@ -357,7 +381,7 @@ def _validate_repo_url(url: str) -> str:
     return url
 
 
-def scan_repo(url: str) -> list[Finding]:
+def scan_repo(url: str, exclude: list[str] | None = None) -> list[Finding]:
     """Shallow-clone a public GitHub repo to a temp dir, scan it, then clean up."""
     url = _validate_repo_url(url)
     if shutil.which("git") is None:
@@ -371,6 +395,6 @@ def scan_repo(url: str) -> list[Finding]:
         )
         if result.returncode != 0:
             raise RuntimeError(f"Failed to clone repository: {result.stderr.strip()}")
-        return scan_path(tmp)
+        return scan_path(tmp, exclude=exclude)
     finally:
         shutil.rmtree(tmp, ignore_errors=True)

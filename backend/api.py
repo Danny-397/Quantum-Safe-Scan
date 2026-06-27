@@ -17,7 +17,7 @@ from config import FREE_MONTHLY_SCAN_LIMIT, PLAN_FREE, PLAN_PRO, PLAN_TEAM
 from extensions import db, limiter
 from models import Finding, Scan, User, generate_api_key
 from quantumsafe.recommender import recommend
-from quantumsafe.reporter import to_html
+from quantumsafe.reporter import to_html, to_sarif
 from scanner_service import persist_scan, scan_repo_url, scan_upload
 
 api_bp = Blueprint("api", __name__, url_prefix="/api/v1")
@@ -163,19 +163,24 @@ def export_scan(scan_id: int):
             headers={"Content-Disposition": f"attachment; filename=scan_{scan_id}.csv"},
         )
 
-    if fmt == "html":
+    if fmt in ("html", "sarif"):
         report = {
             "tool": "quantumsafe", "version": "0.1.0", "target": scan.repo_url,
             "generated_at": scan.created_at.isoformat() if scan.created_at else "",
             "risk_score": scan.risk_score, "risk_band": scan.risk_band,
             "risk_message": "", "summary": scan.to_dict()["summary"], "findings": findings,
         }
+        if fmt == "sarif":
+            return Response(
+                to_sarif(report), mimetype="application/json",
+                headers={"Content-Disposition": f"attachment; filename=scan_{scan_id}.sarif"},
+            )
         return Response(
             to_html(report), mimetype="text/html",
             headers={"Content-Disposition": f"attachment; filename=scan_{scan_id}.html"},
         )
 
-    return jsonify({"error": "format must be json, csv, or html."}), 400
+    return jsonify({"error": "format must be json, csv, html, or sarif."}), 400
 
 
 # --------------------------------------------------------------------------- #

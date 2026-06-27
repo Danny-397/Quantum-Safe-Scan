@@ -127,6 +127,63 @@ def to_json(report: dict) -> str:
 # --------------------------------------------------------------------------- #
 
 
+def to_sarif(report: dict) -> str:
+    """Render findings as SARIF 2.1.0 — the format GitHub code scanning ingests.
+
+    Uploading this (e.g. via github/codeql-action/upload-sarif) makes QuantumSafe
+    findings appear in a repository's Security tab.
+    """
+    level_map = {RISK_HIGH: "error", RISK_MEDIUM: "warning", RISK_LOW: "note"}
+    severity_map = {RISK_HIGH: "9.0", RISK_MEDIUM: "5.0", RISK_LOW: "3.0"}
+
+    # One SARIF rule per detection family.
+    rules: list[dict] = []
+    seen: set[str] = set()
+    for f in report["findings"]:
+        if f["family"] in seen:
+            continue
+        seen.add(f["family"])
+        rules.append({
+            "id": f["family"],
+            "name": f["algorithm"],
+            "shortDescription": {"text": f["algorithm"]},
+            "fullDescription": {"text": f["why"]},
+            "helpUri": "https://csrc.nist.gov/projects/post-quantum-cryptography",
+            "help": {"text": f"{f['why']} Recommended replacement: {f['recommendation']} ({f['nist_reference']})."},
+            "defaultConfiguration": {"level": level_map.get(f["risk_level"], "warning")},
+            "properties": {"security-severity": severity_map.get(f["risk_level"], "5.0")},
+        })
+
+    results = []
+    for f in report["findings"]:
+        results.append({
+            "ruleId": f["family"],
+            "level": level_map.get(f["risk_level"], "warning"),
+            "message": {"text": f"{f['algorithm']}: {f['why']} Replace with {f['recommendation']}."},
+            "locations": [{
+                "physicalLocation": {
+                    "artifactLocation": {"uri": f["file_path"]},
+                    "region": {"startLine": max(1, f["line_number"])},
+                }
+            }],
+        })
+
+    sarif = {
+        "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+        "version": "2.1.0",
+        "runs": [{
+            "tool": {"driver": {
+                "name": "QuantumSafe",
+                "version": report.get("version", ""),
+                "informationUri": "https://github.com/Danny-397/Quantamn-Safe",
+                "rules": rules,
+            }},
+            "results": results,
+        }],
+    }
+    return json.dumps(sarif, indent=2)
+
+
 def to_html(report: dict) -> str:
     e = html.escape
     band = report["risk_band"]
