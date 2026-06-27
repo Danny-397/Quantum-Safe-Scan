@@ -1,5 +1,9 @@
 # QuantumSafe
 
+[![CI](https://github.com/Danny-397/Quantamn-Safe/actions/workflows/ci.yml/badge.svg)](https://github.com/Danny-397/Quantamn-Safe/actions/workflows/ci.yml)
+![Python](https://img.shields.io/badge/python-3.9%2B-blue)
+![License: MIT](https://img.shields.io/badge/license-MIT-green)
+
 **Find your quantum vulnerabilities before attackers do.**
 
 QuantumSafe scans codebases for cryptographic algorithms that will be broken or
@@ -251,10 +255,18 @@ cd ../frontend
 python -m http.server 3000    # http://localhost:3000
 ```
 
-Run the end-to-end backend test (in-memory DB, no setup):
+Run the test suite (39 tests — scanner, scorer, recommender, full API; uses an
+in-memory DB, no setup):
 
 ```bash
-cd backend && python smoke_test.py
+pip install -r requirements-dev.txt
+pytest -q
+```
+
+Seed a demo account so the dashboard is populated:
+
+```bash
+cd backend && python seed_demo.py     # demo@quantumsafe.dev / demodemo123
 ```
 
 Without `MAIL_SERVER` configured, verification/reset emails are printed to the
@@ -286,6 +298,9 @@ See [`.env.example`](.env.example). Summary and where to get each:
 ---
 
 ## Deployment
+
+See **[DEPLOYMENT.md](DEPLOYMENT.md)** for a full step-by-step walkthrough
+(Render + Vercel + Stripe + demo seeding). In short:
 
 - **CLI → PyPI:** `python -m build && twine upload dist/*`
 - **Backend → Render:** push the repo; Render reads [`render.yaml`](render.yaml)

@@ -31,3 +31,7 @@ quantumsafe = "quantumsafe.cli:main"
 [tool.setuptools]
 package-dir = { "quantumsafe" = "cli" }
 packages = ["quantumsafe"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = ["ignore::DeprecationWarning"]
