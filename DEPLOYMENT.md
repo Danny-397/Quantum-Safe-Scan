@@ -36,13 +36,11 @@ Estimated time: ~30–45 minutes. You need free accounts on Render, Vercel, and
 1. On [Vercel](https://vercel.com): **Add New → Project**, import this repo.
    [`vercel.json`](vercel.json) serves the `frontend/` directory statically.
 2. Deploy. Note your URL (e.g. `https://quantumsafe.vercel.app`).
-3. Point the dashboard at your API. Two options:
-   - **Quick:** edit the top of `frontend/app.js` and set the default
-     `API_BASE` to your Render URL, then redeploy; **or**
-   - add this line to the top of each HTML file's `<head>` before `app.js`:
-     ```html
-     <script>window.QUANTUMSAFE_API = "https://quantumsafe-api.onrender.com";</script>
-     ```
+3. Point the dashboard at your API: edit **one line** in `frontend/config.js`:
+   ```js
+   window.QUANTUMSAFE_API = "https://quantumsafe-api.onrender.com";
+   ```
+   Commit + push and Vercel redeploys automatically. (Leave it `""` for local dev.)
 4. Go back to Render and set `FRONTEND_ORIGIN` and `DASHBOARD_URL` to your Vercel
    URL (this is what the API's CORS allows). Redeploy the API.
 

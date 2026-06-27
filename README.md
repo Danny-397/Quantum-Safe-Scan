@@ -246,13 +246,13 @@ A static site (`frontend/`) — no build step. Pages:
 - **Migration plan** — findings grouped by risk with NIST replacement,
   standard reference, and estimated complexity.
 
-Point the dashboard at your API by setting, before `app.js` loads:
+Point the dashboard at your API by editing one line in `frontend/config.js`:
 
-```html
-<script>window.QUANTUMSAFE_API = "https://quantumsafe-api.onrender.com";</script>
+```js
+window.QUANTUMSAFE_API = "https://quantumsafe-api.onrender.com";
 ```
 
-…or in the browser console: `localStorage.setItem('qs_api', 'https://...')`.
+(Leave it `""` for local development — it falls back to `http://localhost:5000`.)
 
 ---
 
@@ -325,6 +325,8 @@ See [`.env.example`](.env.example). Summary and where to get each:
 ---
 
 ## Deployment
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Danny-397/Quantamn-Safe)
 
 See **[DEPLOYMENT.md](DEPLOYMENT.md)** for a full step-by-step walkthrough
 (Render + Vercel + Stripe + demo seeding). In short:

@@ -7,10 +7,15 @@ services:
     plan: free
     # Install the shared scanner package (repo root) AND the backend deps.
     buildCommand: "pip install -e . && pip install -r backend/requirements.txt"
-    startCommand: "cd backend && gunicorn app:app --bind 0.0.0.0:$PORT"
+    # --timeout 120 so a repo clone+scan isn't killed by the default 30s limit.
+    startCommand: "cd backend && gunicorn app:app --bind 0.0.0.0:$PORT --timeout 120"
     healthCheckPath: /health
     autoDeploy: true
     envVars:
+      # Pin Python so the build is reproducible (avoids a newer default breaking
+      # psycopg2/other wheels).
+      - key: PYTHON_VERSION
+        value: "3.12.7"
       - key: SECRET_KEY
         generateValue: true
       - key: JWT_SECRET_KEY
