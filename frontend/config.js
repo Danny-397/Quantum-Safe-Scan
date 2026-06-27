@@ -5,4 +5,4 @@
 //
 // Leave it empty ("") to use http://localhost:5000 for local development.
 // This is the ONLY file you need to edit to connect the dashboard to your API.
-window.QUANTUMSAFE_API = "";
+window.QUANTUMSAFE_API = "https://quantumsafe-api.onrender.com";
