@@ -12,8 +12,8 @@ from flask import Blueprint, Response, g, jsonify, request
 from flask_jwt_extended import jwt_required
 from sqlalchemy import func
 
-from auth import api_key_or_jwt, current_user
-from config import FREE_MONTHLY_SCAN_LIMIT, PLAN_FREE
+from auth import api_key_or_jwt, current_user, send_email
+from config import FREE_MONTHLY_SCAN_LIMIT, PLAN_FREE, PLAN_PRO, PLAN_TEAM
 from extensions import db, limiter
 from models import Finding, Scan, User, generate_api_key
 from quantumsafe.recommender import recommend
@@ -76,7 +76,32 @@ def create_scan():
         return jsonify({"error": str(exc)}), 502
 
     scan = persist_scan(user.id, report)
+    _maybe_send_alert(user, scan, report)
     return jsonify({"scan_id": scan.id, "report": report}), 201
+
+
+def _maybe_send_alert(user: User, scan, report: dict) -> None:
+    """Email the user when a scan finds HIGH-risk findings (Pro+ + opted in)."""
+    if user.plan not in (PLAN_PRO, PLAN_TEAM):
+        return
+    if not user.alert_on_high or report["summary"]["high"] == 0:
+        return
+    from flask import current_app
+    s = report["summary"]
+    dashboard = current_app.config["DASHBOARD_URL"]
+    body = (
+        f"QuantumSafe found {s['high']} HIGH-risk quantum vulnerabilities in your latest scan.\n\n"
+        f"Target: {report['target']}\n"
+        f"Quantum Risk Score: {report['risk_score']}/100 ({report['risk_band']})\n"
+        f"HIGH: {s['high']}  MEDIUM: {s['medium']}  LOW: {s['low']}\n\n"
+        f"View the full report and migration plan:\n"
+        f"{dashboard}/scan.html?id={scan.id}\n"
+    )
+    send_email(
+        f"QuantumSafe alert: {s['high']} HIGH-risk vulnerabilities found",
+        user.email,
+        body,
+    )
 
 
 @api_bp.route("/scans", methods=["GET"])
@@ -234,6 +259,17 @@ def migration_plan(scan_id: int):
 # --------------------------------------------------------------------------- #
 # API key management (CLI)
 # --------------------------------------------------------------------------- #
+
+
+@api_bp.route("/user/preferences", methods=["PUT"])
+@jwt_required()
+def update_preferences():
+    user = current_user()
+    data = request.get_json(silent=True) or {}
+    if "alert_on_high" in data:
+        user.alert_on_high = bool(data["alert_on_high"])
+    db.session.commit()
+    return jsonify({"alert_on_high": user.alert_on_high})
 
 
 @api_bp.route("/user/apikey", methods=["GET"])

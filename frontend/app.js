@@ -203,9 +203,13 @@
 
     const prefBox = $("#pref-alerts");
     if (prefBox) {
-      prefBox.checked = localStorage.getItem("qs_pref_alerts") !== "false";
-      prefBox.addEventListener("change", () =>
-        localStorage.setItem("qs_pref_alerts", prefBox.checked));
+      prefBox.addEventListener("change", async () => {
+        try {
+          await api("/api/v1/user/preferences", {
+            method: "PUT", json: { alert_on_high: prefBox.checked },
+          });
+        } catch (err) { showMsg($("#global-msg"), err.message); }
+      });
     }
   }
 
@@ -323,6 +327,8 @@
     try {
       const me = (await api("/api/v1/auth/me")).user;
       $("#acct-email").textContent = me.email;
+      const prefBox = $("#pref-alerts");
+      if (prefBox) prefBox.checked = me.alert_on_high !== false;
       $("#acct-created").textContent = "Member since " + fmtDate(me.created_at);
       $("#acct-verified").innerHTML = me.email_verified
         ? `<span class="low">✓ Email verified</span>`
