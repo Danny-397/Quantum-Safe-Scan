@@ -167,6 +167,21 @@ limits (inline comments, string literals, regex-only for non-Python) are
 documented in [benchmark/README.md](benchmark/README.md) — this is a regression
 benchmark, not a claim of perfection on arbitrary code.
 
+## Empirical study — how widespread is the problem?
+
+I ran the scanner over 8 widely-used open-source projects ([`study/`](study/),
+reproducible via `python study/run_study.py`):
+
+- **88%** contained at least one **HIGH-risk** (Shor-breakable) cryptographic usage.
+- Average Quantum Risk Score: **72.9 / 100**.
+- Most common quantum-vulnerable primitives: RSA, ECC, legacy TLS, MD5/SHA-1.
+
+Full results, per-project table, chart, and honest caveats (static analysis over
+whole repos including tests; crypto libraries naturally score high) are in
+[study/REPORT.md](study/REPORT.md). The point: quantum-vulnerable crypto is
+pervasive even in well-maintained code — which is why automated detection matters
+as the migration begins.
+
 ## Quantum demonstrations (Shor & Grover)
 
 The [`quantum/`](quantum/) module runs the real algorithms on a quantum simulator:

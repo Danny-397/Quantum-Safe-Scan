@@ -1,0 +1,212 @@
+{
+  "generated_at": "2026-06-28T21:47:56.804483+00:00",
+  "repos_scanned": 8,
+  "with_high_risk": 7,
+  "with_any_finding": 7,
+  "pct_high": 88,
+  "pct_any": 88,
+  "avg_score": 72.9,
+  "family_totals": [
+    [
+      "rsa",
+      194
+    ],
+    [
+      "ecc",
+      125
+    ],
+    [
+      "tls_old",
+      67
+    ],
+    [
+      "sha256",
+      53
+    ],
+    [
+      "md5",
+      46
+    ],
+    [
+      "sha1",
+      46
+    ],
+    [
+      "tls12",
+      11
+    ]
+  ],
+  "rows": [
+    {
+      "repo": "psf/requests",
+      "risk_score": 100,
+      "risk_band": "Critical",
+      "high": 7,
+      "medium": 0,
+      "low": 3,
+      "total": 10,
+      "top_families": [
+        [
+          "md5",
+          5
+        ],
+        [
+          "sha256",
+          3
+        ],
+        [
+          "sha1",
+          2
+        ]
+      ]
+    },
+    {
+      "repo": "urllib3/urllib3",
+      "risk_score": 100,
+      "risk_band": "Critical",
+      "high": 10,
+      "medium": 67,
+      "low": 12,
+      "total": 89,
+      "top_families": [
+        [
+          "tls_old",
+          67
+        ],
+        [
+          "tls12",
+          11
+        ],
+        [
+          "md5",
+          7
+        ],
+        [
+          "sha1",
+          2
+        ],
+        [
+          "sha256",
+          1
+        ]
+      ]
+    },
+    {
+      "repo": "paramiko/paramiko",
+      "risk_score": 100,
+      "risk_band": "Critical",
+      "high": 393,
+      "medium": 9,
+      "low": 49,
+      "total": 451,
+      "top_families": [
+        [
+          "rsa",
+          194
+        ],
+        [
+          "ecc",
+          125
+        ],
+        [
+          "sha256",
+          37
+        ],
+        [
+          "sha1",
+          28
+        ],
+        [
+          "md5",
+          25
+        ]
+      ]
+    },
+    {
+      "repo": "encode/httpx",
+      "risk_score": 100,
+      "risk_band": "Critical",
+      "high": 11,
+      "medium": 0,
+      "low": 9,
+      "total": 20,
+      "top_families": [
+        [
+          "sha256",
+          9
+        ],
+        [
+          "md5",
+          8
+        ],
+        [
+          "sha1",
+          3
+        ]
+      ]
+    },
+    {
+      "repo": "pallets/jinja",
+      "risk_score": 75,
+      "risk_band": "High",
+      "high": 5,
+      "medium": 0,
+      "low": 0,
+      "total": 5,
+      "top_families": [
+        [
+          "sha1",
+          5
+        ]
+      ]
+    },
+    {
+      "repo": "pallets/flask",
+      "risk_score": 60,
+      "risk_band": "Medium",
+      "high": 4,
+      "medium": 0,
+      "low": 0,
+      "total": 4,
+      "top_families": [
+        [
+          "sha1",
+          4
+        ]
+      ]
+    },
+    {
+      "repo": "pallets/click",
+      "risk_score": 48,
+      "risk_band": "Medium",
+      "high": 3,
+      "medium": 0,
+      "low": 3,
+      "total": 6,
+      "top_families": [
+        [
+          "sha256",
+          3
+        ],
+        [
+          "sha1",
+          2
+        ],
+        [
+          "md5",
+          1
+        ]
+      ]
+    },
+    {
+      "repo": "expressjs/express",
+      "risk_score": 0,
+      "risk_band": "Low",
+      "high": 0,
+      "medium": 0,
+      "low": 0,
+      "total": 0,
+      "top_families": []
+    }
+  ]
+}
