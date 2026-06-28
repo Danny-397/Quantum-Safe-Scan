@@ -3,20 +3,19 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>QuantumSafe — Find Your Quantum Vulnerabilities Before Attackers Do</title>
-<meta name="description" content="QuantumSafe scans your codebase, scores quantum risk, and generates a NIST-aligned migration plan. Free CLI. No credit card required." />
-<meta name="theme-color" content="#0A0A0F" />
+<title>QuantumSafe — Find the cryptography quantum computers will break</title>
+<meta name="description" content="QuantumSafe scans your code for RSA, ECC, and other algorithms broken by Shor's and Grover's algorithms, scores the risk 0–100, and maps each finding to its NIST FIPS 203/204 replacement. Free and open source." />
+<meta name="theme-color" content="#08080c" />
 <meta name="keywords" content="post-quantum cryptography, quantum-safe, NIST PQC, FIPS 203, Kyber, Dilithium, crypto scanner, security" />
-<!-- Open Graph / social preview -->
 <meta property="og:type" content="website" />
-<meta property="og:title" content="QuantumSafe — Find Your Quantum Vulnerabilities Before Attackers Do" />
-<meta property="og:description" content="Scan your codebase for quantum-vulnerable cryptography, score the risk, and get a NIST-aligned migration plan. Free CLI." />
+<meta property="og:title" content="QuantumSafe — find the cryptography quantum computers will break" />
+<meta property="og:description" content="Scan code for quantum-vulnerable cryptography, score the risk 0–100, and get a NIST-aligned migration plan. Free and open source." />
 <meta property="og:image" content="og-image.svg" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="QuantumSafe — quantum risk scanner for your codebase" />
-<meta name="twitter:description" content="Detect RSA, ECC, and weak crypto. Score quantum risk. Get NIST-aligned migration recommendations." />
+<meta name="twitter:description" content="Detect RSA, ECC, and weak crypto. Score quantum risk 0–100. Get NIST-aligned migration recommendations." />
 <meta name="twitter:image" content="og-image.svg" />
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%2300FF88'/></svg>" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='2' fill='%2300e676'/></svg>" />
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -24,55 +23,72 @@
   <header class="nav">
     <div class="brand"><span class="dot"></span> QuantumSafe</div>
     <nav class="nav-links">
-      <a href="#how">How it works</a>
-      <a href="#features">Features</a>
-      <a href="login.html">Sign In</a>
-      <a href="login.html?mode=register" class="btn btn-sm btn-primary">Sign Up Free</a>
+      <a href="#try">Live demo</a>
+      <a href="#detect">Detection</a>
+      <a href="login.html">Sign in</a>
+      <a href="login.html?mode=register" class="btn btn-sm btn-primary">Sign up free</a>
     </nav>
   </header>
 
   <main>
     <section class="hero wrap">
-      <h1>Find Your Quantum Vulnerabilities <span class="grn">Before Attackers Do.</span></h1>
-      <p class="sub">Scan any codebase for quantum-vulnerable cryptography, score the risk, and
-        get a NIST-aligned migration plan — <strong>right in your browser</strong>. No install,
-        no terminal. Free to start, no credit card.</p>
-      <div class="cta">
-        <a href="login.html?mode=register" class="btn btn-primary">Create Free Account</a>
-        <a href="#install" class="btn">Or install the CLI</a>
+      <div class="hero-copy">
+        <div class="eyebrow">// Post-quantum code scanner</div>
+        <h1>Find the cryptography a quantum computer will <span class="grn">break</span>.</h1>
+        <p class="sub">QuantumSafe scans your code for RSA, ECC, and the other algorithms that
+          Shor's and Grover's algorithms defeat — scores the risk <strong>0–100</strong> and maps
+          every finding to its NIST <strong>FIPS&nbsp;203/204</strong> replacement.</p>
+        <div class="hero-cta">
+          <a href="login.html?mode=register" class="btn btn-primary">Scan your code — free</a>
+          <a href="#try" class="btn">Try it live ↓</a>
+        </div>
+        <p class="hero-note">Runs in your browser — no install. Prefer the terminal? <code>pip install quantumsafe</code></p>
       </div>
-      <p class="muted" style="font-size:13px;margin-top:12px;">
-        With a free account you scan GitHub repos or upload a .zip and get your full report —
-        all in the browser, nothing to install.</p>
-      <div class="code-wrap">
-        <button class="copy-btn" id="copy-install" title="Copy">Copy</button>
-        <div class="code" id="install"><span class="prompt">$</span> pip install quantumsafe
-<span class="prompt">$</span> quantumsafe scan --path ./myproject</div>
+
+      <div class="terminal" aria-hidden="true">
+        <div class="term-head"><span class="d"></span><span class="d"></span><span class="d"></span><span class="t">quantumsafe — scan</span></div>
+<div class="term-body"><span class="c">$</span> quantumsafe scan --repo github.com/acme/payments-api
+<span class="dim">  cloning · scanning 1,284 files</span>
+
+  QUANTUM RISK SCORE  <span class="score">82</span><span class="dim">/100</span>   <span class="hi">CRITICAL</span>
+
+  <span class="dim">FILE                LINE  ALGORITHM   RISK</span>
+  auth/keys.py        14    RSA-2048    <span class="hi">HIGH</span>
+  auth/keys.py        27    ECDSA       <span class="hi">HIGH</span>
+  tokens.py           8     MD5         <span class="hi">HIGH</span>
+  net/tls.py          33    TLS 1.0     <span class="me">MEDIUM</span>
+  cache.py            51    SHA-256     <span class="lo">LOW</span>
+
+  <span class="c">→</span> replace RSA/ECC with ML-KEM (Kyber) · FIPS 203
+</div>
       </div>
     </section>
 
     <!-- Interactive in-browser scanner -->
     <section class="section wrap" id="try">
-      <h2>Try it in your browser</h2>
-      <p class="lead">Paste code below — QuantumSafe scans it live, right here. No signup, nothing leaves your browser.</p>
+      <div class="section-head">
+        <div class="eyebrow">// Live demo — runs in your browser</div>
+        <h2>Paste code. See the risk. Nothing leaves the page.</h2>
+        <p class="lead">A working scan, client-side. Hit <em>Run full engine</em> to send it to the real scanner.</p>
+      </div>
       <div class="demo-grid">
         <div class="demo-left">
           <div class="demo-toolbar">
             <span class="muted mono">paste code · 11 languages</span>
             <span>
               <button class="btn btn-sm" id="demo-sample">Load sample</button>
-              <button class="btn btn-sm btn-primary" id="demo-run">Run full engine →</button>
+              <button class="btn btn-sm btn-primary" id="demo-run">Run full engine</button>
             </span>
           </div>
           <textarea id="demo-input" class="demo-input mono" spellcheck="false" aria-label="Paste code to scan for quantum-vulnerable cryptography"></textarea>
-          <div id="demo-engine" class="muted mono" style="margin-top:8px;font-size:12px;">Live preview runs in your browser. Click “Run full engine” for the real QuantumSafe scanner.</div>
+          <div id="demo-engine" class="muted mono" style="margin-top:8px;font-size:12px;">Live preview runs in your browser. “Run full engine” uses the real scanner.</div>
         </div>
         <div class="demo-right">
           <div class="demo-score-card">
             <div class="demo-score mono" id="demo-score">0</div>
             <div class="demo-band" id="demo-band">No code scanned</div>
             <div class="demo-bar"><div class="demo-bar-fill" id="demo-bar"></div></div>
-            <div class="pill-row" style="justify-content:center;margin-top:12px;">
+            <div class="pill-row" style="justify-content:center;margin-top:14px;">
               <span class="high">HIGH <b id="demo-high">0</b></span>
               <span class="medium">MED <b id="demo-med">0</b></span>
               <span class="low">LOW <b id="demo-low">0</b></span>
@@ -80,92 +96,92 @@
           </div>
           <div class="demo-findings" id="demo-findings"></div>
           <p class="muted demo-upsell">
-            This scans one snippet. Sign up to scan <b>whole repos &amp; GitHub</b>,
-            with scan history, reports, and alerts. <a href="login.html">Sign up free →</a>
+            This scans one snippet. A free account scans whole repos &amp; GitHub, with history,
+            reports, and alerts. <a href="login.html?mode=register">Create an account →</a>
           </p>
         </div>
       </div>
     </section>
 
+    <!-- What it flags -->
+    <section class="section wrap" id="detect">
+      <div class="section-head">
+        <div class="eyebrow">// What it flags</div>
+        <h2>Every algorithm Shor and Grover put at risk.</h2>
+        <p class="lead">Across 11 languages — Python (AST-aware), JavaScript, Go, Java, Ruby, C#, PHP, Rust, C/C++, Kotlin, Swift.</p>
+      </div>
+      <div class="detect">
+        <div class="detect-row">
+          <div class="detect-tag hi">HIGH</div>
+          <div>
+            <div class="detect-algos">RSA · ECDSA · ECDH · DSA · Diffie-Hellman · MD5 · SHA-1</div>
+            <div class="detect-why">Broken outright by Shor's algorithm, or already collision-broken. Migrate now.</div>
+          </div>
+        </div>
+        <div class="detect-row">
+          <div class="detect-tag me">MEDIUM</div>
+          <div>
+            <div class="detect-algos">TLS 1.0 / 1.1 · 3DES · RC4 · RSA &lt; 2048</div>
+            <div class="detect-why">Deprecated or weakened — schedule a replacement.</div>
+          </div>
+        </div>
+        <div class="detect-row">
+          <div class="detect-tag lo">LOW</div>
+          <div>
+            <div class="detect-algos">SHA-256 · AES-128 · TLS 1.2</div>
+            <div class="detect-why">Grover halves their effective strength — safe today, size up for long-lived data.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How it works -->
     <section class="section wrap" id="how">
-      <h2>How it works — entirely in your browser.</h2>
-      <p class="lead">Create a free account and scan from the web. No IDE, no terminal, nothing to install.</p>
-      <div class="pillars">
-        <div class="pillar">
-          <h3><span class="tag">01</span> Create your account</h3>
-          <p>Sign up free in seconds with just an email — no credit card required.</p>
-        </div>
-        <div class="pillar">
-          <h3><span class="tag">02</span> Point it at your code</h3>
-          <p>Paste a public GitHub repo URL, or upload a <strong>.zip</strong> of your project.
-             Our server scans it for you — you don't install anything.</p>
-        </div>
-        <div class="pillar">
-          <h3><span class="tag">03</span> Get your report</h3>
-          <p>See your Quantum Risk Score, every finding, and a NIST migration plan — saved to
-             your dashboard with history and exports.</p>
-        </div>
+      <div class="section-head">
+        <div class="eyebrow">// How it works</div>
+        <h2>Code to migration plan, in three steps.</h2>
       </div>
-      <div style="text-align:center;margin-top:28px;">
-        <a href="login.html?mode=register" class="btn btn-primary">Create your free account →</a>
-      </div>
-      <p class="muted" style="text-align:center;margin-top:10px;font-size:13px;">
-        Prefer the command line? The optional CLI does the same and syncs to your dashboard.</p>
-    </section>
-
-    <section class="section wrap" id="features">
-      <h2>Quantum risk, end to end.</h2>
-      <p class="lead">Detect. Score. Migrate. The same engine in your browser or your terminal.</p>
-      <div class="pillars">
-        <div class="pillar">
-          <h3><span class="tag">01</span> Scan</h3>
-          <p>Detect RSA, ECC, and weak cryptography across your entire codebase in seconds —
-             Python, JavaScript, Java, Go and Ruby.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="n">01</div>
+          <h3>Point it at your code</h3>
+          <p>Paste a GitHub URL or upload a .zip in the browser — or run the CLI in your terminal.</p>
         </div>
-        <div class="pillar">
-          <h3><span class="tag">02</span> Score</h3>
-          <p>Get a Quantum Risk Score for every asset and your organization overall, with
-             severity-weighted findings.</p>
+        <div class="step">
+          <div class="n">02</div>
+          <h3>Get a risk score</h3>
+          <p>A 0–100 Quantum Risk Score, with every finding pinned to its file and line.</p>
         </div>
-        <div class="pillar">
-          <h3><span class="tag">03</span> Migrate</h3>
-          <p>Receive NIST-approved recommendations — Kyber, Dilithium, SHA-3, AES-256 — for
-             every vulnerability found.</p>
+        <div class="step">
+          <div class="n">03</div>
+          <h3>Follow the plan</h3>
+          <p>NIST-mapped fixes — Kyber, Dilithium, SHA-3, AES-256 — exportable as SARIF or CBOM.</p>
         </div>
-      </div>
-    </section>
-
-    <section class="section wrap" id="pricing">
-      <h2>Free &amp; open.</h2>
-      <p class="lead">Every feature, no paywall. Unlimited scans, full dashboard, history, reports,
-        API access, and the CLI — all free.</p>
-      <div class="plan featured" style="max-width:460px;margin:0 auto;text-align:center;">
-        <h3>Everything included</h3>
-        <div class="price">$0</div>
-        <ul style="text-align:left;">
-          <li>Unlimited scans — GitHub repos or .zip uploads</li>
-          <li>Full web dashboard &amp; scan history</li>
-          <li>JSON, HTML, CSV, SARIF &amp; CBOM reports</li>
-          <li>NIST migration plans</li>
-          <li>API key + free CLI</li>
-          <li>Open source on GitHub</li>
-        </ul>
-        <a href="login.html?mode=register" class="btn btn-primary btn-block">Create Free Account</a>
       </div>
     </section>
 
     <section class="section wrap">
-      <div class="trust">Based on NIST Post-Quantum Cryptography Standards (FIPS 203, 204, 205)</div>
+      <div class="cta-band">
+        <div>
+          <h2>Free, open source, ready to scan.</h2>
+          <p>No paywall, no credit card — every feature included.</p>
+          <div class="mono-note">Based on NIST PQC standards · FIPS 203 / 204 / 205</div>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <a href="login.html?mode=register" class="btn btn-primary">Create free account</a>
+          <a href="https://github.com/Danny-397/Quantamn-Safe" class="btn">View source</a>
+        </div>
+      </div>
     </section>
   </main>
 
-  <footer class="footer">
+  <footer class="footer wrap">
     <div class="footer-links">
-      <a href="#how">How it works</a> · <a href="#features">Features</a> ·
+      <a href="#try">Live demo</a> · <a href="#detect">Detection</a> ·
       <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> ·
       <a href="https://github.com/Danny-397/Quantamn-Safe">GitHub</a>
     </div>
-    QuantumSafe — a security tool for awareness, not a substitute for a professional cryptographic audit.
+    QuantumSafe is a security-awareness tool — not a substitute for a professional cryptographic audit.
   </footer>
 
   <script src="config.js"></script>

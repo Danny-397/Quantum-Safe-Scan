@@ -97,7 +97,6 @@
     }
 
     initDemoScanner();
-    initReveal();
   }
 
   // ---- In-browser live scanner (client-side, nothing leaves the browser) ----
@@ -237,7 +236,7 @@
       renderDemo();
       if (engine) engine.textContent = "Full engine unavailable right now — showing the in-browser preview.";
     } finally {
-      if (btn) { btn.disabled = false; btn.textContent = "Run full engine →"; }
+      if (btn) { btn.disabled = false; btn.textContent = "Run full engine"; }
     }
   }
 
@@ -251,20 +250,6 @@
     const run = $("#demo-run");
     if (run) run.addEventListener("click", runRealDemo);
     renderDemo();
-  }
-
-  // ---- Scroll reveal ----
-  function initReveal() {
-    const els = $$(".pillar, .plan, .demo-grid, .trust");
-    els.forEach((el) => el.classList.add("reveal"));
-    if (!("IntersectionObserver" in window)) {
-      els.forEach((el) => el.classList.add("visible"));
-      return;
-    }
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("visible"); obs.unobserve(e.target); } });
-    }, { threshold: 0.12 });
-    els.forEach((el) => obs.observe(el));
   }
 
   // ---- Cookie / storage notice (all pages) ----
