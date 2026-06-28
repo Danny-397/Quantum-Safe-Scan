@@ -9,6 +9,12 @@ All notable changes to QuantumSafe are documented here. This project follows
 - **Quantum module (`quantum/`):** real Qiskit implementations of Shor's
   algorithm (quantum order-finding factors N and recovers an RSA key) and
   Grover's algorithm (key-search speedup), run on a quantum simulator.
+- **Post-quantum module (`pqc/`):** a from-scratch lattice-based (LWE) key
+  encapsulation mechanism — the foundation of NIST ML-KEM/Kyber — implementing
+  the quantum-safe replacement the scanner recommends.
+- **Evaluation (`benchmark/`):** labeled precision/recall benchmark (100% on 24
+  findings across 9 languages, with comment/word-boundary decoys), enforced by
+  tests; scanner now skips comment-only lines to cut false positives.
 - **Detection engine:** AST (Python) + regex scanning across Python, JavaScript/
   TypeScript, Java, Go, Ruby, C#, PHP, Rust, C/C++, Kotlin, and Swift.
 - **Output formats:** terminal, JSON, standalone HTML, **SARIF 2.1.0**,

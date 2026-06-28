@@ -137,6 +137,26 @@ false positives. Documented limits (inline comments, string literals, regex-only
 outside Python) are stated in `benchmark/README.md`; closing them is what the
 AST/Tree-sitter future work in §7 is for.
 
+## 2d. Post-quantum solution (`pqc/`)
+
+The scanner's top recommendation is CRYSTALS-Kyber / ML-KEM. `pqc/lwe_kem.py`
+implements that recommendation's foundation — a **Learning With Errors (LWE)**
+key-encapsulation mechanism — from scratch (NumPy only):
+
+- **Keygen:** `b = A·s + e (mod q)` with small `e`; recovering `s` is the LWE
+  problem (as hard as worst-case lattice problems).
+- **Encapsulate/decapsulate:** subset-sum masking carries each secret bit in the
+  high bit; `v − sᵀu = eᵀr + μ⌊q/2⌋`, and small `eᵀr` lets the receiver recover
+  `μ`. Parameters (n=256, m=512, q=4093) keep error ≪ q/4 → verified over 200+
+  exchanges with zero decryption failures.
+
+**Why it's quantum-safe:** Shor breaks RSA/ECC because they reduce to
+period-finding (the abelian hidden-subgroup problem). LWE has no such structure,
+so quantum algorithms give only minor speedups — the basis of NIST FIPS 203.
+
+This closes the loop: `quantum/` is the attack, the scanner is the detection,
+`pqc/` is the defense — all runnable.
+
 ## 3. Architecture
 
 ```

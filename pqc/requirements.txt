@@ -1,0 +1,3 @@
+# Post-quantum module dependency (kept out of the lightweight CLI on purpose).
+# Install with: pip install -r pqc/requirements.txt
+numpy>=1.24
