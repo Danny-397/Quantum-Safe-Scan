@@ -37,11 +37,9 @@ def create_app(config_object: type = Config) -> Flask:
     # Blueprints
     from auth import auth_bp
     from api import api_bp
-    from billing import billing_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(api_bp)
-    app.register_blueprint(billing_bp)
 
     # Health check
     @app.route("/health")

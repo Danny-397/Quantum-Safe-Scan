@@ -18,7 +18,6 @@
         <a href="#findings" data-view="findings">Findings</a>
         <a href="migration.html" data-view="migration">Migration Plan</a>
         <a href="#settings" data-view="settings">Settings</a>
-        <a href="#billing" data-view="billing">Billing</a>
       </nav>
       <div class="side-foot">
         <button class="btn btn-block btn-primary" id="btn-new-scan">+ New Scan</button>
@@ -32,7 +31,7 @@
 
       <!-- OVERVIEW -->
       <section class="view" id="view-overview">
-        <div class="page-head"><h1>Overview</h1><span class="muted mono" id="ov-plan"></span></div>
+        <div class="page-head"><h1>Overview</h1></div>
         <div class="grid grid-4">
           <div class="card score-card">
             <h3>Quantum Risk Score</h3>
@@ -129,32 +128,6 @@
             Deleting your account is permanent and removes all your scans and findings.
             See our <a href="privacy.html">Privacy Policy</a>.
           </p>
-        </div>
-      </section>
-
-      <!-- BILLING -->
-      <section class="view hidden" id="view-billing">
-        <div class="page-head"><h1>Billing</h1></div>
-        <div class="card">
-          <h3>Current Plan</h3>
-          <div class="stat sm mono" id="bill-plan">—</div>
-        </div>
-        <div class="grid grid-2" style="margin-top:16px;">
-          <div class="card">
-            <h3>Pro — $19/mo</h3>
-            <p class="muted" style="font-size:14px;">Unlimited scans, dashboard, reports, API, email alerts.</p>
-            <button class="btn btn-primary" data-upgrade="pro" style="margin-top:10px;">Upgrade to Pro</button>
-          </div>
-          <div class="card">
-            <h3>Team — $49/mo</h3>
-            <p class="muted" style="font-size:14px;">Everything in Pro, 5 members, scheduled scans, CSV export.</p>
-            <button class="btn btn-primary" data-upgrade="team" style="margin-top:10px;">Upgrade to Team</button>
-          </div>
-        </div>
-        <div class="card" style="margin-top:16px;">
-          <h3>Manage Subscription</h3>
-          <p class="muted" style="font-size:14px;margin-bottom:10px;">Update payment method, view invoices, or cancel.</p>
-          <button class="btn" id="btn-portal">Open Customer Portal</button>
         </div>
       </section>
     </main>

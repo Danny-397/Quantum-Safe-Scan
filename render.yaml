@@ -30,14 +30,6 @@ services:
         sync: false
       - key: API_URL
         sync: false        # set to this service's public URL
-      - key: STRIPE_SECRET_KEY
-        sync: false
-      - key: STRIPE_WEBHOOK_SECRET
-        sync: false
-      - key: STRIPE_PRO_PRICE_ID
-        sync: false
-      - key: STRIPE_TEAM_PRICE_ID
-        sync: false
       - key: MAIL_SERVER
         sync: false
       - key: MAIL_PORT

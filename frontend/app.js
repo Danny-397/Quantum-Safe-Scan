@@ -336,8 +336,7 @@
           },
         });
         setToken(d.token);
-        const plan = params.get("plan");
-        location.href = plan ? "dashboard.html#billing" : "dashboard.html";
+        location.href = "dashboard.html";
       } catch (err) { showMsg(msg, err.message); }
     });
 
@@ -373,7 +372,7 @@
     if (!requireAuth()) return;
     wireLogout();
 
-    const views = ["overview", "scans", "findings", "settings", "billing"];
+    const views = ["overview", "scans", "findings", "settings"];
     function route() {
       const hash = (location.hash || "#overview").slice(1);
       const view = views.includes(hash) ? hash : "overview";
@@ -385,7 +384,7 @@
 
     const loaders = {
       overview: loadOverview, scans: () => loadScans(1),
-      findings: loadFindings, settings: loadSettings, billing: loadBilling,
+      findings: loadFindings, settings: loadSettings,
     };
 
     window.addEventListener("hashchange", route);
@@ -401,11 +400,8 @@
     });
     $("#btn-run-scan") && $("#btn-run-scan").addEventListener("click", runScan);
 
-    // settings + billing actions
+    // settings actions
     $("#btn-gen-key") && $("#btn-gen-key").addEventListener("click", genKey);
-    $$("[data-upgrade]").forEach((b) =>
-      b.addEventListener("click", () => upgrade(b.dataset.upgrade)));
-    $("#btn-portal") && $("#btn-portal").addEventListener("click", openPortal);
 
     const prefBox = $("#pref-alerts");
     if (prefBox) {
@@ -465,7 +461,6 @@
       $("#ov-med").textContent = d.findings.medium;
       $("#ov-low").textContent = d.findings.low;
       $("#ov-month").textContent = d.scans_this_month;
-      $("#ov-plan").textContent = "Plan: " + d.plan.toUpperCase();
 
       const body = $("#ov-recent");
       body.innerHTML = d.recent_scans.length
@@ -583,25 +578,6 @@
       const d = await api("/api/v1/user/apikey", { method: "POST" });
       $("#apikey-display").textContent = d.api_key;
       showMsg($("#global-msg"), "New key generated — copy it now, it won't be shown again.", "success");
-    } catch (err) { showMsg($("#global-msg"), err.message); }
-  }
-
-  async function loadBilling() {
-    try {
-      const me = (await api("/api/v1/auth/me")).user;
-      $("#bill-plan").textContent = me.plan.toUpperCase();
-    } catch (err) { console.error(err); }
-  }
-  async function upgrade(plan) {
-    try {
-      const d = await api("/api/v1/billing/checkout", { method: "POST", json: { plan } });
-      location.href = d.url;
-    } catch (err) { showMsg($("#global-msg"), err.message); }
-  }
-  async function openPortal() {
-    try {
-      const d = await api("/api/v1/billing/portal", { method: "POST" });
-      location.href = d.url;
     } catch (err) { showMsg($("#global-msg"), err.message); }
   }
 

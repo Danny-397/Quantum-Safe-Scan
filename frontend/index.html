@@ -24,22 +24,26 @@
   <header class="nav">
     <div class="brand"><span class="dot"></span> QuantumSafe</div>
     <nav class="nav-links">
+      <a href="#how">How it works</a>
       <a href="#features">Features</a>
-      <a href="#pricing">Pricing</a>
       <a href="login.html">Sign In</a>
-      <a href="login.html?mode=register" class="btn btn-sm btn-primary">Sign Up</a>
+      <a href="login.html?mode=register" class="btn btn-sm btn-primary">Sign Up Free</a>
     </nav>
   </header>
 
   <main>
     <section class="hero wrap">
       <h1>Find Your Quantum Vulnerabilities <span class="grn">Before Attackers Do.</span></h1>
-      <p class="sub">QuantumSafe scans your codebase, scores quantum risk, and generates a
-        NIST-aligned migration plan. Free CLI. No credit card required.</p>
+      <p class="sub">Scan any codebase for quantum-vulnerable cryptography, score the risk, and
+        get a NIST-aligned migration plan — <strong>right in your browser</strong>. No install,
+        no terminal. Free to start, no credit card.</p>
       <div class="cta">
-        <a href="#install" class="btn btn-primary">Install Free CLI</a>
-        <a href="login.html?mode=register" class="btn">Sign Up for Dashboard</a>
+        <a href="login.html?mode=register" class="btn btn-primary">Create Free Account</a>
+        <a href="#install" class="btn">Or install the CLI</a>
       </div>
+      <p class="muted" style="font-size:13px;margin-top:12px;">
+        With a free account you scan GitHub repos or upload a .zip and get your full report —
+        all in the browser, nothing to install.</p>
       <div class="code-wrap">
         <button class="copy-btn" id="copy-install" title="Copy">Copy</button>
         <div class="code" id="install"><span class="prompt">$</span> pip install quantumsafe
@@ -83,9 +87,35 @@
       </div>
     </section>
 
+    <section class="section wrap" id="how">
+      <h2>How it works — entirely in your browser.</h2>
+      <p class="lead">Create a free account and scan from the web. No IDE, no terminal, nothing to install.</p>
+      <div class="pillars">
+        <div class="pillar">
+          <h3><span class="tag">01</span> Create your account</h3>
+          <p>Sign up free in seconds with just an email — no credit card required.</p>
+        </div>
+        <div class="pillar">
+          <h3><span class="tag">02</span> Point it at your code</h3>
+          <p>Paste a public GitHub repo URL, or upload a <strong>.zip</strong> of your project.
+             Our server scans it for you — you don't install anything.</p>
+        </div>
+        <div class="pillar">
+          <h3><span class="tag">03</span> Get your report</h3>
+          <p>See your Quantum Risk Score, every finding, and a NIST migration plan — saved to
+             your dashboard with history and exports.</p>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:28px;">
+        <a href="login.html?mode=register" class="btn btn-primary">Create your free account →</a>
+      </div>
+      <p class="muted" style="text-align:center;margin-top:10px;font-size:13px;">
+        Prefer the command line? The optional CLI does the same and syncs to your dashboard.</p>
+    </section>
+
     <section class="section wrap" id="features">
       <h2>Quantum risk, end to end.</h2>
-      <p class="lead">Detect. Score. Migrate. One workflow from your terminal to your dashboard.</p>
+      <p class="lead">Detect. Score. Migrate. The same engine in your browser or your terminal.</p>
       <div class="pillars">
         <div class="pillar">
           <h3><span class="tag">01</span> Scan</h3>
@@ -106,45 +136,21 @@
     </section>
 
     <section class="section wrap" id="pricing">
-      <h2>Pricing</h2>
-      <p class="lead">Start free. Upgrade when you need the dashboard.</p>
-      <div class="pricing">
-        <div class="plan">
-          <h3>Free</h3>
-          <div class="price">$0</div>
-          <ul>
-            <li>CLI scanner</li>
-            <li>3 scans per month</li>
-            <li>Terminal output only</li>
-            <li>No dashboard access</li>
-          </ul>
-          <a href="#install" class="btn btn-block">Install CLI</a>
-        </div>
-        <div class="plan featured">
-          <h3>Pro</h3>
-          <div class="price">$19<span>/month</span></div>
-          <ul>
-            <li>Unlimited scans</li>
-            <li>Full web dashboard</li>
-            <li>JSON and HTML reports</li>
-            <li>Scan history</li>
-            <li>API access</li>
-            <li>Email alerts</li>
-          </ul>
-          <a href="login.html?mode=register&plan=pro" class="btn btn-primary btn-block">Start Pro</a>
-        </div>
-        <div class="plan">
-          <h3>Team</h3>
-          <div class="price">$49<span>/month</span></div>
-          <ul>
-            <li>Everything in Pro</li>
-            <li>5 team members</li>
-            <li>Scheduled scans</li>
-            <li>Priority support</li>
-            <li>CSV export</li>
-          </ul>
-          <a href="login.html?mode=register&plan=team" class="btn btn-block">Start Team</a>
-        </div>
+      <h2>Free &amp; open.</h2>
+      <p class="lead">Every feature, no paywall. Unlimited scans, full dashboard, history, reports,
+        API access, and the CLI — all free.</p>
+      <div class="plan featured" style="max-width:460px;margin:0 auto;text-align:center;">
+        <h3>Everything included</h3>
+        <div class="price">$0</div>
+        <ul style="text-align:left;">
+          <li>Unlimited scans — GitHub repos or .zip uploads</li>
+          <li>Full web dashboard &amp; scan history</li>
+          <li>JSON, HTML, CSV, SARIF &amp; CBOM reports</li>
+          <li>NIST migration plans</li>
+          <li>API key + free CLI</li>
+          <li>Open source on GitHub</li>
+        </ul>
+        <a href="login.html?mode=register" class="btn btn-primary btn-block">Create Free Account</a>
       </div>
     </section>
 
@@ -155,7 +161,7 @@
 
   <footer class="footer">
     <div class="footer-links">
-      <a href="#features">Features</a> · <a href="#pricing">Pricing</a> ·
+      <a href="#how">How it works</a> · <a href="#features">Features</a> ·
       <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> ·
       <a href="https://github.com/Danny-397/Quantamn-Safe">GitHub</a>
     </div>

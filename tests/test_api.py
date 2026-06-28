@@ -116,17 +116,13 @@ def test_exports(auth_client, fmt, needle):
     assert needle in r.get_data(as_text=True)
 
 
-def test_free_plan_scan_limit(auth_client):
+def test_scans_are_unlimited(auth_client):
     client, headers = auth_client
-    for _ in range(3):
+    # No paywall: many scans all succeed.
+    for _ in range(5):
         assert client.post("/api/v1/scan", headers=headers,
                            data={"file": (make_zip(), "code.zip")},
                            content_type="multipart/form-data").status_code == 201
-    # 4th scan in the same month should be blocked for a free user.
-    r = client.post("/api/v1/scan", headers=headers,
-                    data={"file": (make_zip(), "code.zip")},
-                    content_type="multipart/form-data")
-    assert r.status_code == 402
 
 
 def test_cli_import_scan_appears_in_dashboard(auth_client):
@@ -161,12 +157,6 @@ def test_import_scan_rejects_garbage(auth_client):
 def test_import_scan_requires_auth(client):
     r = client.post("/api/v1/scan/import", json={"report": {"findings": []}})
     assert r.status_code == 401
-
-
-def test_billing_not_configured(auth_client):
-    client, headers = auth_client
-    r = client.post("/api/v1/billing/checkout", headers=headers, json={"plan": "pro"})
-    assert r.status_code == 503  # no Stripe keys in test env
 
 
 def test_demo_scan_runs_real_engine(client):

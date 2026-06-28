@@ -16,7 +16,6 @@ from flask_jwt_extended import jwt_required
 from sqlalchemy import func
 
 from auth import api_key_or_jwt, current_user, send_email
-from config import FREE_MONTHLY_SCAN_LIMIT, PLAN_FREE, PLAN_PRO, PLAN_TEAM
 from extensions import db, limiter
 from models import Finding, Scan, User, generate_api_key
 from quantumsafe.recommender import recommend
@@ -47,29 +46,6 @@ def _require_user() -> User:
 
 
 # --------------------------------------------------------------------------- #
-# Plan enforcement
-# --------------------------------------------------------------------------- #
-
-
-def _scans_this_month(user_id: int) -> int:
-    start = dt.datetime.now(dt.timezone.utc).replace(
-        day=1, hour=0, minute=0, second=0, microsecond=0
-    )
-    return Scan.query.filter(Scan.user_id == user_id, Scan.created_at >= start).count()
-
-
-def _enforce_scan_limit(user: User) -> tuple[bool, str]:
-    if user.plan == PLAN_FREE:
-        used = _scans_this_month(user.id)
-        if used >= FREE_MONTHLY_SCAN_LIMIT:
-            return False, (
-                f"Free plan is limited to {FREE_MONTHLY_SCAN_LIMIT} scans per month. "
-                "Upgrade to Pro for unlimited scans."
-            )
-    return True, ""
-
-
-# --------------------------------------------------------------------------- #
 # Scanning
 # --------------------------------------------------------------------------- #
 
@@ -79,11 +55,6 @@ def _enforce_scan_limit(user: User) -> tuple[bool, str]:
 @api_key_or_jwt
 def create_scan():
     user: User = g.current_user
-
-    allowed, msg = _enforce_scan_limit(user)
-    if not allowed:
-        return jsonify({"error": msg}), 402  # Payment Required
-
     try:
         if "file" in request.files:
             report = scan_upload(request.files["file"])
@@ -104,9 +75,7 @@ def create_scan():
 
 
 def _maybe_send_alert(user: User, scan, report: dict) -> None:
-    """Email the user when a scan finds HIGH-risk findings (Pro+ + opted in)."""
-    if user.plan not in (PLAN_PRO, PLAN_TEAM):
-        return
+    """Email the user when a scan finds HIGH-risk findings (if they opted in)."""
     if not user.alert_on_high or report["summary"]["high"] == 0:
         return
     from flask import current_app
@@ -173,9 +142,6 @@ def import_scan():
     dashboard: the CLI scans locally, then POSTs the finished report here.
     """
     user: User = g.current_user
-    allowed, msg = _enforce_scan_limit(user)
-    if not allowed:
-        return jsonify({"error": msg}), 402
     data = request.get_json(silent=True) or {}
     try:
         report = _sanitize_report(data.get("report", data))
@@ -272,6 +238,13 @@ def export_scan(scan_id: int):
 # --------------------------------------------------------------------------- #
 
 
+def _scans_this_month(user_id: int) -> int:
+    start = dt.datetime.now(dt.timezone.utc).replace(
+        day=1, hour=0, minute=0, second=0, microsecond=0
+    )
+    return Scan.query.filter(Scan.user_id == user_id, Scan.created_at >= start).count()
+
+
 @api_bp.route("/overview", methods=["GET"])
 @jwt_required()
 def overview():
@@ -297,7 +270,6 @@ def overview():
         "recent_scans": [s.to_dict() for s in scans[:5]],
         "trend": trend,
         "scans_this_month": _scans_this_month(user.id),
-        "plan": user.plan,
     })
 
 

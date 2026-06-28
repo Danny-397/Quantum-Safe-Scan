@@ -29,9 +29,9 @@ It ships as three parts that share **one** detection engine:
 - A **free CLI** (`pip install quantumsafe`) that scans local directories or
   public GitHub repos and prints/exports findings.
 - A **Flask REST API** that powers the dashboard, ingests scans, and handles
-  auth + billing.
+  authentication.
 - A **dark, Bloomberg-terminal-style web dashboard** with scan history,
-  findings, migration plans, exports, and Stripe-powered subscriptions.
+  findings, migration plans, and exports. **Free — no paywall.**
 
 > ⚠️ **Disclaimer:** QuantumSafe is a security-awareness tool. It uses static
 > pattern + AST analysis and is **not** a substitute for a professional
@@ -59,7 +59,7 @@ It was built to show breadth and depth across the stack:
   vulnerable (Shor's vs. Grover's algorithm) and to the correct NIST PQC
   replacement (FIPS 203/204/205).
 - **Backend engineering:** a Flask REST API with SQLAlchemy, JWT + bcrypt auth,
-  hashed API keys, rate limiting, CORS lockdown, and Stripe subscription billing.
+  hashed API keys, rate limiting, and CORS lockdown.
 - **Frontend engineering:** a dependency-light dashboard (vanilla JS) with a
   consistent data contract against the API, charts, and exports.
 - **Measured, not asserted:** a labeled [benchmark](benchmark/) (with comment and
@@ -353,14 +353,6 @@ GET  /api/v1/user/apikey   (JWT)  -> { has_api_key, api_key_prefix }
 POST /api/v1/user/apikey   (JWT)  -> { api_key }   # full key shown ONCE
 ```
 
-### Billing (Stripe)
-
-```http
-POST /api/v1/billing/checkout   (JWT)  { "plan": "pro"|"team" } -> { url }
-POST /api/v1/billing/portal     (JWT)  -> { url }
-POST /api/v1/billing/webhook    (Stripe signature)  -> { received: true }
-```
-
 All endpoints are rate-limited; CORS is restricted to `FRONTEND_ORIGIN`.
 
 ---
@@ -369,12 +361,11 @@ All endpoints are rate-limited; CORS is restricted to `FRONTEND_ORIGIN`.
 
 A static site (`frontend/`) — no build step. Pages:
 
-- **Landing** — hero, feature pillars, pricing (Free / Pro $19 / Team $49).
+- **Landing** — hero, in-browser live scanner, feature pillars (free, no paywall).
 - **Auth** — login, register, forgot/reset password.
 - **Dashboard** — Overview (risk score, totals, trend chart, recent scans),
-  Scans (paginated), Findings (filterable), Settings (API key + account),
-  Billing (upgrade / Stripe portal).
-- **Scan detail** — full findings table, filter by risk, export JSON/HTML/CSV.
+  Scans (paginated), Findings (filterable), Settings (API key + account).
+- **Scan detail** — full findings table, filter by risk, export JSON/HTML/CSV/SARIF/CBOM.
 - **Migration plan** — findings grouped by risk with NIST replacement,
   standard reference, and estimated complexity.
 
@@ -452,12 +443,8 @@ See [`.env.example`](.env.example). Summary and where to get each:
 | `JWT_SECRET_KEY` | ✅ | Generate the same way (use a different value) |
 | `DATABASE_URL` | prod | Render Postgres dashboard → *Connections* (SQLite used if unset) |
 | `FRONTEND_ORIGIN` | ✅ | Your dashboard URL, e.g. `https://quantumsafe.vercel.app` |
-| `DASHBOARD_URL` | ✅ | Same as above (used in emails + Stripe redirects) |
+| `DASHBOARD_URL` | ✅ | Same as above (used in emails) |
 | `API_URL` | ✅ | The deployed API URL (used for email verify links) |
-| `STRIPE_SECRET_KEY` | billing | Stripe Dashboard → *Developers → API keys* (`sk_test_...`) |
-| `STRIPE_WEBHOOK_SECRET` | billing | Stripe → *Developers → Webhooks* → your endpoint (`whsec_...`) |
-| `STRIPE_PRO_PRICE_ID` | billing | Stripe → *Products* → Pro $19/mo recurring price (`price_...`) |
-| `STRIPE_TEAM_PRICE_ID` | billing | Stripe → *Products* → Team $49/mo recurring price (`price_...`) |
 | `MAIL_SERVER` / `MAIL_PORT` / `MAIL_USE_TLS` | email | Your SMTP provider (e.g. `smtp.gmail.com` / 587 / true) |
 | `MAIL_USERNAME` / `MAIL_PASSWORD` | email | SMTP credentials (Gmail: an App Password) |
 | `MAIL_DEFAULT_SENDER` | email | The "from" address |
@@ -470,14 +457,13 @@ See [`.env.example`](.env.example). Summary and where to get each:
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Danny-397/Quantamn-Safe)
 
 See **[DEPLOYMENT.md](DEPLOYMENT.md)** for a full step-by-step walkthrough
-(Render + Vercel + Stripe + demo seeding). In short:
+(Render + Vercel + demo seeding). In short:
 
 - **CLI → PyPI:** `python -m build && twine upload dist/*`
 - **Backend → Render:** push the repo; Render reads [`render.yaml`](render.yaml)
   (web service + Postgres). Set the `sync: false` env vars in the dashboard.
-  Add a Stripe webhook pointing at `https://<api>/api/v1/billing/webhook`.
-- **Frontend → Vercel:** import the repo; [`vercel.json`](vercel.json) serves
-  `frontend/` statically. Set `window.QUANTUMSAFE_API` to your Render API URL.
+- **Frontend → Vercel:** set Root Directory to `frontend/`; point
+  `frontend/config.js` at your Render API URL.
 - **Database → Render Postgres** (provisioned by `render.yaml`).
 
 ---
@@ -502,7 +488,7 @@ Quantamn-Safe/
 │   └── cli.py            #   argparse entry point
 ├── backend/              # Flask REST API
 │   ├── app.py  config.py  extensions.py  models.py
-│   ├── auth.py  api.py  billing.py  scanner_service.py
+│   ├── auth.py  api.py  scanner_service.py
 │   ├── requirements.txt   smoke_test.py
 ├── frontend/             # static dashboard (no build step)
 │   ├── index.html  login.html  dashboard.html  scan.html  migration.html

@@ -22,10 +22,10 @@ All notable changes to QuantumSafe are documented here. This project follows
 - **False-positive controls:** inline `# quantumsafe: ignore` suppression and
   `--exclude` glob patterns.
 - **Backend:** Flask REST API (auth, scans, history, overview, migration plan,
-  exports), JWT + bcrypt, hashed API keys, Stripe billing, Pro email alerts,
-  rate limiting, CORS lockdown.
+  exports), JWT + bcrypt, hashed API keys, email alerts, rate limiting,
+  CORS lockdown. Free, no paywall.
 - **Dashboard:** dark Bloomberg-style UI; landing page with an in-browser live
-  scanner; auth, overview, scans, findings, migration, settings, billing.
+  scanner; auth, overview, scans, findings, migration, settings.
 - **Ecosystem:** reusable GitHub Action + code-scanning workflow, pre-commit hook.
 - **Ops:** Docker + docker-compose, Render blueprint, Vercel config.
 - **Legal/compliance:** Privacy Policy, Terms of Service, signup consent,

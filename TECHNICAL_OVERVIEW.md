@@ -168,7 +168,7 @@ This closes the loop: `quantum/` is the attack, the scanner is the detection,
               ┌───────────┴───────────┐
               ▼                       ▼
        quantumsafe CLI         Flask backend (backend/)
-       (terminal/JSON/HTML)    REST API + SQLAlchemy + JWT + Stripe
+       (terminal/JSON/HTML)    REST API + SQLAlchemy + JWT
                                        │
                                        ▼
                             Static dashboard (frontend/)

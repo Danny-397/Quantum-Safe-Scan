@@ -13,7 +13,6 @@ import secrets
 
 import bcrypt
 
-from config import PLAN_FREE
 from extensions import db
 
 
@@ -66,12 +65,9 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(255), unique=True, nullable=False, index=True)
     password_hash = db.Column(db.String(255), nullable=False)
-    plan = db.Column(db.String(20), nullable=False, default=PLAN_FREE)
 
     api_key_hash = db.Column(db.String(64), unique=True, nullable=True, index=True)
     api_key_prefix = db.Column(db.String(32), nullable=True)
-
-    stripe_customer_id = db.Column(db.String(255), nullable=True)
 
     email_verified = db.Column(db.Boolean, nullable=False, default=False)
     verification_token = db.Column(db.String(64), nullable=True, index=True)
@@ -90,7 +86,6 @@ class User(db.Model):
         return {
             "id": self.id,
             "email": self.email,
-            "plan": self.plan,
             "email_verified": self.email_verified,
             "api_key_prefix": self.api_key_prefix,
             "has_api_key": self.api_key_hash is not None,

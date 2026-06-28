@@ -18,14 +18,6 @@ def _normalize_db_url(url: str) -> str:
     return url
 
 
-# Plan definitions used across the API.
-PLAN_FREE = "free"
-PLAN_PRO = "pro"
-PLAN_TEAM = "team"
-
-FREE_MONTHLY_SCAN_LIMIT = 3
-
-
 class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-change-me")
     JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY", SECRET_KEY)
@@ -44,12 +36,6 @@ class Config:
     RATELIMIT_STORAGE_URI = os.environ.get("RATELIMIT_STORAGE_URI", "memory://")
     RATELIMIT_DEFAULT = os.environ.get("RATELIMIT_DEFAULT", "200 per hour")
 
-    # Stripe
-    STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "")
-    STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
-    STRIPE_PRO_PRICE_ID = os.environ.get("STRIPE_PRO_PRICE_ID", "")
-    STRIPE_TEAM_PRICE_ID = os.environ.get("STRIPE_TEAM_PRICE_ID", "")
-
     # Mail (email verification)
     MAIL_SERVER = os.environ.get("MAIL_SERVER", "")
     MAIL_PORT = int(os.environ.get("MAIL_PORT", "587"))
@@ -58,6 +44,6 @@ class Config:
     MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD", "")
     MAIL_DEFAULT_SENDER = os.environ.get("MAIL_DEFAULT_SENDER", MAIL_USERNAME or "no-reply@quantumsafe.dev")
 
-    # Public URLs used to build links in emails / Stripe redirects.
+    # Public URLs used to build links in emails.
     DASHBOARD_URL = os.environ.get("DASHBOARD_URL", FRONTEND_ORIGIN.split(",")[0])
     API_URL = os.environ.get("API_URL", "http://localhost:5000")

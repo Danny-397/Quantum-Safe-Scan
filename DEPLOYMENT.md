@@ -4,11 +4,10 @@ This guide takes you from the repo to a live, clickable demo:
 
 - **Backend API** → Render (Flask + Postgres)
 - **Frontend dashboard** → Vercel (static)
-- **Payments** → Stripe (optional; test mode is fine)
 - **Demo data** → a seed script so the dashboard looks populated
 
-Estimated time: ~30–45 minutes. You need free accounts on Render, Vercel, and
-(optionally) Stripe.
+Estimated time: ~30 minutes. You need free accounts on Render and Vercel.
+QuantumSafe is free with no payments, so there's nothing billing-related to set up.
 
 ---
 
@@ -24,7 +23,7 @@ Estimated time: ~30–45 minutes. You need free accounts on Render, Vercel, and
    - `FRONTEND_ORIGIN` and `DASHBOARD_URL` → your Vercel URL (see step 2; you can
      come back and set these after Vercel is live)
    - `API_URL` → this Render service's URL (e.g. `https://quantumsafe-api.onrender.com`)
-   - Stripe + Mail vars → optional, see steps 3–4
+   - Mail vars → optional (for verification/alert emails; without them, emails log to the server)
 4. Wait for the first deploy, then check `https://<your-api>.onrender.com/health`
    → should return `{"status":"ok"}`.
 
@@ -44,29 +43,14 @@ Estimated time: ~30–45 minutes. You need free accounts on Render, Vercel, and
 4. Go back to Render and set `FRONTEND_ORIGIN` and `DASHBOARD_URL` to your Vercel
    URL (this is what the API's CORS allows). Redeploy the API.
 
-## 3. Stripe (optional — only to take payments)
 
-1. In the [Stripe Dashboard](https://dashboard.stripe.com) (Test mode):
-   - **Products** → create **Pro** ($19/mo recurring) and **Team** ($49/mo
-     recurring). Copy each **price ID** (`price_…`).
-   - **Developers → API keys** → copy the **Secret key** (`sk_test_…`).
-   - **Developers → Webhooks** → **Add endpoint**:
-     `https://<your-api>.onrender.com/api/v1/billing/webhook`, subscribe to
-     `checkout.session.completed`, `customer.subscription.updated`,
-     `customer.subscription.deleted`. Copy the **signing secret** (`whsec_…`).
-2. Set on Render: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`,
-   `STRIPE_PRO_PRICE_ID`, `STRIPE_TEAM_PRICE_ID`. Redeploy.
-
-Without these, billing endpoints return a clean "not configured" (503) and the
-rest of the app works fine.
-
-## 4. Email (optional — verification + alerts)
+## 3. Email (optional — verification + alerts)
 
 Set `MAIL_SERVER`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`,
 `MAIL_DEFAULT_SENDER` on Render (e.g. Gmail with an App Password). Without these,
 verification/reset/alert emails are logged instead of sent — fine for a demo.
 
-## 5. Seed the demo account (recommended for a portfolio demo)
+## 4. Seed the demo account (recommended for a portfolio demo)
 
 So visitors see a populated dashboard without signing up:
 

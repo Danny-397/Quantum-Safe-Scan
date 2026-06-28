@@ -16,7 +16,7 @@ import os
 import tempfile
 
 from app import create_app
-from config import PLAN_PRO, Config
+from config import Config
 from extensions import db
 from models import User, generate_api_key, hash_password
 from quantumsafe.reporter import build_report
@@ -73,7 +73,6 @@ def seed() -> None:
         user = User(
             email=DEMO_EMAIL,
             password_hash=hash_password(DEMO_PASSWORD),
-            plan=PLAN_PRO,
             email_verified=True,
             api_key_hash=key_hash,
             api_key_prefix=prefix,
