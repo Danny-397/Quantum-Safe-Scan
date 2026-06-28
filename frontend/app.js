@@ -151,8 +151,8 @@
   }
 
   function demoBand(score) {
-    if (score === 0) return ["No risk detected", "var(--accent)"];
-    if (score <= 30) return ["Low risk", "var(--accent)"];
+    if (score === 0) return ["No risk detected", "var(--safe)"];
+    if (score <= 30) return ["Low risk", "var(--safe)"];
     if (score <= 60) return ["Medium risk", "var(--warning)"];
     if (score <= 80) return ["High risk", "var(--danger)"];
     return ["Critical risk", "var(--danger)"];
@@ -467,7 +467,7 @@
       data: {
         labels,
         datasets: [{
-          data, borderColor: "#00FF88", backgroundColor: "rgba(0,255,136,.1)",
+          data, borderColor: "#34d6ff", backgroundColor: "rgba(52,214,255,.12)",
           fill: true, tension: 0.25, pointRadius: 2, borderWidth: 2,
         }],
       },
