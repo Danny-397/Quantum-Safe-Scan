@@ -84,14 +84,17 @@
     // Pre-warm the API to hide cold starts on hosted backends.
     fetch(API_BASE + "/health").catch(() => {});
 
-    // Copy-to-clipboard on the install snippet.
+    // Click the install command to copy it.
     const copyBtn = $("#copy-install");
     if (copyBtn) {
+      copyBtn.style.cursor = "pointer";
+      copyBtn.title = "Click to copy";
       copyBtn.addEventListener("click", async () => {
         try {
           await navigator.clipboard.writeText("pip install quantumsafe");
-          copyBtn.textContent = "Copied!";
-          setTimeout(() => (copyBtn.textContent = "Copy"), 1500);
+          const orig = copyBtn.textContent;
+          copyBtn.textContent = "copied ✓";
+          setTimeout(() => (copyBtn.textContent = orig), 1200);
         } catch (_) { /* clipboard may be blocked */ }
       });
     }
