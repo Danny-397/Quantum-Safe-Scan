@@ -173,6 +173,31 @@
     demoAnim = requestAnimationFrame(step);
   }
 
+  // ---- Score explainer (shared) ----
+  const BAND_MEANING = {
+    Low: "good quantum hygiene — little to migrate",
+    Medium: "plan a migration",
+    High: "prioritize migration",
+    Critical: "immediate action required",
+  };
+  function scaleHTML(score) {
+    const x = Math.max(0, Math.min(100, Number(score) || 0));
+    return `<div class="scale"><div class="scale-bar">
+      <div class="scale-track"><span class="seg s-low" style="width:30%"></span><span class="seg s-med" style="width:30%"></span><span class="seg s-high" style="width:20%"></span><span class="seg s-crit" style="width:20%"></span></div>
+      <span class="scale-marker" style="left:${x}%"></span></div>
+      <div class="scale-legend"><span class="lg-low">0–30 Low</span><span class="lg-med">31–60 Medium</span><span class="lg-high">61–80 High</span><span class="lg-crit">81–100 Critical</span></div></div>`;
+  }
+  function renderScore(ids, score, band) {
+    const s = $(ids.score);
+    if (s) { s.innerHTML = `${score}<span class="score-unit">/100</span>`; s.className = "score-big mono band-" + band; }
+    const b = $(ids.band);
+    if (b) { b.innerHTML = `<span class="band-${band}">${band} risk</span>`; b.className = "score-band"; }
+    const m = $(ids.meaning);
+    if (m) m.textContent = BAND_MEANING[band] || "";
+    const sc = $(ids.scale);
+    if (sc) sc.innerHTML = scaleHTML(score);
+  }
+
   function paintDemo(findings, counts, score, emptyMsg) {
     const [bandText, color] = demoBand(score);
     animateScore(score);
@@ -436,11 +461,8 @@
   async function loadOverview() {
     try {
       const d = await api("/api/v1/overview");
-      $("#ov-score").textContent = d.latest_score;
-      const band = $("#ov-band");
-      band.textContent = d.latest_band + " risk";
-      band.className = "score-band band-" + d.latest_band;
-      $("#ov-score").className = "score-big mono band-" + d.latest_band;
+      renderScore({ score: "#ov-score", band: "#ov-band", meaning: "#ov-meaning", scale: "#ov-scale" },
+                  d.latest_score, d.latest_band);
       $("#ov-total").textContent = d.total_scans;
       $("#ov-high").textContent = d.findings.high;
       $("#ov-med").textContent = d.findings.medium;
@@ -603,10 +625,8 @@
 
     try {
       const scan = (await api("/api/v1/scans/" + id)).scan;
-      $("#sd-score").textContent = scan.risk_score;
-      $("#sd-score").className = "score-big mono band-" + scan.risk_band;
-      $("#sd-band").textContent = scan.risk_band + " risk";
-      $("#sd-band").className = "score-band band-" + scan.risk_band;
+      renderScore({ score: "#sd-score", band: "#sd-band", meaning: "#sd-meaning", scale: "#sd-scale" },
+                  scan.risk_score, scan.risk_band);
       $("#sd-target").textContent = scan.repo_url;
       $("#sd-date").textContent = fmtDate(scan.created_at);
       $("#sd-high").textContent = scan.summary.high;

@@ -85,9 +85,15 @@
         </div>
         <div class="demo-right">
           <div class="demo-score-card">
+            <h3 style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Quantum Risk Score</h3>
             <div class="demo-score mono" id="demo-score">0</div>
-            <div class="demo-band" id="demo-band">No code scanned</div>
+            <div class="muted mono" style="font-size:11px;margin-top:2px;">out of 100</div>
+            <div class="demo-band" id="demo-band" style="margin-top:6px;">No code scanned</div>
             <div class="demo-bar"><div class="demo-bar-fill" id="demo-bar"></div></div>
+            <div class="scale-legend" style="margin-top:9px;">
+              <span class="lg-low">0–30 Low</span><span class="lg-med">31–60 Med</span>
+              <span class="lg-high">61–80 High</span><span class="lg-crit">81–100 Crit</span>
+            </div>
             <div class="pill-row" style="justify-content:center;margin-top:14px;">
               <span class="high">HIGH <b id="demo-high">0</b></span>
               <span class="medium">MED <b id="demo-med">0</b></span>

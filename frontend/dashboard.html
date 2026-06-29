@@ -32,12 +32,20 @@
       <!-- OVERVIEW -->
       <section class="view" id="view-overview">
         <div class="page-head"><h1>Overview</h1></div>
-        <div class="grid grid-4">
-          <div class="card score-card">
+        <div class="card score-explainer score-card">
+          <div>
             <h3>Quantum Risk Score</h3>
             <div class="score-big mono" id="ov-score">—</div>
             <div class="score-band" id="ov-band"></div>
+            <div class="score-meaning" id="ov-meaning"></div>
           </div>
+          <div>
+            <div id="ov-scale"></div>
+            <p class="hint">A 0–100 score for your latest scan. Higher means more cryptography in
+              your code that a quantum computer could break.</p>
+          </div>
+        </div>
+        <div class="grid grid-3" style="margin-top:14px;">
           <div class="card"><h3>Total Scans</h3><div class="stat" id="ov-total">—</div></div>
           <div class="card"><h3>Findings</h3>
             <div class="pill-row" style="margin-top:8px;">
