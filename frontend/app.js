@@ -42,6 +42,27 @@
   }
   function hideMsg(el) { if (el) el.style.display = "none"; }
 
+  // Put a button into a loading state with animated dots, and restore it.
+  function setLoading(btn, on, label) {
+    if (!btn) return;
+    if (on) {
+      if (btn.dataset.loading === "1") return;
+      btn.dataset.loading = "1";
+      btn.dataset.html = btn.innerHTML;
+      btn.disabled = true;
+      btn.setAttribute("aria-busy", "true");
+      btn.innerHTML = (label ? `<span>${label}</span>` : "") +
+        `<span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>`;
+    } else {
+      if (btn.dataset.loading !== "1") return;
+      btn.disabled = false;
+      btn.removeAttribute("aria-busy");
+      btn.innerHTML = btn.dataset.html || btn.innerHTML;
+      delete btn.dataset.loading;
+      delete btn.dataset.html;
+    }
+  }
+
   // ----- API wrapper --------------------------------------------------------
   async function api(path, opts = {}) {
     const headers = opts.headers || {};
@@ -247,7 +268,7 @@
     if (!input || !input.value.trim()) return;
     const btn = $("#demo-run");
     const engine = $("#demo-engine");
-    if (btn) { btn.disabled = true; btn.textContent = "Scanning…"; }
+    setLoading(btn, true, "Scanning");
     if (engine) engine.textContent = "Scanning with the QuantumSafe engine…";
     try {
       const d = await api("/api/v1/demo-scan", {
@@ -264,7 +285,7 @@
       renderDemo();
       if (engine) engine.textContent = "Full engine unavailable right now — showing the in-browser preview.";
     } finally {
-      if (btn) { btn.disabled = false; btn.textContent = "Run full engine"; }
+      setLoading(btn, false);
     }
   }
 
@@ -322,6 +343,8 @@
 
     forms.login && forms.login.addEventListener("submit", async (e) => {
       e.preventDefault();
+      const b = forms.login.querySelector('button[type="submit"]');
+      setLoading(b, true, "Signing in");
       try {
         const d = await api("/api/v1/auth/login", {
           noAuth: true, noRedirect: true,
@@ -329,7 +352,7 @@
         });
         setToken(d.token);
         location.href = "dashboard.html";
-      } catch (err) { showMsg(msg, err.message); }
+      } catch (err) { setLoading(b, false); showMsg(msg, err.message); }
     });
 
     forms.register && forms.register.addEventListener("submit", async (e) => {
@@ -339,6 +362,8 @@
         showMsg(msg, "Please agree to the Terms and Privacy Policy to continue.");
         return;
       }
+      const b = forms.register.querySelector('button[type="submit"]');
+      setLoading(b, true, "Creating account");
       try {
         const d = await api("/api/v1/auth/register", {
           noAuth: true, noRedirect: true,
@@ -350,21 +375,26 @@
         });
         setToken(d.token);
         location.href = "dashboard.html";
-      } catch (err) { showMsg(msg, err.message); }
+      } catch (err) { setLoading(b, false); showMsg(msg, err.message); }
     });
 
     forms.forgot && forms.forgot.addEventListener("submit", async (e) => {
       e.preventDefault();
+      const b = forms.forgot.querySelector('button[type="submit"]');
+      setLoading(b, true, "Sending");
       try {
         const d = await api("/api/v1/auth/forgot", {
           noAuth: true, noRedirect: true, json: { email: forms.forgot.email.value },
         });
         showMsg(msg, d.message, "success");
       } catch (err) { showMsg(msg, err.message); }
+      finally { setLoading(b, false); }
     });
 
     forms.reset && forms.reset.addEventListener("submit", async (e) => {
       e.preventDefault();
+      const b = forms.reset.querySelector('button[type="submit"]');
+      setLoading(b, true, "Updating");
       try {
         const d = await api("/api/v1/auth/reset", {
           noAuth: true, noRedirect: true,
@@ -372,7 +402,7 @@
         });
         showMsg(msg, d.message + " Redirecting…", "success");
         setTimeout(() => (location.href = "login.html"), 1500);
-      } catch (err) { showMsg(msg, err.message); }
+      } catch (err) { setLoading(b, false); showMsg(msg, err.message); }
     });
   }
 
@@ -597,7 +627,8 @@
     const file = $("#scan-file").files[0];
     const btn = $("#btn-run-scan");
     if (!repo && !file) { showMsg(msg, "Provide a GitHub URL or a .zip file."); return; }
-    btn.disabled = true; btn.textContent = "Scanning…";
+    setLoading(btn, true, "Scanning");
+    showMsg(msg, "Scanning… cloning and analyzing your code. This can take up to a minute.", "success");
     try {
       let res;
       if (file) {
@@ -610,8 +641,7 @@
       location.href = "scan.html?id=" + res.scan_id;
     } catch (err) {
       showMsg(msg, err.message);
-    } finally {
-      btn.disabled = false; btn.textContent = "Run Scan";
+      setLoading(btn, false);
     }
   }
 
