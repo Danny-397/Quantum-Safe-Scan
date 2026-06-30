@@ -1,0 +1,54 @@
+QuantumSafe — System Architecture
+=================================================================================
+
+  ENTRY POINTS                          SHARED DETECTION ENGINE (cli/ = quantumsafe)
+  ------------                          --------------------------------------------
+
+   CLI  ────────────┐
+   (pip install     │
+    quantumsafe)    │     ┌─────────┐   ┌────────┐   ┌─────────────┐   ┌──────────┐
+                    ├───► │ scanner │─► │ scorer │─► │ recommender │─► │ reporter │
+   API  ────────────┤     │ AST +   │   │ 0–100  │   │  NIST /     │   │ json/html│
+   (Flask backend/) │     │ regex   │   │ + band │   │  FIPS map   │   │ sarif/   │
+                    │     └─────────┘   └────────┘   └─────────────┘   │ cbom/svg │
+   Dashboard ───────┘          │                                       └──────────┘
+   (frontend/,                 │
+    static site)               ▼
+                         ┌───────────┐
+                         │  Findings │  (file, line, family, severity, reason)
+                         └───────────┘
+                               │
+                               ▼
+                         ┌───────────┐         Persisted for authenticated scans:
+                         │  Database │  ◄────   users · scans · findings
+                         └───────────┘         (SQLite dev / PostgreSQL prod)
+
+
+  WHY / WHAT companions (runnable, NOT on the request path)
+  --------------------------------------------------------
+
+         Quantum Module  (quantum/)               Post-Quantum Module  (pqc/)
+         "why is it vulnerable?"                   "what do I replace it with?"
+         ┌───────────────────────┐                ┌────────────────────────────┐
+         │ shor.py   breaks RSA   │                │ lwe_kem.py  quantum-safe KEM│
+         │ grover.py weakens AES  │                │ benchmark.py sizes vs RSA / │
+         │ resources.py qubit cost│                │              ML-KEM         │
+         └───────────────────────┘                └────────────────────────────┘
+
+
+  Condensed pipeline
+  ------------------
+
+   CLI ─┐
+   API ─┼─► Scanner Engine ─► Risk Engine ─► Recommender ─► Export Engine ─► Dashboard
+   UI  ─┘          │
+                   ├─► Quantum Module (Shor / Grover)   ← justifies the risk ratings
+                   └─► Post-Quantum Module (LWE / Kyber) ← implements the fix
+
+
+  Deployment
+  ----------
+
+   Vercel (frontend/)  ──HTTPS/CORS──►  Render (backend/ Flask)  ──►  Render Postgres
+   PyPI (quantumsafe CLI)  ──optional sync──►  /api/v1/scan/import
+=================================================================================

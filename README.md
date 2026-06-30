@@ -3,116 +3,103 @@
 [![CI](https://github.com/Danny-397/Quantamn-Safe/actions/workflows/ci.yml/badge.svg)](https://github.com/Danny-397/Quantamn-Safe/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/python-3.9%2B-blue)
 ![License: MIT](https://img.shields.io/badge/license-MIT-green)
+![Standards](https://img.shields.io/badge/NIST-FIPS%20203%2F204%2F205-9d7bff)
 
-**Find your quantum vulnerabilities before attackers do.**
+**A post-quantum security platform that demonstrates the quantum attack, detects
+the vulnerable cryptography in your code, and implements the quantum-safe fix.**
 
-QuantumSafe is a post-quantum security platform that covers the full arc — the
-attack, the detection, and the fix:
+QuantumSafe scans code across 11 languages for the cryptography that quantum
+computers will break (RSA, ECC, Diffie-Hellman) or weaken (AES-128, SHA-256),
+scores the risk 0–100, and maps every finding to its NIST FIPS 203/204/205
+replacement — backed by a real Qiskit implementation of Shor's and Grover's
+algorithms and a from-scratch lattice (LWE) key-encapsulation mechanism.
 
-1. **The attack** — a **quantum-computing module** ([`quantum/`](quantum/)) that
-   *implements the real attacks*: **Shor's** and **Grover's** algorithms in
-   Qiskit, run on a quantum simulator (Shor factors a number and reconstructs an
-   RSA key).
-2. **The detection** — a **static-analysis engine** that scans codebases across
-   11 languages for cryptography quantum computers will break, scores the risk,
-   and generates a NIST-aligned migration plan. Measured at **100% precision/
-   recall** on a labeled [benchmark](benchmark/).
-3. **The fix** — a **post-quantum module** ([`pqc/`](pqc/)) that implements the
-   recommended quantum-safe replacement from scratch: a lattice-based (LWE) key
-   exchange, the math behind CRYSTALS-Kyber / ML-KEM.
-
-So it doesn't just *name* the problem — it demonstrates the attack, finds the
-vulnerable code, and runs the solution.
-
-It ships as three parts that share **one** detection engine:
-
-- A **free CLI** (`pip install quantumsafe`) that scans local directories or
-  public GitHub repos and prints/exports findings.
-- A **Flask REST API** that powers the dashboard, ingests scans, and handles
-  authentication.
-- A **dark, Bloomberg-terminal-style web dashboard** with scan history,
-  findings, migration plans, and exports. **Free — no paywall.**
-
-> ⚠️ **Disclaimer:** QuantumSafe is a security-awareness tool. It uses static
-> pattern + AST analysis and is **not** a substitute for a professional
+> ⚠️ **Disclaimer.** QuantumSafe is a security-awareness and triage tool. It uses
+> static pattern + AST analysis and is **not** a substitute for a professional
 > cryptographic audit. Findings are heuristic and may include false
 > positives/negatives.
 
 ---
 
-## What this project demonstrates
+## The three layers
 
-QuantumSafe is a full, working product built end to end — not a tutorial clone.
-It was built to show breadth and depth across the stack:
+QuantumSafe covers the full arc of the post-quantum problem — not just naming it,
+but **executing** the attack, **finding** the vulnerable code, and **running** the
+solution:
 
-- **Quantum computing:** real implementations of **Shor's algorithm** (quantum
-  order-finding + phase estimation, which factors a number and recovers an RSA
-  key) and **Grover's algorithm** in **Qiskit**, run on a quantum simulator —
-  see [`quantum/`](quantum/). Not described — executed.
-- **Post-quantum cryptography from scratch:** a lattice-based (LWE) key
-  encapsulation mechanism — the foundation of NIST's ML-KEM/Kyber — implemented
-  and verified over 200+ key exchanges with zero failures ([`pqc/`](pqc/)).
-- **Program analysis:** a real detection engine using Python's `ast` module
-  (import + call resolution) alongside a multi-language regex engine, with
-  per-line/per-family de-duplication so findings don't double-count.
-- **Applied cryptography knowledge:** maps each finding to *why* it's quantum-
-  vulnerable (Shor's vs. Grover's algorithm) and to the correct NIST PQC
-  replacement (FIPS 203/204/205).
-- **Backend engineering:** a Flask REST API with SQLAlchemy, JWT + bcrypt auth,
-  hashed API keys, rate limiting, and CORS lockdown.
-- **Frontend engineering:** a dependency-light dashboard (vanilla JS) with a
-  consistent data contract against the API, charts, and exports.
-- **Measured, not asserted:** a labeled [benchmark](benchmark/) (with comment and
-  word-boundary decoys) reports the detector's **precision/recall**, and the
-  result is enforced by the test suite.
-- **Software engineering practice:** one shared detection package powering both
-  the CLI and the API, 55 automated tests, CI, and deploy configs for a real
-  multi-service deployment.
+| Layer | Module | What it does |
+|-------|--------|--------------|
+| **1. Attack** | [`quantum/`](quantum/) | Shor's and Grover's algorithms in **Qiskit**, run on a quantum simulator. Shor factors a number and reconstructs an RSA key — the concrete reason RSA/ECC are rated HIGH. |
+| **2. Detection** | [`cli/`](cli/) | A hybrid **AST + regex** static-analysis engine over 11 languages that scores risk and produces a NIST-aligned migration plan. **100% precision/recall** on a labeled [benchmark](benchmark/). |
+| **3. Fix** | [`pqc/`](pqc/) | A from-scratch **lattice (LWE) key-encapsulation mechanism** — the math behind CRYSTALS-Kyber / ML-KEM — so the recommended fix is runnable and provable. |
 
-See [TECHNICAL_OVERVIEW.md](TECHNICAL_OVERVIEW.md) for the design decisions, the
-quantum-threat background, and an honest list of limitations.
+The detection layer ships through three surfaces that share **one** engine:
+
+- A **free CLI** (`pip install quantumsafe`) — scan local dirs or public GitHub
+  repos; export JSON / HTML / SARIF / CBOM / SVG badge.
+- A **Flask REST API** — powers the dashboard, ingests scans, handles auth.
+- A **dark, terminal-style web dashboard** — scan history, findings, migration
+  plans, and exports. **Free, no paywall.**
 
 ---
 
-## Table of contents
+## Why it matters
 
-1. [What it detects](#what-it-detects)
-2. [Quantum Risk Score](#quantum-risk-score)
-3. [CLI: install & usage](#cli-install--usage)
-4. [API documentation](#api-documentation)
-5. [Dashboard](#dashboard)
-6. [Local development setup](#local-development-setup)
-7. [Environment variables](#environment-variables)
-8. [Deployment](#deployment)
-9. [Project structure](#project-structure)
-10. [NIST PQC references](#nist-pqc-references)
-
----
-
-## The threat — why this matters now
-
-RSA-2048 and elliptic-curve crypto secure almost everything: HTTPS/TLS,
-certificates, SSH, code signing, VPNs. **Shor's algorithm breaks all of it** —
-the math is settled; what's missing is hardware (it needs millions of
+RSA-2048 and elliptic-curve crypto secure almost everything — HTTPS/TLS,
+certificates, SSH, code signing, VPNs. **Shor's algorithm breaks all of it.** The
+math is settled; only the hardware is missing (RSA-2048 needs millions of
 error-corrected qubits, and today's machines have a few hundred noisy ones).
 
-That gap is the whole point, not a reason to wait:
+That gap is the reason to act now, not later:
 
-- **"Harvest now, decrypt later":** an attacker can record your encrypted traffic
+- **"Harvest now, decrypt later":** an adversary can record encrypted traffic
   today and decrypt it once the hardware exists. Anything that must stay secret
   for 5–15 years is effectively at risk *now*.
-- **Migration is slow:** swapping cryptography across a large codebase takes years,
-  which is why NIST finalized the post-quantum standards (FIPS 203/204/205) in
-  2024 — so teams can start *before* the break is possible.
+- **Migration is slow:** swapping cryptography across a large codebase takes years
+  — which is why NIST finalized the post-quantum standards (FIPS 203/204/205) in
+  2024.
 
-QuantumSafe exists to make that migration tractable: **find** the vulnerable
-crypto (scanner), **understand** why it's vulnerable (Shor/Grover demos), and
-**adopt** the quantum-safe replacement (LWE/Kyber implementation).
+QuantumSafe makes that migration tractable: **find** the vulnerable crypto,
+**understand** why it's vulnerable, and **adopt** the quantum-safe replacement.
+
+---
+
+## Documentation
+
+| Document | What's in it |
+|----------|--------------|
+| [docs/WHITEPAPER.md](docs/WHITEPAPER.md) | Full technical whitepaper: threat model, design, scoring, evaluation, limitations, future work |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Components, the CLI→API→Scanner→Risk→Export pipeline, data flow, deployment topology |
+| [docs/architecture_diagram.txt](docs/architecture_diagram.txt) | One-screen ASCII system diagram |
+| [docs/NIST_MAPPING.md](docs/NIST_MAPPING.md) | Every detected family → its NIST PQC replacement, with the reasoning |
+| [docs/CVE_MAPPING.md](docs/CVE_MAPPING.md) | Findings mapped to general vulnerability classes (no invented CVEs) |
+| [benchmark/RESULTS.md](benchmark/RESULTS.md) | Precision/recall/F1, risk distribution, reproducible charts |
+| [TECHNICAL_OVERVIEW.md](TECHNICAL_OVERVIEW.md) | Design decisions, quantum-threat background, honest limitations |
+
+---
+
+## Key features
+
+- **11-language detection** — Python (AST-aware), JavaScript/TypeScript, Java, Go,
+  Ruby, C#, PHP, Rust, C/C++, Kotlin, Swift.
+- **0–100 Quantum Risk Score** computed from real findings (never hardcoded), with
+  Low/Medium/High/Critical bands.
+- **NIST-aligned migration plan** — each finding mapped to ML-KEM/ML-DSA/SHA-3/
+  AES-256 with the relevant FIPS standard and a complexity estimate.
+- **Six export formats** — terminal, JSON, HTML, **SARIF** (GitHub code scanning),
+  **CycloneDX CBOM**, and an embeddable **SVG risk badge**.
+- **Real quantum demos** — Shor + Grover in Qiskit, plus circuit resource
+  estimates.
+- **Real post-quantum crypto** — an LWE KEM verified over 200+ key exchanges with
+  zero failures.
+- **Measured, not asserted** — a labeled benchmark with adversarial decoys, plus an
+  empirical study (88% of real repos affected).
+- **Production practice** — one shared engine for CLI + API, **65 automated
+  tests**, CI, Docker, a reusable GitHub Action, and multi-service deploy configs.
+
+---
 
 ## What it detects
-
-Across **Python, JavaScript/TypeScript, Java, Go, Ruby, C#, PHP, Rust, C/C++,
-Kotlin, and Swift** (Python also via AST for precision):
 
 | Risk | Algorithms |
 |------|------------|
@@ -130,7 +117,7 @@ vulnerable, and a NIST-approved replacement:
 
 ## Quantum Risk Score
 
-A 0–100 score computed **from real findings** (never hardcoded):
+A 0–100 score computed **from real findings**:
 
 ```
 score = min(100, 15*HIGH + 5*MEDIUM + 1*LOW)
@@ -163,60 +150,52 @@ python benchmark/evaluate.py
 
 `evaluate.py` prints the exact false positives/negatives so the numbers are
 auditable, and the thresholds are enforced by `tests/test_benchmark.py`. Honest
-limits (inline comments, string literals, regex-only for non-Python) are
-documented in [benchmark/README.md](benchmark/README.md) — this is a regression
-benchmark, not a claim of perfection on arbitrary code.
+limits are documented in [benchmark/README.md](benchmark/README.md) and
+[benchmark/RESULTS.md](benchmark/RESULTS.md) — this is a regression benchmark, not
+a claim of perfection on arbitrary code.
 
-## Empirical study — how widespread is the problem?
+### Empirical study — how widespread is the problem?
 
-I ran the scanner over 8 widely-used open-source projects ([`study/`](study/),
-reproducible via `python study/run_study.py`):
+Scanning 8 widely-used open-source projects ([`study/`](study/), reproducible via
+`python study/run_study.py`):
 
 - **88%** contained at least one **HIGH-risk** (Shor-breakable) cryptographic usage.
 - Average Quantum Risk Score: **72.9 / 100**.
-- Most common quantum-vulnerable primitives: RSA, ECC, legacy TLS, MD5/SHA-1.
 
-Full results, per-project table, chart, and honest caveats (static analysis over
-whole repos including tests; crypto libraries naturally score high) are in
-[study/REPORT.md](study/REPORT.md). The point: quantum-vulnerable crypto is
-pervasive even in well-maintained code — which is why automated detection matters
-as the migration begins.
+Full results and caveats: [study/REPORT.md](study/REPORT.md).
+
+---
 
 ## Quantum demonstrations (Shor & Grover)
 
-The [`quantum/`](quantum/) module runs the real algorithms on a quantum simulator:
-
 ```bash
 pip install -r quantum/requirements.txt
-python quantum/shor.py     # quantum order-finding factors N=15, then breaks a toy RSA key
-python quantum/grover.py   # recovers a hidden k-bit key in ~sqrt(2^k) steps
+python quantum/shor.py        # quantum order-finding factors N=15, then breaks a toy RSA key
+python quantum/grover.py      # recovers a hidden k-bit key in ~sqrt(2^k) steps
+python quantum/resources.py   # qubit count, circuit depth, gate counts vs. RSA-2048 estimates
 ```
 
 - **`shor.py`** uses quantum phase estimation over modular exponentiation to find
-  the order of `a mod N`, factors `N`, and reconstructs an RSA private key from
-  the factors — the concrete reason RSA/ECC are rated **HIGH**.
+  the order of `a mod N`, factors `N`, and reconstructs an RSA private key — the
+  concrete reason RSA/ECC are rated **HIGH**.
 - **`grover.py`** uses amplitude amplification to search a key space in ~√N
-  queries, halving effective key strength — the reason AES-128/SHA-256 are **LOW**
-  (keep the primitive, double the size).
+  queries, halving effective key strength — the reason AES-128/SHA-256 are **LOW**.
 
-Honest scope: these run at small scale (factoring 15), which is the genuine state
-of the art for end-to-end Shor — RSA-2048 needs millions of error-corrected
-qubits that don't exist yet. That gap is exactly why migrating *now* matters. See
-[quantum/README.md](quantum/README.md) for the math and the real-hardware path.
+Honest scope: these run at small scale (factoring 15), the genuine state of the art
+for end-to-end Shor. See [quantum/README.md](quantum/README.md).
 
 ## Post-quantum solution ([`pqc/`](pqc/))
-
-The scanner recommends Kyber/ML-KEM; this module implements its lattice (LWE)
-foundation from scratch and runs a real quantum-safe key exchange:
 
 ```bash
 pip install -r pqc/requirements.txt
 python pqc/lwe_kem.py     # Alice & Bob agree on a shared secret; an eavesdropper can't
+python pqc/benchmark.py   # measured latency + key/ciphertext sizes vs RSA & ML-KEM
 ```
 
-Why a quantum computer can't break it: LWE has **no periodic structure** for
-Shor's algorithm to exploit (unlike RSA/ECC). See [pqc/README.md](pqc/README.md)
-for the math and honest scope.
+Why a quantum computer can't break it: LWE has **no periodic structure** for Shor
+to exploit. See [pqc/README.md](pqc/README.md).
+
+---
 
 ## CLI: install & usage
 
@@ -270,16 +249,13 @@ quantumsafe version
 | `--no-sync` | Don't upload the result to your linked dashboard |
 
 After `quantumsafe auth --key <key> --api-url <your-api>`, every `quantumsafe scan`
-also uploads its report to your dashboard (`POST /api/v1/scan/import`), so terminal
-scans appear in your web history. Use `--no-sync` to keep a scan local.
+also uploads its report to your dashboard (`POST /api/v1/scan/import`). Use
+`--no-sync` to keep a scan local.
 
 **Suppressing a finding:** add `# quantumsafe: ignore` (any comment style) to the
-line. Useful for a known-safe, non-security use of an algorithm.
+line.
 
 ### Use in CI (GitHub Action)
-
-QuantumSafe ships a reusable action that scans and uploads results to your
-repo's **Security tab**:
 
 ```yaml
 - uses: Danny-397/Quantamn-Safe@main
@@ -311,14 +287,6 @@ POST /api/v1/auth/reset         { "token", "password" }   -> { message }
 GET  /api/v1/auth/me            (JWT)                      -> { user }
 ```
 
-Example:
-
-```bash
-curl -s http://localhost:5000/api/v1/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{"email":"you@example.com","password":"supersecret"}'
-```
-
 ### Scanning
 
 ```http
@@ -334,16 +302,9 @@ POST /api/v1/demo-scan          (public, rate-limited)  # landing-page live demo
 
 GET  /api/v1/scans?page=1&per_page=20   (JWT)  -> paginated list
 GET  /api/v1/scans/{id}                 (JWT)  -> scan + findings
-GET  /api/v1/scans/{id}/export?format=json|html|csv   (JWT)
+GET  /api/v1/scans/{id}/export?format=json|html|csv|sarif|cbom|svg   (JWT)
 GET  /api/v1/scans/{id}/migration       (JWT)  -> grouped migration plan
 GET  /api/v1/overview                   (JWT)  -> dashboard stats + trend
-```
-
-```bash
-# Scan a repo from the CLI key (the path the CLI uses under the hood)
-curl -s http://localhost:5000/api/v1/scan \
-  -H "X-API-Key: qs_live_xxx" -H "Content-Type: application/json" \
-  -d '{"repo_url":"https://github.com/pallets/flask"}'
 ```
 
 ### API key management
@@ -353,7 +314,9 @@ GET  /api/v1/user/apikey   (JWT)  -> { has_api_key, api_key_prefix }
 POST /api/v1/user/apikey   (JWT)  -> { api_key }   # full key shown ONCE
 ```
 
-All endpoints are rate-limited; CORS is restricted to `FRONTEND_ORIGIN`.
+All endpoints are rate-limited; CORS is restricted to `FRONTEND_ORIGIN`. GDPR-style
+endpoints (`/user/data` export, `/user/account` delete) let a user export or erase
+all of their data.
 
 ---
 
@@ -365,9 +328,10 @@ A static site (`frontend/`) — no build step. Pages:
 - **Auth** — login, register, forgot/reset password.
 - **Dashboard** — Overview (risk score, totals, trend chart, recent scans),
   Scans (paginated), Findings (filterable), Settings (API key + account).
-- **Scan detail** — full findings table, filter by risk, export JSON/HTML/CSV/SARIF/CBOM.
-- **Migration plan** — findings grouped by risk with NIST replacement,
-  standard reference, and estimated complexity.
+- **Scan detail** — full findings table, filter by risk, export JSON/HTML/CSV/SARIF/CBOM/SVG.
+- **Migration plan** — findings grouped by risk with NIST replacement, standard
+  reference, and estimated complexity.
+- **Research** — a public explainer of Shor/Grover/LWE/Kyber and the NIST standards.
 
 Point the dashboard at your API by editing one line in `frontend/config.js`:
 
@@ -414,12 +378,9 @@ docker compose up --build
 
 ### Tests
 
-Run the test suite (scanner, scorer, recommender, full API; uses an in-memory
-DB, no setup):
-
 ```bash
 pip install -r requirements-dev.txt
-pytest -q
+pytest -q                     # 65 tests; in-memory DB, no setup
 ```
 
 Seed a demo account so the dashboard is populated:
@@ -435,7 +396,7 @@ server log instead of being sent — so you can develop without SMTP.
 
 ## Environment variables
 
-See [`.env.example`](.env.example). Summary and where to get each:
+See [`.env.example`](.env.example).
 
 | Variable | Required | Where to get it |
 |----------|----------|-----------------|
@@ -456,15 +417,13 @@ See [`.env.example`](.env.example). Summary and where to get each:
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Danny-397/Quantamn-Safe)
 
-See **[DEPLOYMENT.md](DEPLOYMENT.md)** for a full step-by-step walkthrough
-(Render + Vercel + demo seeding). In short:
+See **[DEPLOYMENT.md](DEPLOYMENT.md)** for the full walkthrough. In short:
 
 - **CLI → PyPI:** `python -m build && twine upload dist/*`
 - **Backend → Render:** push the repo; Render reads [`render.yaml`](render.yaml)
   (web service + Postgres). Set the `sync: false` env vars in the dashboard.
 - **Frontend → Vercel:** set Root Directory to `frontend/`; point
   `frontend/config.js` at your Render API URL.
-- **Database → Render Postgres** (provisioned by `render.yaml`).
 
 ---
 
@@ -475,38 +434,45 @@ Quantamn-Safe/
 ├── quantum/              # REAL quantum computing (Qiskit): the attacks themselves
 │   ├── shor.py           #   Shor's algorithm — factors N, breaks RSA
 │   ├── grover.py         #   Grover's algorithm — key-search speedup
-│   └── README.md         #   the math + honest scope + real-hardware path
+│   ├── resources.py      #   qubit / depth / gate-count estimation
+│   └── README.md
 ├── pqc/                  # Post-quantum SOLUTION: lattice (LWE) crypto from scratch
 │   ├── lwe_kem.py        #   quantum-safe key encapsulation (the math behind Kyber)
+│   ├── benchmark.py      #   latency & sizes vs RSA / ML-KEM
 │   └── README.md
-├── benchmark/            # labeled precision/recall evaluation of the scanner
 ├── cli/                  # the `quantumsafe` package (CLI + shared engine)
 │   ├── scanner.py        #   AST + regex detection
 │   ├── scorer.py         #   risk score
 │   ├── recommender.py    #   NIST recommendations
-│   ├── reporter.py       #   terminal / JSON / HTML output
+│   ├── reporter.py       #   terminal / JSON / HTML / SARIF / CBOM / SVG output
 │   └── cli.py            #   argparse entry point
 ├── backend/              # Flask REST API
 │   ├── app.py  config.py  extensions.py  models.py
 │   ├── auth.py  api.py  scanner_service.py
-│   ├── requirements.txt   smoke_test.py
+│   └── requirements.txt
 ├── frontend/             # static dashboard (no build step)
 │   ├── index.html  login.html  dashboard.html  scan.html  migration.html
-│   ├── style.css  app.js
+│   ├── research.html  privacy.html  terms.html
+│   └── style.css  app.js  config.js
+├── benchmark/            # labeled precision/recall evaluation (+ graphs/)
+├── study/               # empirical scan over real open-source repos
+├── docs/                # whitepaper, architecture, NIST & vuln-class mappings
 ├── pyproject.toml        # packages cli/ as `quantumsafe`
-├── render.yaml  vercel.json  .env.example  README.md
+└── render.yaml  .env.example  README.md
 ```
 
 ---
 
 ## NIST PQC references
 
-- **FIPS 203** — Module-Lattice-Based Key-Encapsulation Mechanism (ML-KEM / CRYSTALS-Kyber)
-- **FIPS 204** — Module-Lattice-Based Digital Signature Algorithm (ML-DSA / CRYSTALS-Dilithium)
+- **FIPS 203** — Module-Lattice-Based Key-Encapsulation Mechanism (ML-KEM / Kyber)
+- **FIPS 204** — Module-Lattice-Based Digital Signature Algorithm (ML-DSA / Dilithium)
 - **FIPS 205** — Stateless Hash-Based Digital Signature Algorithm (SLH-DSA / SPHINCS+)
 - **NIST SP 800-52 Rev. 2** — TLS guidance
 - **NIST SP 800-131A Rev. 2** — transitioning cryptographic algorithms/key lengths
 - **NIST IR 8547** — transition to post-quantum cryptography standards
+
+Full reasoning per algorithm: [docs/NIST_MAPPING.md](docs/NIST_MAPPING.md).
 
 ---
 
