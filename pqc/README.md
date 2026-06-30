@@ -15,7 +15,8 @@ CRYSTALS-Kyber / **ML-KEM (NIST FIPS 203)**.
 
 ```bash
 pip install -r pqc/requirements.txt
-python pqc/lwe_kem.py     # a full quantum-safe key exchange: Alice & Bob agree on a secret
+python pqc/lwe_kem.py      # a full quantum-safe key exchange: Alice & Bob agree on a secret
+python pqc/benchmark.py    # measured keygen/encap/decap latency + key/ciphertext sizes vs RSA & ML-KEM
 ```
 
 ## How it works

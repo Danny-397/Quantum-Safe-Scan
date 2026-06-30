@@ -33,3 +33,11 @@ def test_shor_factors_15():
     factors = factor_15(verbose=False)
     assert factors is not None
     assert sorted(factors) == [3, 5]
+
+
+def test_resource_estimation_reports_real_costs():
+    from quantum.resources import estimate, grover_circuit, shor_circuit
+    s = estimate(shor_circuit())
+    g = estimate(grover_circuit())
+    assert s["qubits"] == 12 and s["depth"] > 0 and s["gates"] > 0
+    assert g["qubits"] == 4 and g["two_qubit_gates"] > 0

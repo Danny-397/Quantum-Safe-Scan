@@ -20,8 +20,9 @@ attack.
 
 ```bash
 pip install -r quantum/requirements.txt
-python quantum/shor.py      # factors N=15 via quantum order-finding, then breaks a toy RSA key
-python quantum/grover.py    # recovers a hidden k-bit key in ~sqrt(2^k) steps
+python quantum/shor.py        # factors N=15 via quantum order-finding, then breaks a toy RSA key
+python quantum/grover.py      # recovers a hidden k-bit key in ~sqrt(2^k) steps
+python quantum/resources.py   # qubit count, circuit depth, gate counts — vs. RSA-2048 estimates
 ```
 
 ## The math (so the demos aren't a black box)

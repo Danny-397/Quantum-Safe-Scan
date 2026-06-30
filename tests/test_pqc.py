@@ -36,3 +36,11 @@ def test_independent_encapsulations_differ():
     _, a = encapsulate(pk, rng)
     _, b = encapsulate(pk, rng)
     assert a != b
+
+
+def test_benchmark_reports_sizes_and_timing():
+    from pqc.benchmark import measure
+    m = measure()
+    assert m["pubkey_bytes"] > 0 and m["ciphertext_bytes"] > 0
+    assert m["shared_secret_bytes"] == 32
+    assert m["keygen_ms"] >= 0 and m["encap_ms"] >= 0

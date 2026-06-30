@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>QuantumSafe — Research: the quantum threat & post-quantum defense</title>
+<meta name="description" content="How Shor's and Grover's algorithms break classical cryptography, why lattice-based schemes (LWE / ML-KEM) resist them, and the NIST post-quantum standards — with references." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='2' fill='%2334d6ff'/></svg>" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="nav">
+    <a href="index.html" class="brand"><svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true"><defs><linearGradient id="qsg" x1="2" y1="2" x2="30" y2="30" gradientUnits="userSpaceOnUse"><stop stop-color="#34d6ff"/><stop offset="1" stop-color="#9d7bff"/></linearGradient></defs><path d="M16 2.5 27.5 7v8.2c0 7.6-5.4 12.4-11.5 14.3C9.9 27.6 4.5 22.8 4.5 15.2V7z" fill="rgba(52,214,255,.07)" stroke="url(#qsg)" stroke-width="1.8" stroke-linejoin="round"/><ellipse cx="16" cy="16" rx="8.2" ry="3.3" stroke="url(#qsg)" stroke-width="1.5" transform="rotate(45 16 16)"/><ellipse cx="16" cy="16" rx="8.2" ry="3.3" stroke="url(#qsg)" stroke-width="1.5" opacity=".5" transform="rotate(-45 16 16)"/><circle cx="16" cy="16" r="2.5" fill="url(#qsg)"/></svg> QuantumSafe</a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="index.html#detect">Detection</a>
+      <a href="login.html?mode=register" class="btn btn-sm btn-primary">Sign up free</a>
+    </nav>
+  </header>
+
+  <main class="legal">
+    <div class="eyebrow">// Research</div>
+    <h1>The quantum threat, and the math that defends against it</h1>
+    <p class="muted">Why a quantum computer breaks today's public-key cryptography, why lattice
+      schemes survive it, and how QuantumSafe implements both sides. Every algorithm below is
+      runnable in this repo.</p>
+
+    <h2>1. The threat model</h2>
+    <p>Public-key cryptography rests on problems that are hard for classical computers:
+      <strong>integer factorization</strong> (RSA) and the <strong>discrete logarithm</strong>
+      (Diffie-Hellman, elliptic curves). Two quantum algorithms change the picture:</p>
+    <ul>
+      <li><strong>Shor's algorithm</strong> solves factoring and discrete-log in polynomial
+        time — it <em>breaks</em> RSA, DH, and ECC outright, at any key size.</li>
+      <li><strong>Grover's algorithm</strong> gives a quadratic speedup for unstructured search,
+        halving the effective strength of symmetric keys and hash preimages — it <em>weakens</em>
+        but does not break them.</li>
+    </ul>
+    <p><strong>"Harvest now, decrypt later":</strong> an adversary can record encrypted traffic
+      today and decrypt it once a cryptographically-relevant quantum computer exists. For data
+      that must stay secret for years, the threat is effectively present now — which is why
+      migration is a present-day engineering problem, not a future one.</p>
+
+    <h2>2. Shor's algorithm (breaks RSA / ECC)</h2>
+    <p>Shor reduces factoring <code>N = p·q</code> to <strong>order-finding</strong>: the period
+      <code>r</code> of <code>f(x) = aˣ mod N</code>. Quantum phase estimation over a
+      modular-exponentiation operator, followed by an inverse Quantum Fourier Transform, yields a
+      measurement of <code>s/r</code>; continued fractions recover <code>r</code>. If <code>r</code>
+      is even and <code>a^(r/2) ≢ −1 (mod N)</code>, then <code>gcd(a^(r/2) ± 1, N)</code> are
+      non-trivial factors. With <code>p</code> and <code>q</code> the RSA private exponent
+      <code>d ≡ e⁻¹ (mod φ(N))</code> follows immediately.</p>
+    <p class="muted mono" style="font-size:13px;">Run it: <code>python quantum/shor.py</code> — factors N=15 and reconstructs an RSA key.
+      &nbsp;·&nbsp; <code>python quantum/resources.py</code> — qubit/depth/gate cost vs. RSA-2048 estimates.</p>
+
+    <h2>3. Grover's algorithm (weakens AES / hashes)</h2>
+    <p>Grover finds a marked item in an unstructured space of size <code>N</code> in
+      <code>≈ (π/4)√N</code> iterations via amplitude amplification (an oracle reflection plus a
+      diffuser). For a <code>k</code>-bit key, brute force drops from <code>2^k</code> to
+      <code>~2^(k/2)</code> — effective strength is halved. The fix is to double sizes:
+      <strong>AES-128 → AES-256</strong>, <strong>SHA-256 → SHA-384/512</strong>. AES-256 still
+      needs <code>~2^128</code> Grover iterations, which remains infeasible.</p>
+    <p class="muted mono" style="font-size:13px;">Run it: <code>python quantum/grover.py</code></p>
+
+    <h2>4. Learning With Errors — the post-quantum foundation</h2>
+    <p>Lattice schemes base security on the <strong>Learning With Errors (LWE)</strong> problem:
+      given <code>A</code> and <code>b = A·s + e (mod q)</code> with a small error <code>e</code>,
+      recover the secret <code>s</code>. This is provably as hard as worst-case lattice problems.
+      Crucially, LWE has <strong>no periodic / hidden-subgroup structure</strong> for Shor to
+      exploit, so the best known quantum attacks offer only modest speedups — it stays hard.</p>
+    <p class="muted mono" style="font-size:13px;">Run it: <code>python pqc/lwe_kem.py</code> — a full quantum-safe key exchange.
+      &nbsp;·&nbsp; <code>python pqc/benchmark.py</code> — sizes &amp; latency vs. RSA / ML-KEM.</p>
+
+    <h2>5. CRYSTALS-Kyber / ML-KEM and the NIST standards</h2>
+    <p><strong>ML-KEM</strong> (the standardized form of CRYSTALS-Kyber) is a Module-LWE
+      key-encapsulation mechanism: it adds ring structure for efficiency (fast NTT-based
+      multiplication) and a Fujisaki-Okamoto transform for chosen-ciphertext security. QuantumSafe's
+      <code>pqc/</code> module implements the underlying LWE construction to demonstrate the math.
+      In 2024 NIST finalized the first post-quantum standards:</p>
+    <ul>
+      <li><strong>FIPS 203</strong> — ML-KEM (key establishment), based on CRYSTALS-Kyber.</li>
+      <li><strong>FIPS 204</strong> — ML-DSA (signatures), based on CRYSTALS-Dilithium.</li>
+      <li><strong>FIPS 205</strong> — SLH-DSA (hash-based signatures), based on SPHINCS+.</li>
+    </ul>
+
+    <h2>References</h2>
+    <ul class="muted" style="font-size:14px;">
+      <li>P. Shor, "Polynomial-Time Algorithms for Prime Factorization and Discrete Logarithms on a Quantum Computer," SIAM J. Computing, 1997.</li>
+      <li>L. Grover, "A fast quantum mechanical algorithm for database search," STOC 1996.</li>
+      <li>O. Regev, "On lattices, learning with errors, random linear codes, and cryptography," J. ACM, 2009.</li>
+      <li>Bos et al., "CRYSTALS-Kyber: a CCA-secure module-lattice-based KEM," IEEE EuroS&amp;P 2018.</li>
+      <li>C. Gidney, M. Ekerå, "How to factor 2048-bit RSA integers in 8 hours using 20 million noisy qubits," Quantum, 2021.</li>
+      <li>NIST FIPS 203 / 204 / 205, Post-Quantum Cryptography Standards, 2024.</li>
+    </ul>
+  </main>
+
+  <footer class="footer wrap">
+    <div class="footer-links">
+      <a href="index.html">Home</a> · <a href="index.html#detect">Detection</a> ·
+      <a href="research.html">Research</a> · <a href="privacy.html">Privacy</a> ·
+      <a href="https://github.com/Danny-397/Quantamn-Safe">GitHub</a>
+    </div>
+    QuantumSafe is a security-awareness tool — not a substitute for a professional cryptographic audit.
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
