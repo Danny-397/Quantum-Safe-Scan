@@ -42,6 +42,16 @@
   }
   function hideMsg(el) { if (el) el.style.display = "none"; }
 
+  // Fill a table body with shimmering skeleton rows while data loads.
+  function skelRows(tbody, rows = 5, cols = 5) {
+    if (!tbody) return;
+    const cell = '<td><span class="skel w-80"></span></td>';
+    tbody.innerHTML = Array.from(
+      { length: rows },
+      () => `<tr aria-hidden="true">${cell.repeat(cols)}</tr>`
+    ).join("");
+  }
+
   // Put a button into a loading state with animated dots, and restore it.
   function setLoading(btn, on, label) {
     if (!btn) return;
@@ -178,7 +188,7 @@
     if (score === 0) return ["No risk detected", "var(--safe)"];
     if (score <= 30) return ["Low risk", "var(--safe)"];
     if (score <= 60) return ["Medium risk", "var(--warning)"];
-    if (score <= 80) return ["High risk", "var(--danger)"];
+    if (score <= 80) return ["High risk", "var(--high)"];
     return ["Critical risk", "var(--danger)"];
   }
 
@@ -250,7 +260,7 @@
           <span class="arrow">→</span>
           <span class="muted">${esc(f.rec)}</span>
         </div>`).join("")
-      : `<div class="low" style="padding:14px;">No quantum-vulnerable cryptography detected. 🎉</div>`;
+      : `<div class="low" style="padding:14px;">No quantum-vulnerable cryptography detected.</div>`;
   }
 
   // Instant, client-side preview (runs in the browser).
@@ -492,6 +502,7 @@
   }
 
   async function loadOverview() {
+    skelRows($("#ov-recent"), 4, 5);
     try {
       const d = await api("/api/v1/overview");
       renderScore({ score: "#ov-score", band: "#ov-band", meaning: "#ov-meaning", scale: "#ov-scale" },
@@ -508,7 +519,11 @@
         : `<tr><td colspan="5" class="empty">No scans yet. Click “+ New Scan”.</td></tr>`;
 
       drawTrend(d.trend);
-    } catch (err) { console.error(err); }
+    } catch (err) {
+      console.error(err);
+      const b = $("#ov-recent");
+      if (b) b.innerHTML = `<tr><td colspan="5" class="empty">Couldn't load your data. Refresh to retry.</td></tr>`;
+    }
   }
 
   function drawTrend(trend) {
@@ -549,6 +564,7 @@
   let scansPage = 1;
   async function loadScans(page) {
     scansPage = page || 1;
+    skelRows($("#scans-body"), 6, 5);
     try {
       const d = await api(`/api/v1/scans?page=${scansPage}&per_page=20`);
       const body = $("#scans-body");
@@ -558,13 +574,18 @@
       $("#scans-page").textContent = `Page ${d.page} of ${Math.max(1, d.pages)} · ${d.total} total`;
       $("#scans-prev").disabled = d.page <= 1;
       $("#scans-next").disabled = d.page >= d.pages;
-    } catch (err) { console.error(err); }
+    } catch (err) {
+      console.error(err);
+      const b = $("#scans-body");
+      if (b) b.innerHTML = `<tr><td colspan="5" class="empty">Couldn't load scans. Refresh to retry.</td></tr>`;
+    }
     $("#scans-prev") && ($("#scans-prev").onclick = () => loadScans(scansPage - 1));
     $("#scans-next") && ($("#scans-next").onclick = () => loadScans(scansPage + 1));
   }
 
   let findingsCache = [];
   async function loadFindings() {
+    skelRows($("#findings-body"), 5, 5);
     try {
       const list = await api("/api/v1/scans?per_page=1");
       if (!list.scans.length) {
@@ -578,7 +599,11 @@
       renderFindings();
       const filter = $("#find-filter");
       filter.onchange = renderFindings;
-    } catch (err) { console.error(err); }
+    } catch (err) {
+      console.error(err);
+      const b = $("#findings-body");
+      if (b) b.innerHTML = `<tr><td colspan="5" class="empty">Couldn't load findings. Refresh to retry.</td></tr>`;
+    }
   }
   function renderFindings() {
     const lvl = $("#find-filter").value;
@@ -655,6 +680,7 @@
     const id = new URLSearchParams(location.search).get("id");
     if (!id) { showMsg($("#global-msg"), "No scan id provided."); return; }
     $("#sd-migration-link").href = "migration.html?scan=" + id;
+    skelRows($("#sd-body"), 6, 5);
 
     try {
       const scan = (await api("/api/v1/scans/" + id)).scan;
@@ -670,7 +696,11 @@
       $("#sd-filter").onchange = renderSd;
       $$("[data-export]").forEach((b) =>
         b.addEventListener("click", () => exportScan(id, b.dataset.export)));
-    } catch (err) { showMsg($("#global-msg"), err.message); }
+    } catch (err) {
+      showMsg($("#global-msg"), err.message);
+      const b = $("#sd-body");
+      if (b) b.innerHTML = `<tr><td colspan="5" class="empty">Couldn't load this scan.</td></tr>`;
+    }
   }
   function renderSd() {
     const lvl = $("#sd-filter").value;
@@ -700,6 +730,11 @@
   async function initMigration() {
     if (!requireAuth()) return;
     wireLogout();
+    const mc = $("#mig-container");
+    if (mc) {
+      mc.innerHTML = ('<div class="mig-item"><span class="skel w-40"></span>' +
+        '<div style="height:10px"></div><span class="skel w-80"></span></div>').repeat(3);
+    }
     try {
       let id = new URLSearchParams(location.search).get("scan");
       if (!id) {
@@ -723,7 +758,10 @@
       }).join("");
       $("#mig-container").innerHTML = html ||
         `<div class="empty low">No quantum-vulnerable cryptography found. Good quantum hygiene.</div>`;
-    } catch (err) { showMsg($("#global-msg"), err.message); }
+    } catch (err) {
+      showMsg($("#global-msg"), err.message);
+      if (mc) mc.innerHTML = `<div class="empty">Couldn't load the migration plan. Refresh to retry.</div>`;
+    }
   }
   function migItem(it, lvl) {
     return `<div class="mig-item ${riskClass(lvl)}">
