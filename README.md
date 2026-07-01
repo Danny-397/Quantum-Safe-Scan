@@ -99,7 +99,9 @@ defense module (which *implements* the recommended fix). Full write-up in
 - **NIST-aligned migration plan** — each finding mapped to ML-KEM/ML-DSA/SHA-3/
   AES-256 with the relevant FIPS standard and a complexity estimate.
 - **Six export formats** — terminal, JSON, HTML, **SARIF** (GitHub code scanning),
-  **CycloneDX CBOM**, and an embeddable **SVG risk badge**.
+  **CycloneDX CBOM**, and an embeddable **SVG risk badge**. The SARIF output is
+  validated against the official OASIS 2.1.0 JSON Schema and the CBOM against the
+  CycloneDX 1.6 crypto structure in the test suite, so they interoperate for real.
 - **Real quantum demos** — Shor + Grover in Qiskit, plus circuit resource
   estimates.
 - **Real post-quantum crypto** — an LWE KEM verified over 200+ key exchanges with
