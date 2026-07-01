@@ -79,6 +79,41 @@ def test_minified_files_are_skipped(tmp_path):
     assert files == {"net.js"}, f"expected only net.js, got {files}"
 
 
+def test_python_string_and_comment_matches_are_ignored(tmp_path):
+    # Crypto keywords inside docstrings, log messages, and exception strings are
+    # documentation, not usage, and must not be flagged. Real usage in the same
+    # file is still detected by the AST engine.
+    _write(tmp_path, "svc.py",
+           "import hashlib\n"
+           "def rotate():\n"
+           '    """This service no longer uses MD5 or RSA or ECDSA."""\n'
+           '    logger.info("Disabling RSA and DSA fallback")\n'
+           '    raise ValueError("SHA-1 is not allowed")\n'
+           '    return hashlib.md5(b"x")   # real usage, still caught\n')
+    algos = {f.algorithm for f in scan_path(str(tmp_path))}
+    assert algos == {"MD5"}, f"expected only the real MD5 usage, got {algos}"
+
+
+def test_string_masking_is_what_removes_false_positives(tmp_path):
+    # Without masking (naive line regex) the same decoy yields false positives;
+    # masking is what removes them. This guards the precision improvement.
+    _write(tmp_path, "d.py",
+           "def f():\n"
+           '    """uses RSA and MD5"""\n'
+           '    log("ECDSA here")\n')
+    assert scan_path(str(tmp_path)) == []
+    naive = {f.algorithm for f in scan_path(str(tmp_path), mask_python_strings=False)}
+    assert {"RSA", "MD5", "ECDSA"} <= naive
+
+
+def test_findings_carry_confidence(tmp_path):
+    _write(tmp_path, "c.py", "from x import rsa\nk = rsa.generate_private_key()\n")
+    findings = scan_path(str(tmp_path))
+    assert findings
+    assert all(f.confidence in ("high", "medium") for f in findings)
+    assert any(f.confidence == "high" for f in findings)
+
+
 def test_low_risk_classification(tmp_path):
     _write(tmp_path, "s.py", "import hashlib\nh = hashlib.sha256(b'x')\n")
     findings = scan_path(str(tmp_path))

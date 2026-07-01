@@ -15,11 +15,13 @@ so a single line of code never inflates the risk score twice.
 from __future__ import annotations
 
 import ast
+import io
 import os
 import re
 import shutil
 import subprocess
 import tempfile
+import tokenize
 from dataclasses import dataclass, field
 from urllib.parse import urlparse
 
@@ -46,6 +48,9 @@ class Finding:
     nist_reference: str = ""
     complexity: str = ""
     snippet: str = ""
+    # "high"  = precise AST match, or a match sitting on a real call/import line.
+    # "medium" = a regex keyword match on a code line with no obvious usage signal.
+    confidence: str = "medium"
 
     def enrich(self) -> "Finding":
         rec = recommend(self.family)
@@ -68,6 +73,7 @@ class Finding:
             "nist_reference": self.nist_reference,
             "complexity": self.complexity,
             "snippet": self.snippet,
+            "confidence": self.confidence,
         }
 
 
@@ -249,7 +255,7 @@ def _ast_scan_python(source: str, rel_path: str, lines: list[str]) -> list[Findi
         # hashlib.md5() / hashlib.sha1() / hashlib.sha256()
         for key, (family, algo, risk, why) in _AST_HASH.items():
             if low.endswith("hashlib." + key) or low == key:
-                findings.append(Finding(rel_path, lineno, algo, risk, why, family, snippet=snippet))
+                findings.append(Finding(rel_path, lineno, algo, risk, why, family, snippet=snippet, confidence="high"))
 
         # hashlib.new("md5") style
         if low.endswith("hashlib.new") and node.args:
@@ -258,12 +264,12 @@ def _ast_scan_python(source: str, rel_path: str, lines: list[str]) -> list[Findi
                 name = arg0.value.lower().replace("-", "")
                 if name in _AST_HASH:
                     family, algo, risk, why = _AST_HASH[name]
-                    findings.append(Finding(rel_path, lineno, algo, risk, why, family, snippet=snippet))
+                    findings.append(Finding(rel_path, lineno, algo, risk, why, family, snippet=snippet, confidence="high"))
 
         # asymmetric key generation: rsa.generate_private_key, ec.generate_private_key, etc.
         for key, (family, algo, risk, why) in _AST_ASYM.items():
             if re.search(rf"\b{key}\.generate_(?:private_key|parameters)$", low):
-                findings.append(Finding(rel_path, lineno, algo, risk, why, family, snippet=snippet))
+                findings.append(Finding(rel_path, lineno, algo, risk, why, family, snippet=snippet, confidence="high"))
     return findings
 
 
@@ -300,19 +306,75 @@ def _is_comment_line(line: str, lang: str) -> bool:
     return bool(s) and s.startswith(_LINE_COMMENT.get(lang, ()))
 
 
-def _regex_scan(lines: list[str], lang: str, rel_path: str) -> list[Finding]:
+# Token types whose text is *content*, not code, and should be masked out before
+# the Python regex pass (string literals, comments, and — on 3.12+ — the literal
+# segments of f-strings; the ``{expr}`` interpolations stay as real code).
+_PY_MASK_TYPES = {tokenize.STRING, tokenize.COMMENT}
+for _name in ("FSTRING_START", "FSTRING_MIDDLE", "FSTRING_END"):
+    _t = getattr(tokenize, _name, None)
+    if _t is not None:
+        _PY_MASK_TYPES.add(_t)
+
+
+def _mask_python_strings(source: str, lines: list[str]) -> list[str]:
+    """Blank the characters inside Python string/comment tokens (positions kept).
+
+    This is a lightweight, precise form of usage-awareness: a keyword like "RSA"
+    or "MD5" sitting inside a docstring, log message, or exception string is
+    documentation, not usage, so it should not be flagged by the regex engine.
+    Genuine string-argument usage (e.g. ``hashlib.new("md5")``) is still caught
+    by the AST engine, which runs on the original source. Falls back to the
+    unmodified lines if the file does not tokenize.
+    """
+    masked = [list(ln) for ln in lines]
+    try:
+        for tok in tokenize.generate_tokens(io.StringIO(source).readline):
+            if tok.type not in _PY_MASK_TYPES:
+                continue
+            (srow, scol), (erow, ecol) = tok.start, tok.end
+            for row in range(srow, erow + 1):
+                idx = row - 1
+                if not (0 <= idx < len(masked)):
+                    continue
+                buf = masked[idx]
+                start = scol if row == srow else 0
+                end = ecol if row == erow else len(buf)
+                for c in range(start, min(end, len(buf))):
+                    buf[c] = " "
+    except (tokenize.TokenError, IndentationError, SyntaxError, ValueError):
+        return lines
+    return ["".join(buf) for buf in masked]
+
+
+# A match sits on "real usage" when its line looks like a call, an import, or a
+# known crypto constructor — as opposed to a bare keyword mention.
+_USAGE_SIGNAL = re.compile(
+    r"\w\s*\(|^\s*(?:import|from|require|use|using|package|#include)\b"
+    r"|getInstance|createHash|generateKey|Cipher|PKey|new\s+\w",
+    re.IGNORECASE,
+)
+
+
+def _confidence_for(line: str) -> str:
+    return "high" if _USAGE_SIGNAL.search(line) else "medium"
+
+
+def _regex_scan(match_lines: list[str], orig_lines: list[str],
+                lang: str, rel_path: str) -> list[Finding]:
+    """Scan ``match_lines`` (possibly string-masked) but report the original code."""
     findings: list[Finding] = []
-    for i, raw in enumerate(lines, start=1):
+    for i, raw in enumerate(match_lines, start=1):
         line = raw.rstrip("\n")
         if not line.strip() or _is_comment_line(line, lang):
             continue
+        orig = orig_lines[i - 1].strip() if i - 1 < len(orig_lines) else line.strip()
         for rule in RULES:
             if rule.languages and lang not in rule.languages:
                 continue
             if rule.pattern.search(line):
                 findings.append(
                     Finding(rel_path, i, rule.algorithm, rule.risk, rule.why,
-                            rule.family, snippet=line.strip())
+                            rule.family, snippet=orig, confidence=_confidence_for(orig))
                 )
     return findings
 
@@ -340,7 +402,7 @@ def _dedupe(findings: list[Finding]) -> list[Finding]:
 # --------------------------------------------------------------------------- #
 
 
-def scan_file(abs_path: str, rel_path: str) -> list[Finding]:
+def scan_file(abs_path: str, rel_path: str, mask_python_strings: bool = True) -> list[Finding]:
     ext = os.path.splitext(abs_path)[1].lower()
     lang = EXT_TO_LANG.get(ext)
     if lang is None:
@@ -356,7 +418,13 @@ def scan_file(abs_path: str, rel_path: str) -> list[Finding]:
     lines = source.splitlines()
     if _looks_minified(os.path.basename(abs_path), lines):
         return []
-    findings = _regex_scan(lines, lang, rel_path)
+    # Python: mask string/comment content so the regex engine ignores keywords in
+    # docstrings/log strings; the AST engine still runs on the original source.
+    if lang == "python" and mask_python_strings:
+        match_lines = _mask_python_strings(source, lines)
+    else:
+        match_lines = lines
+    findings = _regex_scan(match_lines, lines, lang, rel_path)
     if lang == "python":
         findings += _ast_scan_python(source, rel_path, lines)
 
@@ -380,11 +448,14 @@ def _is_excluded(rel_path: str, patterns: list[str] | None) -> bool:
     return any(fnmatch.fnmatch(rel_path, pat) for pat in patterns)
 
 
-def scan_path(path: str, exclude: list[str] | None = None) -> list[Finding]:
+def scan_path(path: str, exclude: list[str] | None = None,
+              mask_python_strings: bool = True) -> list[Finding]:
     """Recursively scan a local directory (or single file) for vulnerabilities.
 
     ``exclude`` is an optional list of glob patterns (matched against the path
-    relative to ``path``, using forward slashes) to skip.
+    relative to ``path``, using forward slashes) to skip. ``mask_python_strings``
+    (default on) enables the string/comment-aware pass; set it False to measure
+    the naive line-regex baseline (used by the benchmark).
     """
     path = os.path.abspath(path)
     if not os.path.exists(path):
@@ -392,7 +463,7 @@ def scan_path(path: str, exclude: list[str] | None = None) -> list[Finding]:
 
     findings: list[Finding] = []
     if os.path.isfile(path):
-        findings = scan_file(path, os.path.basename(path))
+        findings = scan_file(path, os.path.basename(path), mask_python_strings)
     else:
         for root, dirs, files in os.walk(path):
             dirs[:] = [d for d in dirs if d not in _SKIP_DIRS]
@@ -401,7 +472,7 @@ def scan_path(path: str, exclude: list[str] | None = None) -> list[Finding]:
                 rel_path = os.path.relpath(abs_path, path).replace(os.sep, "/")
                 if _is_excluded(rel_path, exclude):
                     continue
-                findings.extend(scan_file(abs_path, rel_path))
+                findings.extend(scan_file(abs_path, rel_path, mask_python_strings))
 
     findings = _dedupe(findings)
     for f in findings:
