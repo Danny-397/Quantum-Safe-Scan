@@ -32,9 +32,9 @@
     <main class="main">
       <div id="global-msg" class="msg"></div>
       <div id="save-banner" class="save-banner hidden">
-        <p><strong>This scan isn't saved.</strong>
+        <p><strong>This result lives only in this browser tab</strong> — close or refresh it and it's gone.
           <span class="muted">Create a free account to keep it in your history and get email alerts on HIGH-risk findings.</span></p>
-        <button class="btn btn-primary btn-sm" id="save-scan-btn">Sign in to save →</button>
+        <button class="btn btn-primary btn-sm" id="save-scan-btn">Save to a free account →</button>
       </div>
       <div class="page-head">
         <h1>Scan Detail</h1>
@@ -45,6 +45,7 @@
         </div>
       </div>
 
+      <h2 class="sr-only">Scan results</h2>
       <div class="card score-explainer score-card">
         <div>
           <h3>Quantum Risk Score</h3>
@@ -72,7 +73,7 @@
 
       <div class="card" style="margin-top:16px;">
         <div class="toolbar">
-          <label class="muted" style="font-size:13px;">Filter risk</label>
+          <label class="muted" for="sd-filter" style="font-size:13px;">Filter risk</label>
           <select id="sd-filter">
             <option value="all">All</option><option value="HIGH">High</option>
             <option value="MEDIUM">Medium</option><option value="LOW">Low</option>

@@ -151,6 +151,27 @@
 
     initDemoScanner();
     initHomeScan();
+    wireScanTabs();
+  }
+
+  // Tabbed scanner: switch between "Paste code" and "GitHub repo or .zip".
+  function activateScanTab(name) {
+    $$(".scan-tab").forEach((t) => {
+      const on = t.dataset.tab === name;
+      t.classList.toggle("active", on);
+      t.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    $$(".scan-panel").forEach((p) => p.classList.toggle("hidden", p.id !== "tab-" + name));
+  }
+  function wireScanTabs() {
+    const tabs = $$(".scan-tab");
+    if (!tabs.length) return;
+    tabs.forEach((tab) => tab.addEventListener("click", () => {
+      activateScanTab(tab.dataset.tab);
+      const focusId = tab.dataset.tab === "repo" ? "#home-scan-repo" : "#demo-input";
+      const el = $(focusId);
+      if (el) setTimeout(() => el.focus({ preventScroll: true }), 60);
+    }));
   }
 
   // Anonymous "scan a whole repo or upload a .zip" launcher on the landing page.
@@ -317,11 +338,21 @@
     const engine = $("#demo-engine");
     setLoading(btn, true, "Scanning");
     if (engine) engine.textContent = "Scanning with the QuantumSafe engine…";
+    const call = () => api("/api/v1/demo-scan", {
+      noAuth: true, noRedirect: true,
+      json: { code: input.value, filename: "snippet.py" },
+    });
     try {
-      const d = await api("/api/v1/demo-scan", {
-        noAuth: true, noRedirect: true,
-        json: { code: input.value, filename: "snippet.py" },
-      });
+      let d;
+      try {
+        d = await call();
+      } catch (_) {
+        // Likely a cold backend — tell the user and retry once instead of
+        // silently dropping to the in-browser preview.
+        if (engine) engine.textContent = "Engine waking up — retrying…";
+        await new Promise((r) => setTimeout(r, 4000));
+        d = await call();
+      }
       const r = d.report;
       const findings = r.findings.map((f) => ({
         line: f.line_number, algo: f.algorithm, risk: f.risk_level, rec: f.recommendation,
@@ -347,7 +378,7 @@
     if (run) run.addEventListener("click", runRealDemo);
     // Value-first: any "Scan free" / hero CTA drops the cursor into the editor
     // once the anchor has scrolled the demo into view.
-    $$('a[href="#try"]').forEach((a) =>
+    $$('a[href="#scan"]').forEach((a) =>
       a.addEventListener("click", () => setTimeout(() => input.focus({ preventScroll: true }), 350)));
     renderDemo();
   }
@@ -741,10 +772,23 @@
   // Shared scan submitter used by both the dashboard modal (signed in) and the
   // landing page (anonymous). Signed-in scans are saved server-side and open by
   // id; anonymous scans are held in the browser and opened from sessionStorage.
+  // Cycle reassuring status messages during a long request (cold starts on the
+  // free backend can take 30-60s). Returns a cancel fn.
+  function stagedProgress(msgEl, stages) {
+    const timers = stages.map((s) =>
+      setTimeout(() => showMsg(msgEl, s.text, "success"), s.after));
+    return () => timers.forEach(clearTimeout);
+  }
+
   async function submitScan({ repo, file, msgEl, btn }) {
     if (!repo && !file) { showMsg(msgEl, "Provide a GitHub URL or a .zip file."); return; }
     setLoading(btn, true, "Scanning");
-    showMsg(msgEl, "Scanning… cloning and analyzing your code. This can take up to a minute.", "success");
+    showMsg(msgEl, "Waking the scanner…", "success");
+    const stopProgress = stagedProgress(msgEl, [
+      { after: 2500, text: "Cloning and analyzing your code…" },
+      { after: 12000, text: "First scan of the day can take ~40s while the server wakes up — hang tight." },
+      { after: 30000, text: "Still going — larger repos take a little longer…" },
+    ]);
     try {
       let res;
       if (file) {
@@ -754,6 +798,7 @@
       } else {
         res = await api("/api/v1/scan", { method: "POST", json: { repo_url: repo }, noRedirect: true });
       }
+      stopProgress();
       if (res.scan_id) {
         location.href = "scan.html?id=" + res.scan_id;   // saved to the account
       } else {
@@ -761,6 +806,7 @@
         location.href = "scan.html";
       }
     } catch (err) {
+      stopProgress();
       showMsg(msgEl, err.message);
       setLoading(btn, false);
     }
