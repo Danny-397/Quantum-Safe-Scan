@@ -28,6 +28,9 @@ instance/
 .vscode/
 .DS_Store
 
+# Private notes — launch copy, application narrative (never publish)
+_private/
+
 # Scratch / reports
 _scratch/
 report.json
