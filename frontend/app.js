@@ -166,12 +166,23 @@
   function wireScanTabs() {
     const tabs = $$(".scan-tab");
     if (!tabs.length) return;
-    tabs.forEach((tab) => tab.addEventListener("click", () => {
-      activateScanTab(tab.dataset.tab);
-      const focusId = tab.dataset.tab === "repo" ? "#home-scan-repo" : "#demo-input";
-      const el = $(focusId);
-      if (el) setTimeout(() => el.focus({ preventScroll: true }), 60);
-    }));
+    tabs.forEach((tab, i) => {
+      tab.addEventListener("click", () => {
+        activateScanTab(tab.dataset.tab);
+        const el = $(tab.dataset.tab === "repo" ? "#home-scan-repo" : "#demo-input");
+        if (el) setTimeout(() => el.focus({ preventScroll: true }), 60);
+      });
+      // WAI-ARIA tabs pattern: arrow keys move between tabs.
+      tab.addEventListener("keydown", (e) => {
+        let j = null;
+        if (e.key === "ArrowRight") j = (i + 1) % tabs.length;
+        else if (e.key === "ArrowLeft") j = (i - 1 + tabs.length) % tabs.length;
+        if (j === null) return;
+        e.preventDefault();
+        activateScanTab(tabs[j].dataset.tab);
+        tabs[j].focus();
+      });
+    });
   }
 
   // Anonymous "scan a whole repo or upload a .zip" launcher on the landing page.
@@ -186,9 +197,6 @@
     }));
     const repo = $("#home-scan-repo");
     if (repo) repo.addEventListener("keydown", (e) => { if (e.key === "Enter") btn.click(); });
-    // Any "Scan" link drops the cursor into the repo field once it scrolls in.
-    $$('a[href="#scan-repo"]').forEach((a) =>
-      a.addEventListener("click", () => setTimeout(() => repo && repo.focus({ preventScroll: true }), 400)));
   }
 
   // ---- In-browser live scanner (client-side, nothing leaves the browser) ----
@@ -855,7 +863,7 @@
     const held = getResult();
     if (!held || !held.report) {
       const b = $("#sd-body");
-      if (b) b.innerHTML = `<tr><td colspan="5" class="empty">No scan to show — <a href="index.html#try">run one from the home page</a>.</td></tr>`;
+      if (b) b.innerHTML = `<tr><td colspan="5" class="empty">No scan to show — <a href="index.html#scan">run one from the home page</a>.</td></tr>`;
       return;
     }
     const report = held.report;
@@ -974,7 +982,7 @@
     applyAnonChrome();
     const held = getResult();
     if (!held || !held.report) {
-      if (mc) mc.innerHTML = `<div class="empty">No scan to plan for — <a href="index.html#try">run one from the home page</a>.</div>`;
+      if (mc) mc.innerHTML = `<div class="empty">No scan to plan for — <a href="index.html#scan">run one from the home page</a>.</div>`;
       return;
     }
     try {
