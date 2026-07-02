@@ -1,92 +1,65 @@
 {
-  "generated_at": "2026-06-28T21:47:56.804483+00:00",
+  "generated_at": "2026-07-02T00:12:13.259230+00:00",
   "repos_scanned": 8,
   "with_high_risk": 7,
   "with_any_finding": 7,
   "pct_high": 88,
   "pct_any": 88,
-  "avg_score": 72.9,
+  "avg_score": 61.4,
   "family_totals": [
     [
-      "rsa",
-      194
-    ],
-    [
       "ecc",
-      125
+      46
     ],
     [
       "tls_old",
-      67
-    ],
-    [
-      "sha256",
-      53
-    ],
-    [
-      "md5",
-      46
+      38
     ],
     [
       "sha1",
-      46
+      33
+    ],
+    [
+      "md5",
+      21
+    ],
+    [
+      "sha256",
+      21
+    ],
+    [
+      "rsa",
+      15
     ],
     [
       "tls12",
-      11
+      2
     ]
   ],
   "rows": [
     {
-      "repo": "psf/requests",
-      "risk_score": 100,
-      "risk_band": "Critical",
-      "high": 7,
-      "medium": 0,
-      "low": 3,
-      "total": 10,
-      "top_families": [
-        [
-          "md5",
-          5
-        ],
-        [
-          "sha256",
-          3
-        ],
-        [
-          "sha1",
-          2
-        ]
-      ]
-    },
-    {
       "repo": "urllib3/urllib3",
       "risk_score": 100,
       "risk_band": "Critical",
-      "high": 10,
-      "medium": 67,
-      "low": 12,
-      "total": 89,
+      "high": 7,
+      "medium": 38,
+      "low": 2,
+      "total": 47,
       "top_families": [
         [
           "tls_old",
-          67
-        ],
-        [
-          "tls12",
-          11
+          38
         ],
         [
           "md5",
-          7
+          6
         ],
         [
-          "sha1",
+          "tls12",
           2
         ],
         [
-          "sha256",
+          "sha1",
           1
         ]
       ]
@@ -95,52 +68,52 @@
       "repo": "paramiko/paramiko",
       "risk_score": 100,
       "risk_band": "Critical",
-      "high": 393,
-      "medium": 9,
-      "low": 49,
-      "total": 451,
+      "high": 89,
+      "medium": 6,
+      "low": 15,
+      "total": 110,
       "top_families": [
         [
-          "rsa",
-          194
-        ],
-        [
           "ecc",
-          125
-        ],
-        [
-          "sha256",
-          37
+          46
         ],
         [
           "sha1",
-          28
+          18
+        ],
+        [
+          "sha256",
+          15
+        ],
+        [
+          "rsa",
+          15
         ],
         [
           "md5",
-          25
+          10
         ]
       ]
     },
     {
       "repo": "encode/httpx",
-      "risk_score": 100,
+      "risk_score": 93,
       "risk_band": "Critical",
-      "high": 11,
+      "high": 6,
       "medium": 0,
-      "low": 9,
-      "total": 20,
+      "low": 3,
+      "total": 9,
       "top_families": [
         [
-          "sha256",
-          9
-        ],
-        [
           "md5",
-          8
+          3
         ],
         [
           "sha1",
+          3
+        ],
+        [
+          "sha256",
           3
         ]
       ]
@@ -161,33 +134,37 @@
       ]
     },
     {
-      "repo": "pallets/flask",
-      "risk_score": 60,
+      "repo": "pallets/click",
+      "risk_score": 47,
       "risk_band": "Medium",
-      "high": 4,
+      "high": 3,
       "medium": 0,
-      "low": 0,
-      "total": 4,
+      "low": 2,
+      "total": 5,
       "top_families": [
         [
           "sha1",
-          4
+          2
+        ],
+        [
+          "sha256",
+          2
+        ],
+        [
+          "md5",
+          1
         ]
       ]
     },
     {
-      "repo": "pallets/click",
-      "risk_score": 48,
+      "repo": "psf/requests",
+      "risk_score": 46,
       "risk_band": "Medium",
       "high": 3,
       "medium": 0,
-      "low": 3,
-      "total": 6,
+      "low": 1,
+      "total": 4,
       "top_families": [
-        [
-          "sha256",
-          3
-        ],
         [
           "sha1",
           2
@@ -195,6 +172,25 @@
         [
           "md5",
           1
+        ],
+        [
+          "sha256",
+          1
+        ]
+      ]
+    },
+    {
+      "repo": "pallets/flask",
+      "risk_score": 30,
+      "risk_band": "Low",
+      "high": 2,
+      "medium": 0,
+      "low": 0,
+      "total": 2,
+      "top_families": [
+        [
+          "sha1",
+          2
         ]
       ]
     },

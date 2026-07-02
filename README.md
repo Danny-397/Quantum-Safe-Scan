@@ -214,7 +214,7 @@ Scanning 8 widely-used open-source projects ([`study/`](study/), reproducible vi
 `python study/run_study.py`):
 
 - **88%** contained at least one **HIGH-risk** (Shor-breakable) cryptographic usage.
-- Average Quantum Risk Score: **72.9 / 100**.
+- Average Quantum Risk Score: **61.4 / 100**.
 
 Full results and caveats: [study/REPORT.md](study/REPORT.md).
 

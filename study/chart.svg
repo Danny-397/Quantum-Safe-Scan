@@ -1,27 +1,27 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="800" height="338" font-family="-apple-system,Segoe UI,Roboto,Arial,sans-serif">
 <rect width="800" height="338" fill="#0A0A0F"/>
 <text x="20" y="28" fill="#E0E0E0" font-size="16" font-weight="700">Quantum Risk Score by project</text>
-<text x="20" y="68" fill="#9a9aae" font-size="13">psf/requests</text>
+<text x="20" y="68" fill="#9a9aae" font-size="13">urllib3/urllib3</text>
 <rect x="220" y="50" width="520" height="26" fill="#FF4444" rx="3"/>
 <text x="748" y="68" fill="#E0E0E0" font-size="13" font-family="ui-monospace,monospace">100</text>
-<text x="20" y="104" fill="#9a9aae" font-size="13">urllib3/urllib3</text>
+<text x="20" y="104" fill="#9a9aae" font-size="13">paramiko/paramiko</text>
 <rect x="220" y="86" width="520" height="26" fill="#FF4444" rx="3"/>
 <text x="748" y="104" fill="#E0E0E0" font-size="13" font-family="ui-monospace,monospace">100</text>
-<text x="20" y="140" fill="#9a9aae" font-size="13">paramiko/paramiko</text>
-<rect x="220" y="122" width="520" height="26" fill="#FF4444" rx="3"/>
-<text x="748" y="140" fill="#E0E0E0" font-size="13" font-family="ui-monospace,monospace">100</text>
-<text x="20" y="176" fill="#9a9aae" font-size="13">encode/httpx</text>
-<rect x="220" y="158" width="520" height="26" fill="#FF4444" rx="3"/>
-<text x="748" y="176" fill="#E0E0E0" font-size="13" font-family="ui-monospace,monospace">100</text>
-<text x="20" y="212" fill="#9a9aae" font-size="13">pallets/jinja</text>
-<rect x="220" y="194" width="390" height="26" fill="#FF4444" rx="3"/>
-<text x="618" y="212" fill="#E0E0E0" font-size="13" font-family="ui-monospace,monospace">75</text>
-<text x="20" y="248" fill="#9a9aae" font-size="13">pallets/flask</text>
-<rect x="220" y="230" width="312" height="26" fill="#FFB800" rx="3"/>
-<text x="540" y="248" fill="#E0E0E0" font-size="13" font-family="ui-monospace,monospace">60</text>
-<text x="20" y="284" fill="#9a9aae" font-size="13">pallets/click</text>
-<rect x="220" y="266" width="249" height="26" fill="#FFB800" rx="3"/>
-<text x="477" y="284" fill="#E0E0E0" font-size="13" font-family="ui-monospace,monospace">48</text>
+<text x="20" y="140" fill="#9a9aae" font-size="13">encode/httpx</text>
+<rect x="220" y="122" width="483" height="26" fill="#FF4444" rx="3"/>
+<text x="711" y="140" fill="#E0E0E0" font-size="13" font-family="ui-monospace,monospace">93</text>
+<text x="20" y="176" fill="#9a9aae" font-size="13">pallets/jinja</text>
+<rect x="220" y="158" width="390" height="26" fill="#FF4444" rx="3"/>
+<text x="618" y="176" fill="#E0E0E0" font-size="13" font-family="ui-monospace,monospace">75</text>
+<text x="20" y="212" fill="#9a9aae" font-size="13">pallets/click</text>
+<rect x="220" y="194" width="244" height="26" fill="#FFB800" rx="3"/>
+<text x="472" y="212" fill="#E0E0E0" font-size="13" font-family="ui-monospace,monospace">47</text>
+<text x="20" y="248" fill="#9a9aae" font-size="13">psf/requests</text>
+<rect x="220" y="230" width="239" height="26" fill="#FFB800" rx="3"/>
+<text x="467" y="248" fill="#E0E0E0" font-size="13" font-family="ui-monospace,monospace">46</text>
+<text x="20" y="284" fill="#9a9aae" font-size="13">pallets/flask</text>
+<rect x="220" y="266" width="156" height="26" fill="#00FF88" rx="3"/>
+<text x="384" y="284" fill="#E0E0E0" font-size="13" font-family="ui-monospace,monospace">30</text>
 <text x="20" y="320" fill="#9a9aae" font-size="13">expressjs/express</text>
 <rect x="220" y="302" width="0" height="26" fill="#00FF88" rx="3"/>
 <text x="228" y="320" fill="#E0E0E0" font-size="13" font-family="ui-monospace,monospace">0</text>

@@ -1,6 +1,6 @@
 # Empirical study: quantum-vulnerable cryptography in popular open source
 
-*Generated 2026-06-28T21:47:56.804483+00:00 by `study/run_study.py` — reproducible.*
+*Generated 2026-07-02T00:12:13.259230+00:00 by `study/run_study.py` — reproducible.*
 
 ## Method
 
@@ -11,7 +11,7 @@ Each project was shallow-cloned and scanned with the QuantumSafe engine (the sam
 - **8** popular projects scanned.
 - **88%** contain at least one quantum-relevant cryptographic usage.
 - **88%** contain at least one **HIGH-risk** (Shor-breakable: RSA/ECC/DSA/DH or MD5/SHA-1) usage.
-- Average Quantum Risk Score: **72.9/100**.
+- Average Quantum Risk Score: **61.4/100**.
 
 ![Risk by project](chart.svg)
 
@@ -19,26 +19,26 @@ Each project was shallow-cloned and scanned with the QuantumSafe engine (the sam
 
 | Project | Score | Band | HIGH | MED | LOW | Top algorithms |
 |---------|------:|------|-----:|----:|----:|----------------|
-| psf/requests | 100 | Critical | 7 | 0 | 3 | md5×5, sha256×3, sha1×2 |
-| urllib3/urllib3 | 100 | Critical | 10 | 67 | 12 | tls_old×67, tls12×11, md5×7, sha1×2, sha256×1 |
-| paramiko/paramiko | 100 | Critical | 393 | 9 | 49 | rsa×194, ecc×125, sha256×37, sha1×28, md5×25 |
-| encode/httpx | 100 | Critical | 11 | 0 | 9 | sha256×9, md5×8, sha1×3 |
+| urllib3/urllib3 | 100 | Critical | 7 | 38 | 2 | tls_old×38, md5×6, tls12×2, sha1×1 |
+| paramiko/paramiko | 100 | Critical | 89 | 6 | 15 | ecc×46, sha1×18, sha256×15, rsa×15, md5×10 |
+| encode/httpx | 93 | Critical | 6 | 0 | 3 | md5×3, sha1×3, sha256×3 |
 | pallets/jinja | 75 | High | 5 | 0 | 0 | sha1×5 |
-| pallets/flask | 60 | Medium | 4 | 0 | 0 | sha1×4 |
-| pallets/click | 48 | Medium | 3 | 0 | 3 | sha256×3, sha1×2, md5×1 |
+| pallets/click | 47 | Medium | 3 | 0 | 2 | sha1×2, sha256×2, md5×1 |
+| psf/requests | 46 | Medium | 3 | 0 | 1 | sha1×2, md5×1, sha256×1 |
+| pallets/flask | 30 | Low | 2 | 0 | 0 | sha1×2 |
 | expressjs/express | 0 | Low | 0 | 0 | 0 | — |
 
 ## Most common quantum-vulnerable families
 
 | Family | Occurrences |
 |--------|------------:|
-| rsa | 194 |
-| ecc | 125 |
-| tls_old | 67 |
-| sha256 | 53 |
-| md5 | 46 |
-| sha1 | 46 |
-| tls12 | 11 |
+| ecc | 46 |
+| tls_old | 38 |
+| sha1 | 33 |
+| md5 | 21 |
+| sha256 | 21 |
+| rsa | 15 |
+| tls12 | 2 |
 
 ## Takeaway
 
