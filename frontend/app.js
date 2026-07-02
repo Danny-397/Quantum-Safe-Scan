@@ -155,6 +155,9 @@
     }));
     const repo = $("#home-scan-repo");
     if (repo) repo.addEventListener("keydown", (e) => { if (e.key === "Enter") btn.click(); });
+    // Any "Scan" link drops the cursor into the repo field once it scrolls in.
+    $$('a[href="#scan-repo"]').forEach((a) =>
+      a.addEventListener("click", () => setTimeout(() => repo && repo.focus({ preventScroll: true }), 400)));
   }
 
   // ---- In-browser live scanner (client-side, nothing leaves the browser) ----

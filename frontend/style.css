@@ -35,6 +35,8 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
+/* Keep anchored sections clear of the sticky nav when jumped to. */
+.section, .hero, [id] { scroll-margin-top: 84px; }
 body {
   color: var(--text);
   font-family: var(--sans);
@@ -73,10 +75,12 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
 }
 .btn:hover { border-color: var(--accent); color: #fff; box-shadow: 0 0 0 1px rgba(91,115,232,.25); }
 .btn-primary {
-  background: var(--accent); color: #fff; border-color: transparent; font-weight: 700;
+  /* Deeper indigo than the --accent link colour so white text stays clearly
+     readable (the lighter accent washed the label out). */
+  background: #3f52d6; color: #fff !important; border-color: transparent; font-weight: 700;
   text-shadow: none; box-shadow: none;
 }
-.btn-primary:hover { background: #6d83f0; color: #fff; box-shadow: none; }
+.btn-primary:hover { background: #4f63e6; color: #fff !important; box-shadow: none; }
 .btn-danger { border-color: var(--danger); color: var(--danger); background: transparent; }
 .btn-danger:hover { background: rgba(255,77,109,.1); color: var(--danger); box-shadow: none; }
 .btn-sm { padding: 7px 13px; font-size: 13px; }
@@ -254,6 +258,13 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
 }
 .home-scan .msg { margin-top: 14px; margin-bottom: 0; }
 .home-scan-note { font-size: 12px; margin-top: 10px; }
+.home-scan-save {
+  display: flex; flex-direction: column; gap: 3px; margin-top: 16px; padding: 12px 14px;
+  background: rgba(91,115,232,.08); border: 1px solid rgba(91,115,232,.35);
+  border-radius: var(--r-sm); font-size: 13.5px;
+}
+.home-scan-save strong { color: var(--text); }
+.home-scan-save a { font-weight: 600; }
 
 /* ---------- Save-this-scan banner (anonymous scan detail) ---------- */
 .save-banner {
@@ -447,4 +458,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .app { grid-template-columns: 1fr; }
   .sidebar { position: static; height: auto; }
   .cta-band { flex-direction: column; align-items: flex-start; }
+}
+
+@media (max-width: 640px) {
+  .nav { flex-wrap: wrap; gap: 10px 0; padding: 12px 18px; }
+  .nav-links { flex-wrap: wrap; gap: 14px 16px; row-gap: 10px; }
+  .nav-links a { font-size: 13.5px; }
 }

@@ -26,11 +26,12 @@
   <header class="nav">
     <div class="brand"><svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true"><defs><linearGradient id="qsg" x1="2" y1="2" x2="30" y2="30" gradientUnits="userSpaceOnUse"><stop stop-color="#5b73e8"/><stop offset="1" stop-color="#7c8df0"/></linearGradient></defs><g stroke="url(#qsg)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity=".8"><path d="M3 9V3h6"/><path d="M23 3h6v6"/><path d="M29 23v6h-6"/><path d="M9 29H3v-6"/></g><circle cx="15.5" cy="15" r="7" stroke="url(#qsg)" stroke-width="2.2"/><path d="M19 18.6 23 22.6" stroke="url(#qsg)" stroke-width="2.4" stroke-linecap="round"/></svg> QuantumSafe</div>
     <nav class="nav-links">
+      <a href="#scan-repo">Scan</a>
       <a href="#try">Live demo</a>
       <a href="#detect">Detection</a>
       <a href="research.html">Research</a>
       <a href="login.html">Sign in</a>
-      <a href="#try" class="btn btn-sm btn-primary">Scan free ↓</a>
+      <a href="#scan-repo" class="btn btn-sm btn-primary">Scan free ↓</a>
     </nav>
   </header>
 
@@ -130,7 +131,7 @@
         <div class="home-scan-row">
           <input id="home-scan-repo" type="text" placeholder="https://github.com/owner/repo"
                  aria-label="GitHub repository URL" />
-          <button class="btn btn-primary" id="home-scan-run">Scan repo →</button>
+          <button class="btn btn-primary" id="home-scan-run">Scan GitHub →</button>
         </div>
         <div class="home-scan-or"><span>or</span></div>
         <label class="home-scan-file">
@@ -138,7 +139,12 @@
           <input id="home-scan-file" type="file" accept=".zip" aria-label="Upload a .zip of your codebase" />
         </label>
         <div id="home-scan-msg" class="msg"></div>
-        <p class="muted mono home-scan-note">github.com HTTPS repos only · results open instantly and are held in your browser</p>
+        <div class="home-scan-save">
+          <span>Results open instantly — <strong>no account needed.</strong></span>
+          <span class="muted"><a href="login.html">Sign in</a> or
+            <a href="login.html?mode=register">create a free account</a> to save this scan to your history.</span>
+        </div>
+        <p class="muted mono home-scan-note">github.com HTTPS repos only · your results are held in your browser</p>
       </div>
     </section>
 
