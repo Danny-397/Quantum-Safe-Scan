@@ -5,7 +5,7 @@
 If you discover a security vulnerability in QuantumSafe, please report it
 responsibly. **Do not open a public issue for security problems.**
 
-- Email: **[security@YOUR-DOMAIN]** (replace with your contact address)
+- Email: **dlichtenberger91@gmail.com**
 - Please include: a description, steps to reproduce, affected component
   (CLI / backend / dashboard), and impact.
 - We aim to acknowledge reports within **3 business days** and to provide a
