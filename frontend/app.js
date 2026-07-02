@@ -112,6 +112,16 @@
     return true;
   }
 
+  // On public pages, reflect an existing session in the nav so returning users
+  // land on their dashboard instead of the sign-in form.
+  function reflectAuthInNav() {
+    if (!getToken()) return;
+    $$('a[href="login.html"], a[href="login.html?mode=register"]').forEach((a) => {
+      a.textContent = "Dashboard";
+      a.setAttribute("href", "dashboard.html");
+    });
+  }
+
   function wireLogout() {
     const b = $("#btn-logout");
     if (b) b.addEventListener("click", () => { clearToken(); location.href = "index.html"; });
@@ -959,6 +969,7 @@
   // ----- dispatch -----------------------------------------------------------
   document.addEventListener("DOMContentLoaded", () => {
     const page = location.pathname.split("/").pop() || "index.html";
+    reflectAuthInNav();
     if (page === "" || page === "index.html") initLanding();
     else if (page === "login.html") initAuth();
     else if (page === "dashboard.html") initDashboard();
