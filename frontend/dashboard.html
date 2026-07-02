@@ -24,7 +24,7 @@
       </nav>
       <div class="side-foot">
         <button class="btn btn-block btn-primary" id="btn-new-scan">+ New Scan</button>
-        <button class="btn btn-block btn-sm" id="btn-logout" style="margin-top:8px;">Log out</button>
+        <a class="btn btn-block btn-sm" href="index.html" style="margin-top:8px;">← Home</a>
         <div class="side-legal"><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></div>
       </div>
     </aside>
@@ -127,6 +127,13 @@
             <input type="checkbox" id="pref-alerts" /> Email me when a scan finds HIGH-risk vulnerabilities
           </label>
           <p class="muted" style="font-size:12.5px;margin-top:6px;">Free for every account. Sent after a scan that contains HIGH-risk findings, when email delivery is configured.</p>
+        </div>
+        <div class="card" style="margin-top:16px;">
+          <h3>Session</h3>
+          <p class="muted" style="font-size:13px;margin-bottom:12px;">
+            Sign out of QuantumSafe on this device. Your saved scans stay in your account.
+          </p>
+          <button class="btn btn-sm" id="btn-logout">Log out</button>
         </div>
         <div class="card" style="margin-top:16px;">
           <h3>Privacy &amp; your data</h3>
