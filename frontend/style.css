@@ -81,6 +81,8 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
   text-shadow: none; box-shadow: none;
 }
 .btn-primary:hover { background: #4f63e6; color: #fff !important; box-shadow: none; }
+.btn-ghost { background: transparent; border-color: transparent; color: var(--muted); }
+.btn-ghost:hover { color: var(--text); border-color: var(--border-strong); box-shadow: none; }
 .btn-danger { border-color: var(--danger); color: var(--danger); background: transparent; }
 .btn-danger:hover { background: rgba(255,77,109,.1); color: var(--danger); box-shadow: none; }
 .btn-sm { padding: 7px 13px; font-size: 13px; }
@@ -137,6 +139,7 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
 .hero-cta { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
 .hero-note { color: var(--muted-2); font-size: 13px; margin-top: 18px; }
 .hero-note code { font-family: var(--mono); color: var(--accent); background: rgba(91,115,232,.06); padding: 2px 7px; border-radius: var(--r-sm); border: 1px solid rgba(91,115,232,.18); }
+.hero-note-cli { margin-top: 8px; font-size: 12px; opacity: .8; }
 
 /* terminal mock */
 .terminal {
