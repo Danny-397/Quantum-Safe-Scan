@@ -11,7 +11,7 @@
   <img src="https://img.shields.io/github/last-commit/Danny-397/Quantum-Safe?style=flat-square&color=555" alt="Last commit">
   <img src="https://img.shields.io/github/license/Danny-397/Quantum-Safe?style=flat-square&color=3fb950" alt="License: MIT">
   <br>
-  <img src="https://img.shields.io/badge/tests-74%20passing-3fb950?style=flat-square&logo=pytest&logoColor=white" alt="74 tests passing">
+  <img src="https://img.shields.io/badge/tests-80%20passing-3fb950?style=flat-square&logo=pytest&logoColor=white" alt="80 tests passing">
   <img src="https://img.shields.io/badge/benchmark-100%25%20precision-3fb950?style=flat-square" alt="100% precision on benchmark">
   <img src="https://img.shields.io/badge/SARIF%202.1.0-schema--validated-3fb950?style=flat-square" alt="SARIF schema-validated">
   <img src="https://img.shields.io/badge/NIST-FIPS%20203%2F204%2F205-5b73e8?style=flat-square" alt="NIST FIPS 203/204/205">
@@ -59,8 +59,8 @@ solution:
 
 | Layer | Module | What it does |
 |-------|--------|--------------|
-| **1. Attack** | [`quantum/`](quantum/) | Shor's and Grover's algorithms in **Qiskit**, run on a quantum simulator. Shor factors a number and reconstructs an RSA key — the concrete reason RSA/ECC are rated HIGH. |
-| **2. Detection** | [`cli/`](cli/) | A hybrid **AST + regex** static-analysis engine over 11 languages that scores risk and produces a NIST-aligned migration plan. **100% precision/recall** on a labeled [benchmark](benchmark/). |
+| **1. Attack** | [`quantum/`](quantum/) | Shor's and Grover's algorithms in **Qiskit**, run on a quantum simulator. At simulator scale Shor factors a small number and reconstructs a toy RSA key — an educational demonstration of *why* RSA/ECC are rated HIGH (not a break of real key sizes). |
+| **2. Detection** | [`cli/`](cli/) | A hybrid **AST + regex** static-analysis engine over 11 languages that scores risk and produces a NIST-aligned migration plan. **100% precision/recall on our labeled [benchmark](benchmark/)** (15 files, 26 findings) — see [methodology](benchmark/RESULTS.md). |
 | **3. Fix** | [`pqc/`](pqc/) | A from-scratch **lattice (LWE) key-encapsulation mechanism** — the math behind CRYSTALS-Kyber / ML-KEM — so the recommended fix is runnable and provable. |
 
 The detection layer ships through three surfaces that share **one** engine:
@@ -138,7 +138,7 @@ defense module (which *implements* the recommended fix). Full write-up in
   zero failures.
 - **Measured, not asserted** — a labeled benchmark with adversarial decoys, plus an
   empirical study (88% of real repos affected).
-- **Production practice** — one shared engine for CLI + API, **74 automated
+- **Production practice** — one shared engine for CLI + API, **80 automated
   tests**, CI, Docker, a reusable GitHub Action, and multi-service deploy configs.
 
 ---
@@ -470,7 +470,7 @@ docker compose up --build
 
 ```bash
 pip install -r requirements-dev.txt
-pytest -q                     # 65 tests; in-memory DB, no setup
+pytest -q                     # 80 tests; in-memory DB, no setup
 ```
 
 Seed a demo account so the dashboard is populated:
