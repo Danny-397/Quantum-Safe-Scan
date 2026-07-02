@@ -35,12 +35,10 @@ scores the risk 0–100, and maps every finding to its NIST FIPS 203/204/205
 replacement — backed by a real Qiskit implementation of Shor's and Grover's
 algorithms and a from-scratch lattice (LWE) key-encapsulation mechanism.
 
-<!-- Swap this screenshot for an animated demo once recorded:
-     replace the <img> line below with  ![QuantumSafe demo](docs/demo.gif) -->
 <p align="center">
   <a href="https://pypi.org/project/quantumsafe-scan/">
-    <img src="docs/screenshots/overview.png" width="820"
-         alt="QuantumSafe dashboard showing a real scan of paramiko — 100/100 Critical, 110 findings">
+    <img src="docs/demo.gif" width="860"
+         alt="QuantumSafe scanning pasted code — the Quantum Risk Score climbs to 66/100 and each finding maps to its NIST replacement">
   </a>
 </p>
 
