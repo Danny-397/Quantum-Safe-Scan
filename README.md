@@ -1,13 +1,33 @@
-# QuantumSafe
+<div align="center">
 
-[![CI](https://github.com/Danny-397/Quantamn-Safe/actions/workflows/ci.yml/badge.svg)](https://github.com/Danny-397/Quantamn-Safe/actions/workflows/ci.yml)
-[![PyPI](https://img.shields.io/pypi/v/quantumsafe-scan)](https://pypi.org/project/quantumsafe-scan/)
-![Python](https://img.shields.io/badge/python-3.9%2B-blue)
-![License: MIT](https://img.shields.io/badge/license-MIT-green)
-![Standards](https://img.shields.io/badge/NIST-FIPS%20203%2F204%2F205-9d7bff)
+<img src="docs/banner.png" alt="QuantumSafe — find the cryptography quantum computers will break" width="840">
 
-**A post-quantum security platform that demonstrates the quantum attack, detects
-the vulnerable cryptography in your code, and implements the quantum-safe fix.**
+<p>
+  <a href="https://pypi.org/project/quantumsafe-scan/"><img src="https://img.shields.io/pypi/v/quantumsafe-scan?style=flat-square&logo=pypi&logoColor=white&color=5b73e8" alt="PyPI version"></a>
+  <img src="https://img.shields.io/pypi/pyversions/quantumsafe-scan?style=flat-square&logo=python&logoColor=white" alt="Python versions">
+  <a href="https://github.com/Danny-397/Quantamn-Safe/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Danny-397/Quantamn-Safe/ci.yml?branch=main&style=flat-square&logo=githubactions&logoColor=white&label=CI" alt="CI status"></a>
+  <a href="https://github.com/Danny-397/Quantamn-Safe/tags"><img src="https://img.shields.io/github/v/tag/Danny-397/Quantamn-Safe?style=flat-square&logo=github&label=version&color=5b73e8" alt="Latest version"></a>
+  <a href="https://github.com/Danny-397/Quantamn-Safe/stargazers"><img src="https://img.shields.io/github/stars/Danny-397/Quantamn-Safe?style=flat-square&logo=github" alt="Stars"></a>
+  <img src="https://img.shields.io/github/last-commit/Danny-397/Quantamn-Safe?style=flat-square&color=555" alt="Last commit">
+  <img src="https://img.shields.io/github/license/Danny-397/Quantamn-Safe?style=flat-square&color=3fb950" alt="License: MIT">
+  <br>
+  <img src="https://img.shields.io/badge/tests-74%20passing-3fb950?style=flat-square&logo=pytest&logoColor=white" alt="74 tests passing">
+  <img src="https://img.shields.io/badge/benchmark-100%25%20precision-3fb950?style=flat-square" alt="100% precision on benchmark">
+  <img src="https://img.shields.io/badge/SARIF%202.1.0-schema--validated-3fb950?style=flat-square" alt="SARIF schema-validated">
+  <img src="https://img.shields.io/badge/NIST-FIPS%20203%2F204%2F205-5b73e8?style=flat-square" alt="NIST FIPS 203/204/205">
+  <img src="https://img.shields.io/badge/PRs-welcome-5b73e8?style=flat-square" alt="PRs welcome">
+</p>
+
+<strong>Scan your code for the encryption quantum computers will break, score it 0&ndash;100, and get the NIST-approved replacement for every finding &mdash; free &amp; open source.</strong>
+
+<br><br>
+
+<a href="https://pypi.org/project/quantumsafe-scan/"><b>Install</b></a> &nbsp;&middot;&nbsp;
+<a href="docs/WHITEPAPER.md"><b>Documentation</b></a> &nbsp;&middot;&nbsp;
+<a href="#the-three-layers"><b>How it works</b></a> &nbsp;&middot;&nbsp;
+<a href="https://github.com/Danny-397/Quantamn-Safe/issues"><b>Report a bug</b></a>
+
+</div>
 
 QuantumSafe scans code across 11 languages for the cryptography that quantum
 computers will break (RSA, ECC, Diffie-Hellman) or weaken (AES-128, SHA-256),
