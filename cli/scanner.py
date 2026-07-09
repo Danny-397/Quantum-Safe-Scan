@@ -402,7 +402,8 @@ def _dedupe(findings: list[Finding]) -> list[Finding]:
 # --------------------------------------------------------------------------- #
 
 
-def scan_file(abs_path: str, rel_path: str, mask_python_strings: bool = True) -> list[Finding]:
+def scan_file(abs_path: str, rel_path: str, mask_python_strings: bool = True,
+              taint: bool = False) -> list[Finding]:
     ext = os.path.splitext(abs_path)[1].lower()
     lang = EXT_TO_LANG.get(ext)
     if lang is None:
@@ -427,6 +428,10 @@ def scan_file(abs_path: str, rel_path: str, mask_python_strings: bool = True) ->
     findings = _regex_scan(match_lines, lines, lang, rel_path)
     if lang == "python":
         findings += _ast_scan_python(source, rel_path, lines)
+        if taint:
+            # Interprocedural data-flow pass: crypto reached through wrappers.
+            from .taint import taint_scan_python
+            findings += taint_scan_python(source, rel_path, lines)
 
     # Honor inline suppressions: a line containing "quantumsafe: ignore".
     if findings:
@@ -449,13 +454,15 @@ def _is_excluded(rel_path: str, patterns: list[str] | None) -> bool:
 
 
 def scan_path(path: str, exclude: list[str] | None = None,
-              mask_python_strings: bool = True) -> list[Finding]:
+              mask_python_strings: bool = True, taint: bool = False) -> list[Finding]:
     """Recursively scan a local directory (or single file) for vulnerabilities.
 
     ``exclude`` is an optional list of glob patterns (matched against the path
     relative to ``path``, using forward slashes) to skip. ``mask_python_strings``
     (default on) enables the string/comment-aware pass; set it False to measure
-    the naive line-regex baseline (used by the benchmark).
+    the naive line-regex baseline (used by the benchmark). ``taint`` (default
+    off) enables the experimental interprocedural data-flow pass that also flags
+    quantum-vulnerable crypto reached through Python wrapper functions.
     """
     path = os.path.abspath(path)
     if not os.path.exists(path):
@@ -463,7 +470,7 @@ def scan_path(path: str, exclude: list[str] | None = None,
 
     findings: list[Finding] = []
     if os.path.isfile(path):
-        findings = scan_file(path, os.path.basename(path), mask_python_strings)
+        findings = scan_file(path, os.path.basename(path), mask_python_strings, taint)
     else:
         for root, dirs, files in os.walk(path):
             dirs[:] = [d for d in dirs if d not in _SKIP_DIRS]
@@ -472,7 +479,7 @@ def scan_path(path: str, exclude: list[str] | None = None,
                 rel_path = os.path.relpath(abs_path, path).replace(os.sep, "/")
                 if _is_excluded(rel_path, exclude):
                     continue
-                findings.extend(scan_file(abs_path, rel_path, mask_python_strings))
+                findings.extend(scan_file(abs_path, rel_path, mask_python_strings, taint))
 
     findings = _dedupe(findings)
     for f in findings:
@@ -496,7 +503,7 @@ def _validate_repo_url(url: str) -> str:
     return url
 
 
-def scan_repo(url: str, exclude: list[str] | None = None) -> list[Finding]:
+def scan_repo(url: str, exclude: list[str] | None = None, taint: bool = False) -> list[Finding]:
     """Shallow-clone a public GitHub repo to a temp dir, scan it, then clean up."""
     url = _validate_repo_url(url)
     if shutil.which("git") is None:
@@ -510,6 +517,6 @@ def scan_repo(url: str, exclude: list[str] | None = None) -> list[Finding]:
         )
         if result.returncode != 0:
             raise RuntimeError(f"Failed to clone repository: {result.stderr.strip()}")
-        return scan_path(tmp, exclude=exclude)
+        return scan_path(tmp, exclude=exclude, taint=taint)
     finally:
         shutil.rmtree(tmp, ignore_errors=True)

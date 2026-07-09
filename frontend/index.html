@@ -75,23 +75,48 @@
       </div>
     </section>
 
-    <!-- Unified scanner: paste code OR scan a repo/zip (tabs) -->
+    <!-- Unified scanner: scan a whole repo/zip (primary) OR paste a snippet (instant demo) -->
     <section class="section wrap" id="scan">
       <div class="section-head">
         <div class="eyebrow">// Scan — free, no account</div>
         <h2>Scan your code for quantum-vulnerable cryptography.</h2>
-        <p class="lead">Paste a snippet, point at a GitHub repo, or upload a .zip. You get a 0–100
+        <p class="lead">Point at a GitHub repo, upload a .zip, or paste a snippet. You get a 0–100
           risk score, every finding pinned to file &amp; line, and the NIST-approved fix —
           exportable as SARIF or CBOM. Nothing is saved unless you create a free account.</p>
       </div>
 
-      <div class="scan-tabs" role="tablist" aria-label="Choose how to scan">
-        <button class="scan-tab active" role="tab" aria-selected="true" aria-controls="tab-paste" id="tabbtn-paste" data-tab="paste">Paste code</button>
-        <button class="scan-tab" role="tab" aria-selected="false" aria-controls="tab-repo" id="tabbtn-repo" data-tab="repo">GitHub repo or .zip</button>
+      <!-- PRIMARY: scan a whole codebase from GitHub or a .zip -->
+      <div class="scan-primary card" id="scan-repo">
+        <div class="scan-primary-head">
+          <h3>Scan a whole codebase</h3>
+          <span class="scan-primary-tag">Most popular · no account, no install</span>
+        </div>
+        <div class="home-scan-row">
+          <input id="home-scan-repo" type="text" placeholder="https://github.com/owner/repo"
+                 aria-label="GitHub repository URL" />
+          <button class="btn btn-primary" id="home-scan-run">Scan GitHub repo →</button>
+        </div>
+        <div class="home-scan-or"><span>or</span></div>
+        <label class="home-scan-file">
+          <span class="muted">Upload a <strong>.zip</strong> of your codebase (25 MB max)</span>
+          <input id="home-scan-file" type="file" accept=".zip" aria-label="Upload a .zip of your codebase" />
+        </label>
+        <div id="home-scan-msg" class="msg"></div>
+        <div class="home-scan-save">
+          <span>Scans every file across <strong>11 languages</strong> — results open instantly,
+            <strong>no account needed.</strong></span>
+          <span class="muted"><a href="login.html">Sign in</a> or
+            <a href="login.html?mode=register">create a free account</a> to save this scan to your history.</span>
+        </div>
+        <p class="muted mono home-scan-note">github.com HTTPS repos only · your results are held in your browser</p>
       </div>
 
-      <!-- Tab: paste code -->
-      <div class="scan-panel" id="tab-paste" role="tabpanel" aria-labelledby="tabbtn-paste">
+      <!-- SECONDARY: instant in-browser paste demo -->
+      <div class="scan-secondary" id="scan-paste">
+        <div class="scan-secondary-head">
+          <h3>Or try it instantly — paste a snippet</h3>
+          <span class="muted">Runs live in your browser · nothing uploaded</span>
+        </div>
       <div class="demo-grid">
         <div class="demo-left">
           <div class="demo-toolbar">
@@ -123,36 +148,13 @@
           </div>
           <div class="demo-findings" id="demo-findings"></div>
           <p class="muted demo-upsell">
-            This scans one snippet in your browser. Use the <b>GitHub repo or .zip</b> tab above to
-            scan a whole codebase — still no account. A <a href="login.html?mode=register">free account</a>
+            This scans one snippet in your browser. Use <b><a href="#scan-repo">Scan a whole codebase</a></b> above to
+            check an entire repo or .zip — still no account. A <a href="login.html?mode=register">free account</a>
             only adds saved scan history, email alerts, and a CLI key.
           </p>
         </div>
       </div>
-      </div><!-- /#tab-paste -->
-
-      <!-- Tab: GitHub repo or .zip -->
-      <div class="scan-panel hidden" id="tab-repo" role="tabpanel" aria-labelledby="tabbtn-repo">
-      <div class="home-scan card">
-        <div class="home-scan-row">
-          <input id="home-scan-repo" type="text" placeholder="https://github.com/owner/repo"
-                 aria-label="GitHub repository URL" />
-          <button class="btn btn-primary" id="home-scan-run">Scan GitHub →</button>
-        </div>
-        <div class="home-scan-or"><span>or</span></div>
-        <label class="home-scan-file">
-          <span class="muted">Upload a <strong>.zip</strong> of your codebase (25 MB max)</span>
-          <input id="home-scan-file" type="file" accept=".zip" aria-label="Upload a .zip of your codebase" />
-        </label>
-        <div id="home-scan-msg" class="msg"></div>
-        <div class="home-scan-save">
-          <span>Results open instantly — <strong>no account needed.</strong></span>
-          <span class="muted"><a href="login.html">Sign in</a> or
-            <a href="login.html?mode=register">create a free account</a> to save this scan to your history.</span>
-        </div>
-        <p class="muted mono home-scan-note">github.com HTTPS repos only · your results are held in your browser</p>
-      </div>
-      </div><!-- /#tab-repo -->
+      </div><!-- /#scan-paste -->
     </section>
 
     <!-- What it flags -->

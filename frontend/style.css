@@ -263,17 +263,31 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
 .home-scan .msg { margin-top: 14px; margin-bottom: 0; }
 .home-scan-note { font-size: 12px; margin-top: 10px; }
 
-/* ---------- Scanner tabs (Paste code / GitHub repo or .zip) ---------- */
-.scan-tabs { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom: 22px; }
-.scan-tab {
-  background: transparent; border: 1px solid var(--border); color: var(--muted);
-  padding: 9px 18px; border-radius: 999px; font-family: var(--sans);
-  font-size: 14px; font-weight: 600; cursor: pointer;
-  transition: color .14s ease, border-color .14s ease, background .14s ease;
+/* ---------- Scanner: primary (repo/.zip) + secondary (paste demo) ---------- */
+/* The whole-codebase scanner is the headline action; the paste demo sits below
+   it as a lighter "try it instantly" panel so neither path is ever hidden. */
+.scan-primary {
+  max-width: 720px; margin: 0 auto 12px;
+  border: 1px solid rgba(91,115,232,.45);
+  box-shadow: 0 0 0 3px rgba(91,115,232,.06);
 }
-.scan-tab:hover { color: var(--text); border-color: var(--border-strong); }
-.scan-tab.active { background: #3f52d6; color: #fff; border-color: transparent; }
-.scan-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.scan-primary-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap; margin-bottom: 14px;
+}
+.scan-primary-head h3 { font-size: 17px; margin: 0; }
+.scan-primary-tag {
+  font-size: 12px; font-weight: 600; color: var(--accent);
+  background: rgba(91,115,232,.1); border: 1px solid rgba(91,115,232,.3);
+  padding: 3px 10px; border-radius: 999px; white-space: nowrap;
+}
+.scan-secondary { max-width: 940px; margin: 26px auto 0; }
+.scan-secondary-head {
+  display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  justify-content: center; text-align: center; margin-bottom: 16px;
+}
+.scan-secondary-head h3 { font-size: 15px; margin: 0; color: var(--text); }
+.scan-secondary-head::before, .scan-secondary-head::after { content: none; }
 
 /* ---------- "Run it in CI" block ---------- */
 .ci-block { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center;

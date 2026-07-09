@@ -38,6 +38,26 @@ inside Python docstrings, log strings, and exception messages) without losing a
 true positive. Comment-only mentions and word-boundary traps are handled by the
 comment filter and anchored patterns.
 
+## Real-world benchmark (`realworld.py`)
+
+`evaluate.py` measures **precision/recall** on a small labeled corpus.
+`realworld.py` answers the complementary question — *what does the scanner find in
+real production code?* — by downloading the latest sdist of 37 popular PyPI
+packages from the PyPI JSON API, extracting each (nothing built or executed), and
+running the scanner:
+
+```bash
+python benchmark/realworld.py            # curated 37-package set
+python benchmark/realworld.py --limit 10 # first N only
+python benchmark/realworld.py flask paramiko  # explicit packages
+```
+
+Latest run: **32 of 37** packages had findings across **10,938** Python files —
+**5,512** findings (**4,083** HIGH-risk). Full results, per-package table, and
+`file:line` examples in [RESULTS-realworld.md](RESULTS-realworld.md). Because these
+are *unlabeled* real packages, results are reported as *discoveries* (each with
+provenance), not scored against ground truth.
+
 ## Honest limitations (what this benchmark does *not* prove)
 
 This is a focused regression benchmark, not a large-scale field study. Real-world

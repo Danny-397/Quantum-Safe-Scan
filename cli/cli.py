@@ -74,10 +74,10 @@ def cmd_scan(args: argparse.Namespace) -> int:
     try:
         if args.repo:
             target = args.repo
-            findings = scan_repo(args.repo, exclude=exclude)
+            findings = scan_repo(args.repo, exclude=exclude, taint=args.taint)
         else:
             target = os.path.abspath(args.path)
-            findings = scan_path(args.path, exclude=exclude)
+            findings = scan_path(args.path, exclude=exclude, taint=args.taint)
     except (FileNotFoundError, ValueError, RuntimeError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return 1
@@ -176,6 +176,10 @@ def build_parser() -> argparse.ArgumentParser:
                              ".html, .sarif, or .svg (risk badge).")
     p_scan.add_argument("--exclude", action="append", metavar="GLOB",
                         help="Glob of paths to skip (repeatable), e.g. --exclude 'tests/*'.")
+    p_scan.add_argument("--taint", action="store_true",
+                        help="Also run interprocedural data-flow analysis to flag "
+                             "quantum-vulnerable crypto reached through Python wrapper "
+                             "functions (experimental).")
     p_scan.add_argument("--fail-on-high", action="store_true",
                         help="Exit with code 1 if any HIGH-risk finding is present (for CI).")
     p_scan.add_argument("--no-sync", action="store_true",

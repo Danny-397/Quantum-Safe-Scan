@@ -122,6 +122,9 @@ defense module (which *implements* the recommended fix). Full write-up in
 
 - **11-language detection** — Python (AST-aware), JavaScript/TypeScript, Java, Go,
   Ruby, C#, PHP, Rust, C/C++, Kotlin, Swift.
+- **Data-flow (taint) analysis** — optional `--taint` pass builds a call graph and
+  propagates taint to fixpoint, so it catches quantum-vulnerable crypto reached
+  through Python **wrapper functions**, not just direct calls.
 - **0–100 Quantum Risk Score** computed from real findings (never hardcoded), with
   Low/Medium/High/Critical bands.
 - **NIST-aligned migration plan** — each finding mapped to ML-KEM/ML-DSA/SHA-3/
@@ -235,6 +238,37 @@ protocol library, a few of those suppressed string constants are arguably real
 signals, so 110 is a deliberately conservative, code-focused count — not a claim
 that the other 341 were all false positives.*
 
+### Real-world benchmark — 37 of the most-downloaded PyPI packages
+
+`benchmark/realworld.py` scales the paramiko example up: it pulls the latest
+sdist of 37 widely-used packages straight from the PyPI JSON API, extracts each
+(nothing is built or executed), and runs the real scanner. Fully reproducible:
+
+```bash
+python benchmark/realworld.py
+```
+
+| Metric | Result |
+|---|---|
+| Packages scanned | **37** |
+| Packages with ≥1 finding | **32 (86%)** |
+| Python files analyzed | **10,938** |
+| Total findings | **5,512** — **4,083 HIGH-risk** |
+| Most common families | `ecc` ×1,709, `sha256` ×956, `rsa` ×770, `sha1` ×576, `dsa` ×355, `md5` ×351 |
+
+Every finding is a concrete `file:line` an auditor can open — e.g. Diffie-Hellman
+in `twisted/conch/ssh/transport.py`, MD5 in `requests/auth.py` (HTTP Digest), and
+ECDSA throughout `paramiko`. Full per-package table and examples:
+[benchmark/RESULTS-realworld.md](benchmark/RESULTS-realworld.md).
+
+> *Honest caveat: some of these packages **are** cryptography libraries
+> (`cryptography`, `pycryptodome`, `ecdsa`, `rsa`, `pyopenssl`), so their large
+> counts are expected — they implement RSA/ECC on purpose. The more telling signal
+> is the *application* and *infrastructure* code that still reaches for
+> quantum-vulnerable primitives: `django`, `botocore`, `pymongo`, `scrapy`,
+> `celery`, `requests`, `aiohttp`. That's exactly the "harvest now, decrypt later"
+> surface the tool is built to inventory.*
+
 ### Empirical study — how widespread is the problem?
 
 Scanning 8 widely-used open-source projects ([`study/`](study/), reproducible via
@@ -302,6 +336,9 @@ quantumsafe scan --path ./myproject --output report.sarif       # GitHub code sc
 quantumsafe scan --path ./myproject --output report.cbom.json   # CycloneDX CBOM
 quantumsafe scan --path ./myproject --output badge.svg          # embeddable risk badge
 
+# Also flag crypto reached through Python wrapper functions (data-flow analysis)
+quantumsafe scan --path ./myproject --taint
+
 # Skip paths with glob patterns (repeatable)
 quantumsafe scan --path . --exclude 'tests/*' --exclude 'vendor/*'
 
@@ -326,6 +363,7 @@ quantumsafe version
 | `--repo` | Public `https://github.com/<org>/<repo>` URL |
 | `--output` | Write to `.json`, `.cbom.json` (CycloneDX CBOM), `.html`, `.sarif`, or `.svg` (risk badge); terminal summary still printed |
 | `--exclude` | Glob of paths to skip (repeatable) |
+| `--taint` | Also run interprocedural data-flow analysis (Python): flag quantum-vulnerable crypto reached through wrapper functions, not just direct calls |
 | `--fail-on-high` | Exit non-zero on any HIGH finding (CI gate) |
 | `--no-sync` | Don't upload the result to your linked dashboard |
 

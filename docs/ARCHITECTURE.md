@@ -37,6 +37,7 @@ risk model and implement the recommended defense, not to serve API traffic.
 | Component        | Location     | Responsibility                                                        |
 |------------------|--------------|-----------------------------------------------------------------------|
 | Scanner          | `cli/scanner.py`     | AST (Python) + regex (11 langs) detection; produces `Finding`s |
+| Taint analysis   | `cli/taint.py`       | Optional interprocedural data-flow pass: call graph + fixpoint taint to catch crypto reached through Python wrappers |
 | Risk scorer      | `cli/scorer.py`      | `15·HIGH + 5·MED + 1·LOW`, capped at 100; risk bands           |
 | Recommender      | `cli/recommender.py` | Maps each family → NIST replacement, FIPS ref, complexity      |
 | Reporter         | `cli/reporter.py`    | Terminal / JSON / HTML / SARIF / CycloneDX CBOM / SVG badge    |
@@ -45,7 +46,7 @@ risk model and implement the recommended defense, not to serve API traffic.
 | Dashboard        | `frontend/`          | Static site (vanilla JS): scans, findings, plans, settings     |
 | Quantum module   | `quantum/`           | Shor + Grover (Qiskit) + resource estimation                   |
 | Post-quantum     | `pqc/`               | LWE key-encapsulation mechanism + benchmark                    |
-| Benchmark        | `benchmark/`         | Labeled corpus + precision/recall evaluation                   |
+| Benchmark        | `benchmark/`         | Labeled corpus + precision/recall (`evaluate.py`); real-world PyPI scan (`realworld.py`) |
 | Study            | `study/`             | Empirical scan over real open-source repos                     |
 
 ---

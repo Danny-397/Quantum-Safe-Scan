@@ -151,38 +151,6 @@
 
     initDemoScanner();
     initHomeScan();
-    wireScanTabs();
-  }
-
-  // Tabbed scanner: switch between "Paste code" and "GitHub repo or .zip".
-  function activateScanTab(name) {
-    $$(".scan-tab").forEach((t) => {
-      const on = t.dataset.tab === name;
-      t.classList.toggle("active", on);
-      t.setAttribute("aria-selected", on ? "true" : "false");
-    });
-    $$(".scan-panel").forEach((p) => p.classList.toggle("hidden", p.id !== "tab-" + name));
-  }
-  function wireScanTabs() {
-    const tabs = $$(".scan-tab");
-    if (!tabs.length) return;
-    tabs.forEach((tab, i) => {
-      tab.addEventListener("click", () => {
-        activateScanTab(tab.dataset.tab);
-        const el = $(tab.dataset.tab === "repo" ? "#home-scan-repo" : "#demo-input");
-        if (el) setTimeout(() => el.focus({ preventScroll: true }), 60);
-      });
-      // WAI-ARIA tabs pattern: arrow keys move between tabs.
-      tab.addEventListener("keydown", (e) => {
-        let j = null;
-        if (e.key === "ArrowRight") j = (i + 1) % tabs.length;
-        else if (e.key === "ArrowLeft") j = (i - 1 + tabs.length) % tabs.length;
-        if (j === null) return;
-        e.preventDefault();
-        activateScanTab(tabs[j].dataset.tab);
-        tabs[j].focus();
-      });
-    });
   }
 
   // Anonymous "scan a whole repo or upload a .zip" launcher on the landing page.
