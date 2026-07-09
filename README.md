@@ -261,6 +261,13 @@ in `twisted/conch/ssh/transport.py`, MD5 in `requests/auth.py` (HTTP Digest), an
 ECDSA throughout `paramiko`. Full per-package table and examples:
 [benchmark/RESULTS-realworld.md](benchmark/RESULTS-realworld.md).
 
+| Findings by family (colored by risk tier) | Packages with the most HIGH-risk findings |
+|---|---|
+| ![by family](benchmark/graphs/realworld_by_family.png) | ![top packages](benchmark/graphs/realworld_top_packages.png) |
+
+_Charts are generated from `benchmark/realworld.json` by
+`python benchmark/graphs/generate_realworld_graphs.py` — not hand-drawn._
+
 > *Honest caveat: some of these packages **are** cryptography libraries
 > (`cryptography`, `pycryptodome`, `ecdsa`, `rsa`, `pyopenssl`), so their large
 > counts are expected — they implement RSA/ECC on purpose. The more telling signal

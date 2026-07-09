@@ -19,3 +19,15 @@ quantumsafe scan --path . --exclude 'legacy/*'       # skip a folder
 ```
 
 The `safe.py` file shows an inline suppression (`# quantumsafe: ignore`).
+
+## Data-flow analysis (`--taint`)
+
+`wrapped_crypto.py` hides MD5 and RSA behind wrapper functions. A plain scan only
+flags the direct primitive lines; the optional data-flow pass follows the call
+graph and also flags the wrappers and their call sites — where no crypto keyword
+appears at all:
+
+```bash
+quantumsafe scan --path wrapped_crypto.py            # direct calls only
+quantumsafe scan --path wrapped_crypto.py --taint    # + the wrapper blast radius
+```

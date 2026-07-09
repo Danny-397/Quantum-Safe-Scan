@@ -165,6 +165,13 @@
     }));
     const repo = $("#home-scan-repo");
     if (repo) repo.addEventListener("keydown", (e) => { if (e.key === "Enter") btn.click(); });
+    // One-click example repos: fill the input and launch the scan immediately.
+    $$(".scan-chip").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        if (repo) repo.value = chip.dataset.repo || "";
+        btn.click();
+      });
+    });
   }
 
   // ---- In-browser live scanner (client-side, nothing leaves the browser) ----
