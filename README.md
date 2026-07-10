@@ -22,6 +22,7 @@
 
 <br><br>
 
+<a href="https://quantumsafescan.com"><b>Live demo</b></a> &nbsp;&middot;&nbsp;
 <a href="https://pypi.org/project/quantumsafe-scan/"><b>Install</b></a> &nbsp;&middot;&nbsp;
 <a href="docs/WHITEPAPER.md"><b>Documentation</b></a> &nbsp;&middot;&nbsp;
 <a href="#the-three-layers"><b>How it works</b></a> &nbsp;&middot;&nbsp;
@@ -36,7 +37,7 @@ replacement — backed by a real Qiskit implementation of Shor's and Grover's
 algorithms and a from-scratch lattice (LWE) key-encapsulation mechanism.
 
 <p align="center">
-  <a href="https://pypi.org/project/quantumsafe-scan/">
+  <a href="https://quantumsafescan.com">
     <img src="docs/demo.gif" width="860"
          alt="QuantumSafe scanning pasted code — the Quantum Risk Score climbs to 66/100 and each finding maps to its NIST replacement">
   </a>
@@ -536,7 +537,7 @@ See [`.env.example`](.env.example).
 | `SECRET_KEY` | ✅ | Generate: `python -c "import secrets;print(secrets.token_hex(32))"` |
 | `JWT_SECRET_KEY` | ✅ | Generate the same way (use a different value) |
 | `DATABASE_URL` | prod | Render Postgres dashboard → *Connections* (SQLite used if unset) |
-| `FRONTEND_ORIGIN` | ✅ | Your dashboard URL, e.g. `https://quantumsafe.vercel.app` |
+| `FRONTEND_ORIGIN` | ✅ | Your dashboard URL, e.g. `https://quantumsafescan.com` |
 | `DASHBOARD_URL` | ✅ | Same as above (used in emails) |
 | `API_URL` | ✅ | The deployed API URL (used for email verify links) |
 | `MAIL_SERVER` / `MAIL_PORT` / `MAIL_USE_TLS` | email | Your SMTP provider (e.g. `smtp.gmail.com` / 587 / true) |
