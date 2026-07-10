@@ -140,7 +140,10 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
 .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
 
 /* ---------- Hero ---------- */
-.hero { position: relative; display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; padding: 80px 0 70px; }
+/* Vertical padding only — the horizontal gutter comes from .wrap. Using the
+   `padding` shorthand here would reset .wrap's left/right padding to 0 (equal
+   specificity, later in source), leaving content flush to the screen on mobile. */
+.hero { position: relative; display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; padding-top: 80px; padding-bottom: 70px; }
 /* Let grid children shrink below their content's intrinsic width so the
    terminal mock (white-space:pre) scrolls internally instead of widening
    the whole page on narrow screens. */
@@ -176,7 +179,7 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
 .term-caption { margin-top: 10px; text-align: right; font-size: 12px; color: var(--muted-2); letter-spacing: .02em; }
 
 /* ---------- Sections ---------- */
-.section { padding: 66px 0; border-top: 1px solid var(--border); }
+.section { padding-top: 66px; padding-bottom: 66px; border-top: 1px solid var(--border); }
 .section-head { max-width: 660px; margin-bottom: 38px; }
 .section-head h2 { font-size: 30px; margin-bottom: 10px; }
 .section-head .lead { color: var(--muted); font-size: 16px; }
@@ -224,7 +227,7 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
 .pillar p { color: var(--muted); font-size: 14px; }
 .trust { color: var(--muted); font-family: var(--mono); font-size: 13px; }
 
-.footer { color: var(--muted-2); font-size: 13px; padding: 38px 0; border-top: 1px solid var(--border); }
+.footer { color: var(--muted-2); font-size: 13px; padding-top: 38px; padding-bottom: 38px; border-top: 1px solid var(--border); }
 .footer-links { margin-bottom: 10px; font-size: 13px; }
 .footer-links a { color: var(--muted); }
 .footer-links a:hover { color: var(--accent); }
@@ -523,7 +526,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 
 @media (max-width: 880px) {
-  .hero { grid-template-columns: 1fr; gap: 36px; padding: 48px 0; }
+  .hero { grid-template-columns: 1fr; gap: 36px; padding-top: 48px; padding-bottom: 48px; }
   .hero h1 { font-size: 36px; }
   .steps, .demo-grid, .grid-4, .grid-3, .grid-2, .pillars { grid-template-columns: 1fr; }
   .step { border-right: none; border-bottom: 1px solid var(--border); }
@@ -573,11 +576,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 
 @media (max-width: 640px) {
-  .wrap { padding: 0 24px; }
-  .hero { padding: 36px 0 30px; }
+  .wrap { padding-left: 24px; padding-right: 24px; }
+  .hero { padding-top: 36px; padding-bottom: 30px; }
   .hero h1 { font-size: 30px; }
   .hero .sub { font-size: 16px; }
-  .section { padding: 44px 0; }
+  .section { padding-top: 44px; padding-bottom: 44px; }
   .section-head { margin-bottom: 26px; }
   .section-head h2 { font-size: 24px; }
   .hero-cta .btn, .cta-band .btn { flex: 1 1 auto; }
