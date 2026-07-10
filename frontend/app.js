@@ -127,6 +127,34 @@
     if (b) b.addEventListener("click", () => { clearToken(); location.href = "index.html"; });
   }
 
+  // Inject a hamburger toggle into the top nav so the links collapse into a
+  // tap-to-open menu on phones (CSS hides the button above the mobile width).
+  function initMobileNav() {
+    const nav = $("header.nav");
+    if (!nav) return;
+    const links = nav.querySelector(".nav-links");
+    if (!links || nav.querySelector(".nav-toggle")) return;
+
+    if (!links.id) links.id = "primary-nav";
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "nav-toggle";
+    btn.setAttribute("aria-label", "Toggle navigation menu");
+    btn.setAttribute("aria-expanded", "false");
+    btn.setAttribute("aria-controls", links.id);
+    btn.innerHTML = "<span></span><span></span><span></span>";
+    nav.insertBefore(btn, links);
+
+    const close = () => { nav.classList.remove("nav-open"); btn.setAttribute("aria-expanded", "false"); };
+    btn.addEventListener("click", () => {
+      const open = nav.classList.toggle("nav-open");
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+    // Close after choosing a link, or once the viewport grows back to desktop.
+    links.querySelectorAll("a").forEach((a) => a.addEventListener("click", close));
+    window.addEventListener("resize", () => { if (window.innerWidth > 720) close(); });
+  }
+
   // =========================================================================
   //  LANDING
   // =========================================================================
@@ -999,6 +1027,7 @@
   document.addEventListener("DOMContentLoaded", () => {
     const page = location.pathname.split("/").pop() || "index.html";
     reflectAuthInNav();
+    initMobileNav();
     if (page === "" || page === "index.html") initLanding();
     else if (page === "login.html") initAuth();
     else if (page === "dashboard.html") initDashboard();

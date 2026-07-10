@@ -129,10 +129,22 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
 .nav-links a { color: var(--muted); font-size: 14px; font-weight: 500; }
 .nav-links a:hover { color: var(--text); }
 
+/* Mobile menu button — injected by app.js, hidden until the mobile breakpoint. */
+.nav-toggle { display: none; flex-direction: column; justify-content: center; gap: 5px;
+  width: 44px; height: 40px; padding: 0 10px; cursor: pointer; flex: none;
+  background: rgba(255,255,255,.02); border: 1px solid var(--border-strong); border-radius: var(--r-sm); }
+.nav-toggle span { display: block; height: 2px; width: 100%; background: var(--text); border-radius: 2px;
+  transition: transform .2s ease, opacity .2s ease; }
+.nav-toggle:hover { border-color: var(--accent); }
+
 .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
 
 /* ---------- Hero ---------- */
 .hero { position: relative; display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; padding: 80px 0 70px; }
+/* Let grid children shrink below their content's intrinsic width so the
+   terminal mock (white-space:pre) scrolls internally instead of widening
+   the whole page on narrow screens. */
+.hero > * { min-width: 0; }
 .hero h1 { font-size: 48px; line-height: 1.05; margin-bottom: 20px; font-weight: 700; }
 .hero h1 .grn { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .hero .sub { color: var(--muted); font-size: 17px; line-height: 1.65; max-width: 540px; margin-bottom: 28px; }
@@ -341,7 +353,9 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
 .side-legal a { color: var(--muted-2); }
 .side-legal a:hover { color: var(--accent); }
 
-.main { padding: 28px 36px; max-width: 1200px; }
+/* min-width:0 lets the content column shrink so wide tables (.table-wrap)
+   scroll within their card rather than stretching the page sideways. */
+.main { padding: 28px 36px; max-width: 1200px; min-width: 0; }
 .page-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
 .page-head h1 { font-size: 24px; }
 
@@ -396,6 +410,10 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
 .band-Medium { color: var(--warning); }
 .band-High { color: var(--high); }
 .band-Critical { color: var(--danger); }
+
+/* Horizontal scroll container so wide tables swipe within their card on
+   narrow screens instead of forcing the whole page wider than the viewport. */
+.table-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
 table.tbl { width: 100%; border-collapse: collapse; font-size: 14px; }
 table.tbl th { text-align: left; padding: 10px 12px; color: var(--muted); font-size: 11px;
@@ -510,13 +528,71 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .steps, .demo-grid, .grid-4, .grid-3, .grid-2, .pillars { grid-template-columns: 1fr; }
   .step { border-right: none; border-bottom: 1px solid var(--border); }
   .step:last-child { border-bottom: none; }
-  .app { grid-template-columns: 1fr; }
-  .sidebar { position: static; height: auto; }
   .cta-band { flex-direction: column; align-items: flex-start; }
+
+  /* Dashboard shell: sidebar collapses into a sticky top bar with a
+     horizontally-scrolling nav strip so it never eats the whole first screen. */
+  .app { grid-template-columns: 1fr; }
+  .sidebar {
+    position: sticky; top: 0; z-index: 20; height: auto;
+    border-right: none; border-bottom: 1px solid var(--border);
+    padding: 12px 16px; background: rgba(13,17,23,.92); backdrop-filter: blur(12px) saturate(140%);
+  }
+  .sidebar .brand { margin: 0 0 10px; }
+  .sidebar nav { flex-direction: row; gap: 2px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+    padding-bottom: 2px; scrollbar-width: none; }
+  .sidebar nav::-webkit-scrollbar { display: none; }
+  .sidebar nav a { white-space: nowrap; padding: 8px 13px; }
+  .sidebar nav a.active { box-shadow: inset 0 -2px 0 var(--accent); }
+  .sidebar .side-foot { position: static; left: auto; right: auto; bottom: auto;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; }
+  .sidebar .side-foot .btn-block { width: auto; flex: 1 1 auto; margin-top: 0 !important; }
+  .side-legal { margin-top: 0; margin-left: auto; }
+  .main { padding: 20px 18px; }
+}
+
+@media (max-width: 720px) {
+  /* Landing / research top nav → hamburger menu. */
+  .nav { position: relative; padding: 12px 18px; }
+  .nav-toggle { display: flex; }
+  .nav-links {
+    display: none; position: absolute; top: 100%; left: 0; right: 0;
+    flex-direction: column; align-items: stretch; gap: 0;
+    background: rgba(13,17,23,.98); backdrop-filter: blur(12px) saturate(140%);
+    border-bottom: 1px solid var(--border); padding: 6px 18px 14px;
+    box-shadow: 0 24px 40px -30px rgba(0,0,0,.8);
+  }
+  .nav.nav-open .nav-links { display: flex; }
+  .nav-links a { padding: 13px 4px; font-size: 15px; border-bottom: 1px solid var(--border); }
+  .nav-links a:last-child { border-bottom: none; }
+  .nav-links a.btn-primary { margin-top: 12px; padding: 13px 18px; }
+  /* hamburger → X */
+  .nav.nav-open .nav-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav.nav-open .nav-toggle span:nth-child(2) { opacity: 0; }
+  .nav.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 }
 
 @media (max-width: 640px) {
-  .nav { flex-wrap: wrap; gap: 10px 0; padding: 12px 18px; }
-  .nav-links { flex-wrap: wrap; gap: 14px 16px; row-gap: 10px; }
-  .nav-links a { font-size: 13.5px; }
+  .wrap { padding: 0 16px; }
+  .hero { padding: 36px 0 30px; }
+  .hero h1 { font-size: 30px; }
+  .hero .sub { font-size: 16px; }
+  .section { padding: 44px 0; }
+  .section-head { margin-bottom: 26px; }
+  .section-head h2 { font-size: 24px; }
+  .hero-cta .btn, .cta-band .btn { flex: 1 1 auto; }
+  .page-head { flex-wrap: wrap; gap: 12px; }
+  .page-head .toolbar { width: 100%; }
+  .main { padding: 18px 16px; }
+  .legal { padding: 32px 18px 60px; }
+  .legal h1 { font-size: 25px; }
+  .scan-primary, .scan-secondary-head { text-align: left; }
+
+  /* Wide tables keep their columns legible and scroll sideways within the card. */
+  .table-wrap table.tbl { min-width: 560px; }
+
+  /* 16px on form controls stops iOS Safari from auto-zooming when they focus. */
+  input, textarea, select,
+  .field input, .home-scan-row input[type="text"], .demo-input,
+  .toolbar select, .toolbar input { font-size: 16px; }
 }

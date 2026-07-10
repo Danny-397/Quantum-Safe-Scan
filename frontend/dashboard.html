@@ -67,18 +67,18 @@
 
         <div class="card" style="margin-top:16px;">
           <h3>Recent Scans</h3>
-          <table class="tbl"><thead><tr>
+          <div class="table-wrap"><table class="tbl"><thead><tr>
             <th>Target</th><th>Date</th><th>Score</th><th>H/M/L</th><th></th>
-          </tr></thead><tbody id="ov-recent"></tbody></table>
+          </tr></thead><tbody id="ov-recent"></tbody></table></div>
         </div>
       </section>
 
       <!-- SCANS -->
       <section class="view hidden" id="view-scans">
         <div class="page-head"><h1>Scans</h1><button class="btn btn-primary" id="btn-new-scan-2">+ New Scan</button></div>
-        <table class="tbl"><thead><tr>
+        <div class="table-wrap"><table class="tbl"><thead><tr>
           <th>Target</th><th>Date</th><th>Score</th><th>Findings</th><th></th>
-        </tr></thead><tbody id="scans-body"></tbody></table>
+        </tr></thead><tbody id="scans-body"></tbody></table></div>
         <div class="toolbar" style="margin-top:14px;">
           <button class="btn btn-sm" id="scans-prev">Prev</button>
           <span class="muted mono" id="scans-page"></span>
@@ -98,9 +98,9 @@
           <div class="spacer"></div>
           <a class="btn btn-sm" id="find-detail-link">Open full detail →</a>
         </div>
-        <table class="tbl"><thead><tr>
+        <div class="table-wrap"><table class="tbl"><thead><tr>
           <th>File</th><th>Line</th><th>Algorithm</th><th>Risk</th><th>Recommendation</th>
-        </tr></thead><tbody id="findings-body"></tbody></table>
+        </tr></thead><tbody id="findings-body"></tbody></table></div>
       </section>
 
       <!-- SETTINGS -->
