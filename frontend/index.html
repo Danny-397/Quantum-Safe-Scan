@@ -200,25 +200,32 @@
       </div>
     </section>
 
-    <!-- What the score means — auto-cycling demo -->
+    <!-- See it in action — auto-cycling code → Quantum Risk Score -->
     <section class="section wrap" id="score">
       <div class="section-head">
-        <div class="eyebrow">// The 0–100 scale</div>
-        <h2>What your Quantum Risk Score means.</h2>
-        <p class="lead">One score, <em>computed from real findings — never hardcoded</em>, that lands
-          in one of four bands. Watch it move from Low to Critical.</p>
+        <div class="eyebrow">// See it in action</div>
+        <h2>Real code in, a Quantum Risk Score out.</h2>
+        <p class="lead">The same engine that powers the scanner, cycling through sample files —
+          each one scored 0–100 from its <em>actual findings</em>, with every vulnerable line flagged.</p>
       </div>
-      <div class="card score-explainer score-card" id="score-demo">
-        <div>
-          <div class="score-demo-tag"><span class="live-dot"></span> Live demo · cycling bands</div>
-          <div class="score-big mono" id="sdemo-score">—</div>
-          <div class="score-band" id="sdemo-band"></div>
-          <div class="score-meaning" id="sdemo-msg"></div>
+      <div class="score-cycle" id="score-cycle">
+        <div class="score-cycle-code">
+          <div class="term-head"><span class="d"></span><span class="d"></span><span class="d"></span>
+            <span class="t" id="cyc-file">sample.py</span></div>
+          <pre class="score-cycle-pre"><code id="cyc-code"></code></pre>
         </div>
-        <div>
-          <div id="sdemo-scale"></div>
-          <p class="hint">A real scan shows a single fixed score — this cycles the four bands so you
-            can see the whole scale. Score = min(100, 15×HIGH + 5×MEDIUM + 1×LOW).</p>
+        <div class="score-cycle-card">
+          <div class="score-demo-tag"><span class="live-dot"></span> Live demo · cycling samples</div>
+          <div class="score-big mono" id="cyc-score">—</div>
+          <div class="score-band" id="cyc-band"></div>
+          <div class="score-meaning" id="cyc-msg"></div>
+          <div id="cyc-scale"></div>
+          <div class="pill-row cyc-counts">
+            <span class="high">HIGH <b id="cyc-high">0</b></span>
+            <span class="medium">MED <b id="cyc-med">0</b></span>
+            <span class="low">LOW <b id="cyc-low">0</b></span>
+          </div>
+          <p class="cyc-hint">Cycles automatically — or tap a band above to jump to that sample.</p>
         </div>
       </div>
     </section>

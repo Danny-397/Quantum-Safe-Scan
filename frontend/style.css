@@ -431,6 +431,46 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
 /* ---------- Animated score demo (landing) ---------- */
 /* Smoothly cross-fade the big number's colour as the demo cycles bands. */
 .score-big { transition: color .4s ease; }
+
+/* Cycling "code in → score out" demo: an editor panel beside a live score card. */
+.score-cycle { display: grid; grid-template-columns: 1.05fr .95fr; gap: 18px; align-items: stretch; }
+.score-cycle > * { min-width: 0; }
+.score-cycle-code { background: #05060d; border: 1px solid var(--border-strong);
+  border-radius: var(--r); overflow: hidden; display: flex; flex-direction: column; }
+.score-cycle-pre { margin: 0; padding: 12px 0; overflow-x: auto; flex: 1;
+  font-family: var(--mono); font-size: 12px; line-height: 1.75; color: #c6d0e4;
+  transition: opacity .28s ease; }
+#cyc-code { display: block; }
+.cl { display: flex; align-items: center; padding: 1px 12px; border-left: 2px solid transparent;
+  transition: background .35s ease, border-color .35s ease; }
+.cl-ln { width: 18px; flex: none; margin-right: 8px; text-align: right;
+  color: var(--muted-2); opacity: .55; user-select: none; }
+.cl-gut { width: 12px; flex: none; margin-right: 10px; text-align: center;
+  font-weight: 700; font-size: 10px; color: transparent; user-select: none; }
+.cl-txt { white-space: pre; flex: 1; }
+.cl.r-high   { background: rgba(248,81,73,.10);  border-left-color: var(--danger); }
+.cl.r-medium { background: rgba(210,153,34,.10); border-left-color: var(--warning); }
+.cl.r-low    { background: rgba(63,185,80,.08);  border-left-color: var(--safe); }
+.cl.r-high   .cl-gut { color: var(--danger); }
+.cl.r-medium .cl-gut { color: var(--warning); }
+.cl.r-low    .cl-gut { color: var(--safe); }
+
+.score-cycle-card { position: relative; overflow: hidden; background: var(--panel);
+  border: 1px solid var(--border); border-radius: var(--r); padding: 22px; }
+.score-cycle-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0;
+  height: 1px; background: var(--grad); opacity: .6; }
+.cyc-counts { justify-content: flex-start; margin-top: 16px; transition: opacity .28s ease; }
+.score-cycle.is-swapping .score-cycle-pre,
+.score-cycle.is-swapping .cyc-counts { opacity: 0; }
+
+/* Tier cards are clickable in the demo — clicking a band jumps to its sample. */
+#cyc-scale .tier { cursor: pointer; }
+#cyc-scale .tier:hover { opacity: 1; border-color: var(--border-strong); transform: translateY(-2px); }
+#cyc-scale .tier:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.cyc-hint { margin-top: 10px; font-size: 12px; color: var(--muted-2); }
+
+@media (max-width: 880px) { .score-cycle { grid-template-columns: 1fr; } }
+@media (max-width: 640px) { .score-cycle-pre { font-size: 11px; } }
 .score-demo-tag { display: inline-flex; align-items: center; gap: 7px; margin-bottom: 10px;
   font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted-2); }
 .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex: none;

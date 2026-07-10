@@ -192,7 +192,7 @@
     });
 
     // Individual reveals across the marketing and app pages.
-    const singles = ".section-head, .hero-visual, .ci-block, .cta-band," +
+    const singles = ".section-head, .hero-visual, .ci-block, .cta-band, .score-cycle," +
       " .card, .auth-card, .mig-item, .save-banner," +
       " .legal h1, .legal h2, .legal p, .legal ul, .page-head";
     document.querySelectorAll(singles).forEach((el) => mark(el));
@@ -223,52 +223,134 @@
 
     initDemoScanner();
     initHomeScan();
-    initScoreDemo();
+    initScoreCycle();
   }
 
-  // Auto-cycling score card: glides Low → Medium → High → Critical (and loops)
-  // so visitors see the whole 0–100 scale — the number counts, the colour
-  // shifts, the marker slides, and the matching tier card lights up.
-  function initScoreDemo() {
-    const scoreEl = $("#sdemo-score");
-    if (!scoreEl) return;
-    const bandEl = $("#sdemo-band"), msgEl = $("#sdemo-msg"), scaleEl = $("#sdemo-scale");
-    const STATES = [
-      { score: 18, band: "Low" },
-      { score: 47, band: "Medium" },
-      { score: 73, band: "High" },
-      { score: 96, band: "Critical" },
-    ];
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // Sample files for the cycling "code → score" demo. Each is scored live by
+  // the real in-browser engine (scanDemo), so the numbers are never faked —
+  // they range from a low-risk hashing file up to a critical payments file.
+  const CYCLE_SNIPPETS = [
+    { file: "session_crypto.py", code:
+      "# modern-ish session crypto\n" +
+      "digest = hashlib.sha256(data)   # SHA-256\n" +
+      "sig = hmac.new(key, msg, sha256)   # SHA-256\n" +
+      "box = AES.new(k, AES.MODE_GCM)   # AES-128\n" },
+    { file: "legacy_tls.py", code:
+      "# legacy transport + ciphers\n" +
+      "ctx = ssl.SSLContext(PROTOCOL_TLSv1)   # TLS 1.0\n" +
+      "c = Cipher(TripleDES(key))   # 3DES\n" +
+      "mac = hmac.new(key, msg, sha1)   # SHA-1\n" +
+      "tok = hashlib.md5(user_id)   # MD5\n" },
+    { file: "keys.py", code:
+      "# API key generation\n" +
+      "rsa_key = rsa.generate_private_key(2048)   # RSA\n" +
+      "ec_key = ec.generate_private_key(SECP256R1)   # ECC\n" +
+      "dsa_key = dsa.generate_private_key(2048)   # DSA\n" +
+      "md5sum = hashlib.md5(blob)   # MD5\n" +
+      "sha1sig = hashlib.sha1(blob)   # SHA-1\n" },
+    { file: "payments.py", code:
+      "# payment tokens — harvest-now, decrypt-later\n" +
+      "rsa_key = rsa.generate_private_key(2048)   # RSA\n" +
+      "ec_key = ec.generate_private_key(SECP256R1)   # ECC\n" +
+      "dh = DiffieHellman(group=14)   # Diffie-Hellman\n" +
+      "dsa_key = dsa.generate_private_key(2048)   # DSA\n" +
+      "md5 = hashlib.md5(card_no)   # MD5\n" +
+      "sha1 = hashlib.sha1(card_no)   # SHA-1\n" },
+  ];
+
+  // Cycling "code in → Quantum Risk Score out" demo (mirrors the README's top
+  // demo): rotates through the sample files, scoring each with the real engine
+  // and flagging every vulnerable line. Auto-cycles, but clicking (or keyboard-
+  // activating) any band card jumps straight to that band's sample.
+  function initScoreCycle() {
+    const codeEl = $("#cyc-code");
+    if (!codeEl) return;
+    const wrap = $("#score-cycle");
+    const scoreEl = $("#cyc-score"), bandEl = $("#cyc-band"), msgEl = $("#cyc-msg"),
+      scaleEl = $("#cyc-scale"), fileEl = $("#cyc-file"),
+      hi = $("#cyc-high"), me = $("#cyc-med"), lo = $("#cyc-low");
+    const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const BAND_IDX = { low: 0, med: 1, high: 2, crit: 3 };
     let idx = 0, raf = null, timer = null, cur = 0;
 
-    function apply(state) {
-      bandEl.innerHTML = `<span class="band-${state.band}">${state.band} risk</span>`;
+    function codeHTML(code, findings) {
+      const flag = {};
+      findings.forEach((f) => { flag[f.line] = f; });
+      return code.replace(/\n$/, "").split("\n").map((line, i) => {
+        const n = i + 1, f = flag[n], rc = f ? riskClass(f.risk) : "";
+        // Risk marker sits in the left gutter (border + letter) so it's always
+        // visible at rest — never pushed off the right by a long line.
+        return `<span class="cl ${rc}"><span class="cl-ln">${n}</span>` +
+          `<span class="cl-gut ${rc}">${f ? f.risk[0] : ""}</span>` +
+          `<span class="cl-txt">${esc(line) || " "}</span></span>`;
+      }).join("");
+    }
+
+    function render(snip) {
+      const res = scanDemo(snip.code);
+      const band = res.score <= 30 ? "Low" : res.score <= 60 ? "Medium"
+        : res.score <= 80 ? "High" : "Critical";
+      fileEl.textContent = snip.file;
+      codeEl.innerHTML = codeHTML(snip.code, res.findings);
+      bandEl.innerHTML = `<span class="band-${band}">${band} risk</span>`;
       bandEl.className = "score-band";
-      msgEl.textContent = BAND_MEANING[state.band] || "";
-      scoreEl.className = "score-big mono band-" + state.band;
-      scaleEl.innerHTML = scaleHTML(state.score);          // slides marker + lights tier
-      const from = cur, to = state.score, start = performance.now(), dur = reduce ? 0 : 650;
+      msgEl.textContent = BAND_MEANING[band] || "";
+      scoreEl.className = "score-big mono band-" + band;
+      scaleEl.innerHTML = scaleHTML(res.score);
+      hi.textContent = res.counts.HIGH; me.textContent = res.counts.MEDIUM; lo.textContent = res.counts.LOW;
+      // Make the freshly-rendered tier cards keyboard-focusable.
+      scaleEl.querySelectorAll(".tier").forEach((t) => {
+        t.tabIndex = 0; t.setAttribute("role", "button");
+        t.setAttribute("aria-label", "Show the " + (t.querySelector(".tier-name") || {}).textContent + " sample");
+      });
+      const from = cur, to = res.score, start = performance.now(), dur = reduce ? 0 : 650;
       cur = to;
       if (raf) cancelAnimationFrame(raf);
       (function step(now) {
         const t = dur ? Math.min(1, (now - start) / dur) : 1;
-        const val = Math.round(from + (to - from) * t);
-        scoreEl.innerHTML = `${val}<span class="score-unit">/100</span>`;
+        scoreEl.innerHTML = `${Math.round(from + (to - from) * t)}<span class="score-unit">/100</span>`;
         if (t < 1) raf = requestAnimationFrame(step);
       })(performance.now());
     }
-    function tick() {
-      apply(STATES[idx]);
-      idx = (idx + 1) % STATES.length;
-      timer = setTimeout(tick, reduce ? 4200 : 2600);
+
+    function show(i, animateSwap) {
+      const len = CYCLE_SNIPPETS.length;
+      idx = ((i % len) + len) % len;
+      const snip = CYCLE_SNIPPETS[idx];
+      if (animateSwap && !reduce) {
+        wrap.classList.add("is-swapping");
+        setTimeout(() => { render(snip); wrap.classList.remove("is-swapping"); }, 260);
+      } else {
+        render(snip);
+      }
     }
-    tick();
-    // Pause while the tab is backgrounded so it's not animating off-screen.
-    document.addEventListener("visibilitychange", () => {
+    function schedule() {
       clearTimeout(timer);
-      if (raf) cancelAnimationFrame(raf);
-      if (!document.hidden) tick();
+      timer = setTimeout(() => { show(idx + 1, true); schedule(); }, reduce ? 5200 : 3600);
+    }
+
+    // Click / keyboard on a band card → jump to that sample, then keep cycling.
+    function jumpToTier(tier) {
+      const key = ["low", "med", "high", "crit"].find((k) => tier.classList.contains("t-" + k));
+      if (!key) return;
+      show(BAND_IDX[key], true);
+      schedule();   // reset the timer so the chosen band stays up a full interval
+    }
+    scaleEl.addEventListener("click", (e) => {
+      const tier = e.target.closest(".tier");
+      if (tier) jumpToTier(tier);
+    });
+    scaleEl.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      const tier = e.target.closest(".tier");
+      if (tier) { e.preventDefault(); jumpToTier(tier); }
+    });
+
+    show(0, false);
+    schedule();
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) { clearTimeout(timer); if (raf) cancelAnimationFrame(raf); }
+      else schedule();
     });
   }
 
