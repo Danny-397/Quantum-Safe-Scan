@@ -155,6 +155,50 @@
     window.addEventListener("resize", () => { if (window.innerWidth > 720) close(); });
   }
 
+  // Site-wide scroll-reveal: sections fade + rise as they enter the viewport,
+  // with grouped items (steps, cards, rows) staggering one after another for a
+  // smooth, premium feel. Runs synchronously at parse time (this script is the
+  // last element in <body>, so the DOM is fully available) to hide targets
+  // before first paint — no flash. Bails out entirely for reduced-motion / no
+  // IntersectionObserver so content is always visible.
+  function initReveal() {
+    if (!("IntersectionObserver" in window)) return;
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    document.documentElement.classList.add("qs-anim");
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        const el = e.target;
+        el.classList.add("in");
+        io.unobserve(el);
+        // Drop the stagger delay once revealed so it doesn't lag later hover
+        // transitions (transition-delay applies to every transition on the node).
+        const d = parseFloat(el.style.transitionDelay) || 0;
+        if (d) setTimeout(() => { el.style.transitionDelay = ""; }, 800 + d);
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+
+    const mark = (el, delay) => {
+      if (!el || el.classList.contains("reveal")) return;
+      el.classList.add("reveal");
+      if (delay) el.style.transitionDelay = delay + "ms";
+      io.observe(el);
+    };
+
+    // Staggered groups — children rise one after another.
+    document.querySelectorAll(".hero-copy, .steps, .detect, .pillars, .grid").forEach((group) => {
+      Array.from(group.children).forEach((child, i) => mark(child, Math.min(i, 6) * 70));
+    });
+
+    // Individual reveals across the marketing and app pages.
+    const singles = ".section-head, .hero-visual, .ci-block, .cta-band," +
+      " .card, .auth-card, .mig-item, .save-banner," +
+      " .legal h1, .legal h2, .legal p, .legal ul, .page-head";
+    document.querySelectorAll(singles).forEach((el) => mark(el));
+  }
+  initReveal();
+
   // =========================================================================
   //  LANDING
   // =========================================================================

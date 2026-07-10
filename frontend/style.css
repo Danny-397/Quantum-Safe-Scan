@@ -71,10 +71,12 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
   display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;
   border: 1px solid var(--border-strong); background: rgba(255,255,255,.02); color: var(--text);
   padding: 11px 18px; border-radius: var(--r-sm); font-size: 14px; font-weight: 600;
-  font-family: var(--sans); transition: border-color .14s ease, background .14s ease, color .14s ease, box-shadow .14s ease;
+  font-family: var(--sans); transition: border-color .14s ease, background .14s ease, color .14s ease, box-shadow .14s ease, transform .14s ease;
   text-align: center;
 }
-.btn:hover { border-color: var(--accent); color: #fff; box-shadow: 0 0 0 1px rgba(91,115,232,.25); }
+.btn:hover { border-color: var(--accent); color: #fff; box-shadow: 0 0 0 1px rgba(91,115,232,.25); transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) { .btn:hover, .btn:active { transform: none; } }
 .btn-primary {
   /* Deeper indigo than the --accent link colour so white text stays clearly
      readable (the lighter accent washed the label out). */
@@ -556,6 +558,20 @@ table.tbl td .skel { vertical-align: middle; }
 .skip-link:focus { left: 0; }
 a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
   outline: 2px solid var(--accent); outline-offset: 2px;
+}
+
+/* ---------- Scroll reveal (premium entrance animations) ---------- */
+/* Elements fade + rise as they scroll into view. Gated behind .qs-anim, which
+   app.js adds only when JS is on and reduced-motion is off — so the content is
+   always visible as a fallback and never animates for motion-sensitive users.
+   Uses only opacity/transform, so there is no layout shift. */
+html.qs-anim .reveal {
+  opacity: 0; transform: translateY(22px);
+  transition: opacity .7s cubic-bezier(.16, 1, .3, 1), transform .7s cubic-bezier(.16, 1, .3, 1);
+}
+html.qs-anim .reveal.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  html.qs-anim .reveal { opacity: 1; transform: none; transition: none; }
 }
 
 @media (max-width: 880px) {
