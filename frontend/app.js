@@ -179,6 +179,53 @@
 
     initDemoScanner();
     initHomeScan();
+    initScoreDemo();
+  }
+
+  // Auto-cycling score card: glides Low → Medium → High → Critical (and loops)
+  // so visitors see the whole 0–100 scale — the number counts, the colour
+  // shifts, the marker slides, and the matching tier card lights up.
+  function initScoreDemo() {
+    const scoreEl = $("#sdemo-score");
+    if (!scoreEl) return;
+    const bandEl = $("#sdemo-band"), msgEl = $("#sdemo-msg"), scaleEl = $("#sdemo-scale");
+    const STATES = [
+      { score: 18, band: "Low" },
+      { score: 47, band: "Medium" },
+      { score: 73, band: "High" },
+      { score: 96, band: "Critical" },
+    ];
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let idx = 0, raf = null, timer = null, cur = 0;
+
+    function apply(state) {
+      bandEl.innerHTML = `<span class="band-${state.band}">${state.band} risk</span>`;
+      bandEl.className = "score-band";
+      msgEl.textContent = BAND_MEANING[state.band] || "";
+      scoreEl.className = "score-big mono band-" + state.band;
+      scaleEl.innerHTML = scaleHTML(state.score);          // slides marker + lights tier
+      const from = cur, to = state.score, start = performance.now(), dur = reduce ? 0 : 650;
+      cur = to;
+      if (raf) cancelAnimationFrame(raf);
+      (function step(now) {
+        const t = dur ? Math.min(1, (now - start) / dur) : 1;
+        const val = Math.round(from + (to - from) * t);
+        scoreEl.innerHTML = `${val}<span class="score-unit">/100</span>`;
+        if (t < 1) raf = requestAnimationFrame(step);
+      })(performance.now());
+    }
+    function tick() {
+      apply(STATES[idx]);
+      idx = (idx + 1) % STATES.length;
+      timer = setTimeout(tick, reduce ? 4200 : 2600);
+    }
+    tick();
+    // Pause while the tab is backgrounded so it's not animating off-screen.
+    document.addEventListener("visibilitychange", () => {
+      clearTimeout(timer);
+      if (raf) cancelAnimationFrame(raf);
+      if (!document.hidden) tick();
+    });
   }
 
   // Anonymous "scan a whole repo or upload a .zip" launcher on the landing page.
@@ -285,10 +332,14 @@
   };
   function scaleHTML(score) {
     const x = Math.max(0, Math.min(100, Number(score) || 0));
+    const active = x <= 30 ? "low" : x <= 60 ? "med" : x <= 80 ? "high" : "crit";
+    const tier = (key, range, name) =>
+      `<div class="tier t-${key}${active === key ? " on" : ""}">` +
+      `<span class="tier-range">${range}</span><span class="tier-name">${name}</span></div>`;
     return `<div class="scale"><div class="scale-bar">
       <div class="scale-track"><span class="seg s-low" style="width:30%"></span><span class="seg s-med" style="width:30%"></span><span class="seg s-high" style="width:20%"></span><span class="seg s-crit" style="width:20%"></span></div>
       <span class="scale-marker" style="left:${x}%"></span></div>
-      <div class="scale-legend"><span class="lg-low">0–30 Low</span><span class="lg-med">31–60 Medium</span><span class="lg-high">61–80 High</span><span class="lg-crit">81–100 Critical</span></div></div>`;
+      <div class="tiers">${tier("low", "0–30", "Low")}${tier("med", "31–60", "Medium")}${tier("high", "61–80", "High")}${tier("crit", "81–100", "Critical")}</div></div>`;
   }
   function renderScore(ids, score, band) {
     const s = $(ids.score);

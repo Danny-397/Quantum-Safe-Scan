@@ -200,6 +200,29 @@
       </div>
     </section>
 
+    <!-- What the score means — auto-cycling demo -->
+    <section class="section wrap" id="score">
+      <div class="section-head">
+        <div class="eyebrow">// The 0–100 scale</div>
+        <h2>What your Quantum Risk Score means.</h2>
+        <p class="lead">One score, <em>computed from real findings — never hardcoded</em>, that lands
+          in one of four bands. Watch it move from Low to Critical.</p>
+      </div>
+      <div class="card score-explainer score-card" id="score-demo">
+        <div>
+          <div class="score-demo-tag"><span class="live-dot"></span> Live demo · cycling bands</div>
+          <div class="score-big mono" id="sdemo-score">—</div>
+          <div class="score-band" id="sdemo-band"></div>
+          <div class="score-meaning" id="sdemo-msg"></div>
+        </div>
+        <div>
+          <div id="sdemo-scale"></div>
+          <p class="hint">A real scan shows a single fixed score — this cycles the four bands so you
+            can see the whole scale. Score = min(100, 15×HIGH + 5×MEDIUM + 1×LOW).</p>
+        </div>
+      </div>
+    </section>
+
     <!-- How it works -->
     <section class="section wrap" id="how">
       <div class="section-head">
