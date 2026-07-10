@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Replace [YOUR-DOMAIN] with your real domain. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://[YOUR-DOMAIN]/</loc><priority>1.0</priority></url>
-  <url><loc>https://[YOUR-DOMAIN]/login.html</loc><priority>0.6</priority></url>
-  <url><loc>https://[YOUR-DOMAIN]/privacy.html</loc><priority>0.3</priority></url>
-  <url><loc>https://[YOUR-DOMAIN]/terms.html</loc><priority>0.3</priority></url>
+  <url><loc>https://quantumsafescan.com/</loc><priority>1.0</priority></url>
+  <url><loc>https://quantumsafescan.com/login.html</loc><priority>0.6</priority></url>
+  <url><loc>https://quantumsafescan.com/privacy.html</loc><priority>0.3</priority></url>
+  <url><loc>https://quantumsafescan.com/terms.html</loc><priority>0.3</priority></url>
 </urlset>

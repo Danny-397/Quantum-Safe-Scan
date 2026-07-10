@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
 
-# Replace [YOUR-DOMAIN] with your real domain once set.
-Sitemap: https://[YOUR-DOMAIN]/sitemap.xml
+Sitemap: https://quantumsafescan.com/sitemap.xml

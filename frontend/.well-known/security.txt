@@ -2,5 +2,5 @@
 Contact: mailto:dlichtenberger91@gmail.com
 Expires: 2027-06-27T00:00:00.000Z
 Preferred-Languages: en
-Canonical: https://[YOUR-DOMAIN]/.well-known/security.txt
-Policy: https://[YOUR-DOMAIN]/terms.html
+Canonical: https://quantumsafescan.com/.well-known/security.txt
+Policy: https://quantumsafescan.com/terms.html
