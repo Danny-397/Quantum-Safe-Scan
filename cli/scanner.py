@@ -774,6 +774,12 @@ def scan_path(path: str, exclude: list[str] | None = None,
                     continue
                 findings.extend(scan_file(abs_path, rel_path, mask_strings, taint))
 
+    if taint and os.path.isdir(path):
+        # Whole-program pass: crypto reached through a wrapper in *another* file.
+        # (The per-file pass above handles intra-module wrappers.)
+        from .callgraph import cross_file_taint
+        findings.extend(cross_file_taint(path))
+
     if scan_deps and os.path.isdir(path):
         from .dependencies import scan_dependencies
         findings.extend(scan_dependencies(path, exclude=exclude))

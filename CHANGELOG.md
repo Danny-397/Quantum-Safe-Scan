@@ -30,6 +30,13 @@ All notable changes to QuantumSafe are documented here. This project follows
   before/after for drop-ins (MD5/SHA-1 → SHA-256, 3DES/RC4 → AES-256-GCM, TLS →
   1.3) or a PQC migration pointer with a language-appropriate library for
   asymmetric families; surfaced in JSON, HTML, and SARIF help text.
+- **Cross-file (whole-program) taint analysis (`callgraph.py`).** The `--taint`
+  pass is no longer intra-module: it builds a program-wide Python call graph by
+  resolving imports (absolute, relative, unique-suffix) to qualified symbols and
+  propagates crypto taint to a fixpoint across files, so a wrapper defined in one
+  module and called from another (no crypto keyword at the call site) is flagged,
+  with provenance naming the resolving module. Edges are only created on a
+  resolved import, so same-named functions can't create phantom taint.
 - **Seeded recall benchmark (`benchmark/seeded.py`).** A mutation benchmark with
   ground truth by construction — 50 real quantum-vulnerable API calls across 7
   languages that must be detected, plus 50 comment/string decoys that must not

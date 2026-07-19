@@ -104,8 +104,14 @@ token = sign_request(body)       # the real blast radius — no "md5" in sight
 The taint pass builds a **call graph** and propagates taint to a **fixpoint**: any
 function that *transitively* reaches a trusted (AST-detected) primitive becomes tainted,
 and its call sites are reported as **indirect** findings with the wrapper chain attached.
-It is intra-module, opt-in, and strictly *additive* (it never emits where the direct
-scan already fired), so it can extend coverage without ever regressing precision.
+This works **across files**, not just within one: `cli/callgraph.py` builds a
+*whole-program* call graph by resolving imports (absolute, relative, and unique-suffix)
+to qualified `module.func` symbols, so a wrapper defined in `crypto/legacy.py` and called
+from `api/handlers.py` — with no crypto keyword at the call site — is still caught, and
+its provenance names the resolving module. A call edge is only created when it resolves
+to an indexed function, so an unrelated same-named function can't create a phantom edge.
+The pass is opt-in (`--taint`) and strictly *additive* (it never emits where the direct
+scan already fired), so it extends coverage without ever regressing precision.
 
 **Risk score (computed from findings, never hardcoded):**
 
@@ -231,7 +237,7 @@ from live scanner output, not hand-drawn.
 ## 8. What's next
 
 Tree-sitter AST parsing to bring non-Python languages up to AST-level precision;
-cross-file (import-resolving) reachability and taint; a larger hand-labeled real-world
+import-resolving reachability (the taint pass is already cross-file); a larger hand-labeled real-world
 corpus to complement the seeded recall benchmark; per-protocol hybrid (classical + PQC)
 migration recipes; and an optional binding to production ML-KEM alongside the teaching
 implementation.

@@ -183,7 +183,8 @@ def build_parser() -> argparse.ArgumentParser:
     p_scan.add_argument("--taint", action="store_true",
                         help="Also run interprocedural data-flow analysis to flag "
                              "quantum-vulnerable crypto reached through Python wrapper "
-                             "functions (experimental).")
+                             "functions, across files via a whole-program call graph "
+                             "(experimental).")
     p_scan.add_argument("--no-deps", action="store_true",
                         help="Skip dependency scanning (manifests + lockfiles: "
                              "requirements.txt, package.json, go.mod, pom.xml, Gemfile, "

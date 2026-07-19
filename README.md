@@ -382,7 +382,7 @@ quantumsafe version
 | `--repo` | Public `https://github.com/<org>/<repo>` URL |
 | `--output` | Write to `.json`, `.cbom.json` (CycloneDX CBOM), `.html`, `.sarif`, or `.svg` (risk badge); terminal summary still printed |
 | `--exclude` | Glob of paths to skip (repeatable) |
-| `--taint` | Also run interprocedural data-flow analysis (Python): flag quantum-vulnerable crypto reached through wrapper functions, not just direct calls |
+| `--taint` | Also run interprocedural data-flow analysis (Python): flag quantum-vulnerable crypto reached through wrapper functions, **across files** (whole-program call graph with import resolution), not just direct calls |
 | `--no-deps` | Skip dependency scanning (on by default): parses manifests **and lockfiles** (`requirements.txt`, `pyproject.toml`, `package.json`, `go.mod`, `pom.xml`, `Gemfile`, `package-lock.json`, `poetry.lock`, `Pipfile.lock`, `Gemfile.lock`, `yarn.lock`, `go.sum`) and flags known quantum-vulnerable crypto libraries (with purl + direct/transitive scope) in the CBOM |
 | `--no-rank` | Skip reachability ranking (on by default): labels each source finding `reachable` / `test-example` / `unreferenced` so exploitable findings sort above dead or example code |
 | `--fail-on-high` | Exit non-zero on any HIGH finding (CI gate) |
@@ -591,7 +591,8 @@ Quantum-Safe/
 │   ├── scanner.py        #   AST + regex detection, cross-language usage-awareness
 │   ├── dependencies.py   #   dependency + lockfile crypto scanning (purl + CBOM)
 │   ├── reachability.py   #   reachability ranking (reachable/test/unreferenced)
-│   ├── taint.py          #   interprocedural data-flow (wrapper) analysis
+│   ├── taint.py          #   intra-module data-flow (wrapper) analysis
+│   ├── callgraph.py      #   whole-program cross-file taint (import resolution)
 │   ├── scorer.py         #   risk score
 │   ├── recommender.py    #   NIST family-level recommendations
 │   ├── remediation.py    #   call-site-specific fixes (before/after)
