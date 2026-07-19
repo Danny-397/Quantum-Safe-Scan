@@ -1,4 +1,4 @@
-name: "QuantumSafe"
+name: "QuantumSafe Scanner"
 description: "Scan a codebase for quantum-vulnerable cryptography and upload SARIF to code scanning."
 author: "QuantumSafe"
 branding:
@@ -34,25 +34,3 @@ outputs:
 
 runs:
   using: "composite"
-  steps:
-    - uses: actions/setup-python@v5
-      with:
-        python-version: "3.12"
-
-    - name: Install QuantumSafe
-      shell: bash
-      run: |
-        if [ -n "${{ inputs.version }}" ]; then
-          pip install --upgrade "quantumsafe-scan==${{ inputs.version }}"
-        else
-          pip install --upgrade quantumsafe-scan
-        fi
-
-    - name: Run QuantumSafe scan
-      shell: bash
-      run: |
-        ARGS=(scan --path "${{ inputs.path }}" --output "${{ inputs.output }}" --no-sync)
-        if [ "${{ inputs.fail-on-high }}" = "true" ]; then ARGS+=(--fail-on-high); fi
-        IFS=',' read -ra EX <<< "${{ inputs.exclude }}"
-        for g in "${EX[@]}"; do [ -n "$g" ] && ARGS+=(--exclude "$g"); done
-        quantumsafe "${ARGS[@]}"
