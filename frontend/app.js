@@ -92,7 +92,26 @@
       opts.body = JSON.stringify(opts.json);
       if (!opts.method) opts.method = "POST";  // a JSON body implies POST
     }
-    const res = await fetch(API_BASE + path, { ...opts, headers });
+    // fetch() has no default timeout, so if the hosted API is asleep, mid-deploy
+    // or gone, every caller hangs on a spinner forever with nothing on screen to
+    // explain it. Fail after a bounded wait and say what still works instead:
+    // the snippet scanner on the home page runs entirely in the browser.
+    let res;
+    const ac = new AbortController();
+    const timer = setTimeout(() => ac.abort(), opts.timeoutMs || 45000);
+    try {
+      res = await fetch(API_BASE + path, { ...opts, headers, signal: ac.signal });
+    } catch (err) {
+      throw new Error(
+        (err && err.name === "AbortError"
+          ? "The hosted scanner didn't respond in time."
+          : "Couldn't reach the hosted scanner.") +
+        " You can still paste code into the snippet scanner on the home page — that runs" +
+        " entirely in your browser — or scan locally with: pip install quantumsafe-scan"
+      );
+    } finally {
+      clearTimeout(timer);
+    }
     if (res.status === 401 && !opts.noRedirect) {
       clearToken();
       if (!/login\.html$/.test(location.pathname)) location.href = "login.html";
@@ -203,8 +222,12 @@
   //  LANDING
   // =========================================================================
   function initLanding() {
-    // Pre-warm the API to hide cold starts on hosted backends.
-    fetch(API_BASE + "/health").catch(() => {});
+    // Pre-warm the API to hide cold starts on hosted backends. Bounded, because
+    // an unreachable host otherwise leaves this request pending for the life of
+    // the page — which stalls load indicators and headless renderers.
+    try {
+      fetch(API_BASE + "/health", { signal: AbortSignal.timeout(8000) }).catch(() => {});
+    } catch (_) { /* AbortSignal.timeout is unsupported on older browsers */ }
 
     // Click the install command to copy it.
     const copyBtn = $("#copy-install");
@@ -976,15 +999,21 @@
       { after: 2500, text: "Cloning and analyzing your code…" },
       { after: 12000, text: "First scan of the day can take ~40s while the server wakes up — hang tight." },
       { after: 30000, text: "Still going — larger repos take a little longer…" },
+      { after: 75000, text: "Taking unusually long. If this doesn't finish, the snippet scanner on the home page runs in your browser and always works." },
     ]);
     try {
       let res;
+      // A real scan is synchronous and can legitimately run for minutes: a cold
+      // start on the free tier plus cloning and parsing a large repo. Give it a
+      // generous ceiling — the point of the bound is to fail eventually rather
+      // than spin forever, not to cut short a scan that is genuinely working.
+      const SCAN_TIMEOUT_MS = 240000;
       if (file) {
         const fd = new FormData();
         fd.append("file", file);
-        res = await api("/api/v1/scan", { method: "POST", body: fd, noRedirect: true });
+        res = await api("/api/v1/scan", { method: "POST", body: fd, noRedirect: true, timeoutMs: SCAN_TIMEOUT_MS });
       } else {
-        res = await api("/api/v1/scan", { method: "POST", json: { repo_url: repo }, noRedirect: true });
+        res = await api("/api/v1/scan", { method: "POST", json: { repo_url: repo }, noRedirect: true, timeoutMs: SCAN_TIMEOUT_MS });
       }
       stopProgress();
       if (res.scan_id) {
