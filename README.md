@@ -397,16 +397,46 @@ line.
 
 ### Use in CI (GitHub Action)
 
+Drop this in `.github/workflows/quantumsafe.yml`. Findings land in the repo's
+**Security → Code scanning** tab, annotated on the exact file and line.
+
 ```yaml
-- uses: Danny-397/Quantum-Safe@main
-  with:
-    path: .
-    exclude: tests/*,vendor/*
-    fail-on-high: "true"
-- uses: github/codeql-action/upload-sarif@v3
-  with:
-    sarif_file: quantumsafe.sarif
+name: QuantumSafe
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+  security-events: write      # required for upload-sarif
+
+jobs:
+  quantumsafe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: Danny-397/Quantum-Safe-Scan@main
+        with:
+          path: .
+          exclude: tests/*,vendor/*
+          fail-on-high: "true"   # fail the build on any HIGH finding
+
+      - uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: quantumsafe.sarif
+          category: quantumsafe
 ```
+
+| Input | Default | Meaning |
+|---|---|---|
+| `path` | `.` | Directory to scan |
+| `output` | `quantumsafe.sarif` | Where to write the SARIF report |
+| `exclude` | *(none)* | Comma-separated globs to skip |
+| `fail-on-high` | `"false"` | Exit non-zero if any HIGH finding is present |
+| `version` | *(latest)* | Pin `quantumsafe-scan`, e.g. `0.2.0` |
+
+Pin to a released tag rather than `@main` once one exists — `@main` moves under
+you, which is the same class of problem as an unpinned linter.
 
 ---
 

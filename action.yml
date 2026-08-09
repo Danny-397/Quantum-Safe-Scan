@@ -34,3 +34,43 @@ outputs:
 
 runs:
   using: "composite"
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+
+    - name: Install quantumsafe-scan
+      shell: bash
+      env:
+        QS_VERSION: ${{ inputs.version }}
+      run: |
+        if [ -n "$QS_VERSION" ]; then
+          pip install "quantumsafe-scan==$QS_VERSION"
+        else
+          pip install quantumsafe-scan
+        fi
+
+    - name: Run QuantumSafe scan
+      shell: bash
+      # Inputs go through the environment rather than being interpolated into
+      # the script: a ${{ }} expansion inside `run` is a shell-injection vector
+      # if a caller passes a crafted value.
+      env:
+        QS_PATH: ${{ inputs.path }}
+        QS_OUTPUT: ${{ inputs.output }}
+        QS_EXCLUDE: ${{ inputs.exclude }}
+        QS_FAIL_ON_HIGH: ${{ inputs.fail-on-high }}
+      run: |
+        args=(scan --path "$QS_PATH" --output "$QS_OUTPUT")
+        if [ "$QS_FAIL_ON_HIGH" = "true" ]; then
+          args+=(--fail-on-high)
+        fi
+        if [ -n "$QS_EXCLUDE" ]; then
+          IFS=',' read -ra globs <<< "$QS_EXCLUDE"
+          for g in "${globs[@]}"; do
+            g="$(echo "$g" | xargs)"          # trim surrounding whitespace
+            [ -n "$g" ] && args+=(--exclude "$g")
+          done
+        fi
+        quantumsafe "${args[@]}"
