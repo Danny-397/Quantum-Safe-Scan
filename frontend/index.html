@@ -157,7 +157,9 @@
               <span class="low">LOW <b id="demo-low">0</b></span>
             </div>
           </div>
-          <div class="demo-findings" id="demo-findings"></div>
+          <!-- tabindex/role: the list scrolls, so keyboard users need to be able
+               to focus it and scroll with the arrow keys. -->
+          <div class="demo-findings" id="demo-findings" tabindex="0" role="region" aria-label="Scan findings"></div>
           <p class="muted demo-upsell">
             This scans one snippet in your browser. Use <b><a href="#scan-repo">Scan a whole codebase</a></b> above to
             check an entire repo or .zip — still no account. A <a href="login.html?mode=register">free account</a>

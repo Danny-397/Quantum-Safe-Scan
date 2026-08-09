@@ -501,7 +501,9 @@ table.tbl tr:hover td { background: var(--panel-2); }
 .badge { display: inline-block; border: 1px solid; border-radius: var(--r-sm); padding: 1px 7px; font-size: 12px; font-family: var(--mono); }
 /* Tinted fills so risk level is distinguishable beyond colour alone (the text
    label HIGH/MEDIUM/LOW is the primary non-colour signal; this reinforces it). */
-.badge.r-high { border-color: var(--danger); background: rgba(248,81,73,.13); }
+/* The badge sits on a tinted red panel, where --danger only reaches 4.48:1 at
+   this size. A slightly lighter red clears AA with margin. */
+.badge.r-high { border-color: var(--danger); background: rgba(248,81,73,.13); color: #ff6b63; }
 .badge.r-medium { border-color: var(--warning); background: rgba(210,153,34,.14); }
 .badge.r-low { border-color: var(--safe); background: rgba(63,185,80,.13); }
 
