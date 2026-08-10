@@ -20,10 +20,20 @@ services:
         generateValue: true
       - key: JWT_SECRET_KEY
         generateValue: true
+      # Set this in the Render dashboard to an EXTERNAL Postgres (Neon, Supabase,
+      # or a paid Render instance).
+      #
+      # It used to be `fromDatabase: quantumsafe-db`, pointing at a Render free
+      # Postgres. Render deletes those after 90 days; once it was gone the
+      # blueprint could no longer resolve the reference, so the service stopped
+      # starting altogether — the whole API was unreachable rather than merely
+      # storage-less. Tradeski supplies DATABASE_URL this way and has stayed up.
+      #
+      # Left unset the app falls back to SQLite (see backend/config.py): accounts
+      # and scan history don't survive a redeploy, but the service boots and
+      # anonymous scanning — the part the public site actually uses — works.
       - key: DATABASE_URL
-        fromDatabase:
-          name: quantumsafe-db
-          property: connectionString
+        sync: false
       - key: FRONTEND_ORIGIN
         sync: false        # set to your Vercel dashboard URL
       - key: DASHBOARD_URL
@@ -43,7 +53,3 @@ services:
       - key: MAIL_DEFAULT_SENDER
         sync: false
 
-databases:
-  - name: quantumsafe-db
-    plan: free
-    databaseName: quantumsafe
