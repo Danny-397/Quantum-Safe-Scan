@@ -11,7 +11,7 @@
   <img src="https://img.shields.io/github/last-commit/Danny-397/Quantum-Safe?style=flat-square&color=555" alt="Last commit">
   <img src="https://img.shields.io/github/license/Danny-397/Quantum-Safe?style=flat-square&color=3fb950" alt="License: MIT">
   <br>
-  <img src="https://img.shields.io/badge/tests-80%20passing-3fb950?style=flat-square&logo=pytest&logoColor=white" alt="80 tests passing">
+  <img src="https://img.shields.io/badge/tests-102%20passing-3fb950?style=flat-square&logo=pytest&logoColor=white" alt="102 tests passing">
   <img src="https://img.shields.io/badge/benchmark-100%25%20precision-3fb950?style=flat-square" alt="100% precision on benchmark">
   <img src="https://img.shields.io/badge/SARIF%202.1.0-schema--validated-3fb950?style=flat-square" alt="SARIF schema-validated">
   <img src="https://img.shields.io/badge/NIST-FIPS%20203%2F204%2F205-5b73e8?style=flat-square" alt="NIST FIPS 203/204/205">
@@ -557,7 +557,7 @@ docker compose up --build
 
 ```bash
 pip install -r requirements-dev.txt
-pytest -q                     # 80 tests; in-memory DB, no setup
+pytest -q                     # 102 tests; in-memory DB, no setup
 ```
 
 Seed a demo account so the dashboard is populated:
