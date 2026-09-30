@@ -1001,6 +1001,21 @@
       { after: 30000, text: "Still going — larger repos take a little longer…" },
       { after: 75000, text: "Taking unusually long. If this doesn't finish, the snippet scanner on the home page runs in your browser and always works." },
     ]);
+    // Confirm the host is up before committing to the long scan request. A cold
+    // start answers /health within about a minute; a host that is down never
+    // answers at all, and without this check the visitor waits out the full
+    // scan ceiling below before learning that.
+    try {
+      await api("/health", { noAuth: true, noRedirect: true, timeoutMs: 70000 });
+    } catch (_) {
+      stopProgress();
+      showMsg(msgEl,
+        "The hosted repo scanner is offline right now. The snippet scanner on the home page" +
+        " runs entirely in your browser and still works, and the full scanner runs locally:" +
+        " pip install quantumsafe-scan");
+      setLoading(btn, false);
+      return;
+    }
     try {
       let res;
       // A real scan is synchronous and can legitimately run for minutes: a cold
