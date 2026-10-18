@@ -19,6 +19,10 @@ node_modules/
 # Env / secrets
 .env
 *.local
+# ...and local scratch files that carry an extension, e.g. notes.local.md.
+# A college-essay draft sat untracked in this public repo because "*.local"
+# does not match "ESSAY-quantumsafe.local.md".
+*.local.*
 
 # Databases
 *.db
