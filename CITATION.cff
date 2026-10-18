@@ -1,0 +1,40 @@
+# This file lets GitHub show a "Cite this repository" button and gives the
+# project a stable, machine-readable citation. It is also what Zenodo reads when
+# you archive a release to mint a DOI.
+#
+# TODO before you rely on this for a paper/DOI:
+#   1. Confirm the author name below is exactly how you want to be cited
+#      (use your real given/family name — this is inferred, not verified).
+#   2. Add your ORCID if you have one (uncomment the `orcid:` line).
+#   3. After you create a Zenodo DOI, put it in `doi:` and in
+#      `preferred-citation` so the two agree.
+cff-version: 1.2.0
+title: "QuantumSafe — a scanner for quantum-vulnerable cryptography"
+message: "If you use this software or its findings, please cite it as below."
+type: software
+authors:
+  - given-names: Danny
+    family-names: Lichtenberger
+    # orcid: "https://orcid.org/0000-0000-0000-0000"
+repository-code: "https://github.com/Danny-397/Quantum-Safe-Scan"
+url: "https://quantumsafescan.com"
+abstract: >-
+  QuantumSafe scans source code across 11 languages for cryptography that
+  quantum computers will break (RSA, ECC, Diffie-Hellman) or weaken (AES-128,
+  SHA-256), scores the risk 0-100, and maps every finding to its NIST FIPS
+  203/204/205 post-quantum replacement. It ships a hybrid AST + regex detection
+  engine (100% precision / 100% recall on a labeled adversarial benchmark),
+  cross-file taint analysis, dependency and lockfile scanning, and SARIF/CBOM
+  exports, backed by a runnable Qiskit implementation of Shor's and Grover's
+  algorithms and a from-scratch Learning-With-Errors (LWE) key-encapsulation
+  mechanism.
+keywords:
+  - post-quantum cryptography
+  - static analysis
+  - cryptographic bill of materials
+  - NIST FIPS 203
+  - harvest-now-decrypt-later
+  - lattice cryptography
+license: MIT
+version: 0.2.0
+date-released: "2026-07-18"

@@ -5,13 +5,13 @@
 <p>
   <a href="https://pypi.org/project/quantumsafe-scan/"><img src="https://img.shields.io/pypi/v/quantumsafe-scan?style=flat-square&logo=pypi&logoColor=white&color=5b73e8" alt="PyPI version"></a>
   <img src="https://img.shields.io/pypi/pyversions/quantumsafe-scan?style=flat-square&logo=python&logoColor=white" alt="Python versions">
-  <a href="https://github.com/Danny-397/Quantum-Safe/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Danny-397/Quantum-Safe/ci.yml?branch=main&style=flat-square&logo=githubactions&logoColor=white&label=CI" alt="CI status"></a>
-  <a href="https://github.com/Danny-397/Quantum-Safe/tags"><img src="https://img.shields.io/github/v/tag/Danny-397/Quantum-Safe?style=flat-square&logo=github&label=version&color=5b73e8" alt="Latest version"></a>
-  <a href="https://github.com/Danny-397/Quantum-Safe/stargazers"><img src="https://img.shields.io/github/stars/Danny-397/Quantum-Safe?style=flat-square&logo=github" alt="Stars"></a>
-  <img src="https://img.shields.io/github/last-commit/Danny-397/Quantum-Safe?style=flat-square&color=555" alt="Last commit">
-  <img src="https://img.shields.io/github/license/Danny-397/Quantum-Safe?style=flat-square&color=3fb950" alt="License: MIT">
+  <a href="https://github.com/Danny-397/Quantum-Safe-Scan/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Danny-397/Quantum-Safe-Scan/ci.yml?branch=main&style=flat-square&logo=githubactions&logoColor=white&label=CI" alt="CI status"></a>
+  <a href="https://github.com/Danny-397/Quantum-Safe-Scan/tags"><img src="https://img.shields.io/github/v/tag/Danny-397/Quantum-Safe-Scan?style=flat-square&logo=github&label=version&color=5b73e8" alt="Latest version"></a>
+  <a href="https://github.com/Danny-397/Quantum-Safe-Scan/stargazers"><img src="https://img.shields.io/github/stars/Danny-397/Quantum-Safe-Scan?style=flat-square&logo=github" alt="Stars"></a>
+  <img src="https://img.shields.io/github/last-commit/Danny-397/Quantum-Safe-Scan?style=flat-square&color=555" alt="Last commit">
+  <img src="https://img.shields.io/github/license/Danny-397/Quantum-Safe-Scan?style=flat-square&color=3fb950" alt="License: MIT">
   <br>
-  <img src="https://img.shields.io/badge/tests-80%20passing-3fb950?style=flat-square&logo=pytest&logoColor=white" alt="80 tests passing">
+  <img src="https://img.shields.io/badge/tests-102%20passing-3fb950?style=flat-square&logo=pytest&logoColor=white" alt="102 tests passing">
   <img src="https://img.shields.io/badge/benchmark-100%25%20precision-3fb950?style=flat-square" alt="100% precision on benchmark">
   <img src="https://img.shields.io/badge/SARIF%202.1.0-schema--validated-3fb950?style=flat-square" alt="SARIF schema-validated">
   <img src="https://img.shields.io/badge/NIST-FIPS%20203%2F204%2F205-5b73e8?style=flat-square" alt="NIST FIPS 203/204/205">
@@ -26,7 +26,7 @@
 <a href="https://pypi.org/project/quantumsafe-scan/"><b>Install</b></a> &nbsp;&middot;&nbsp;
 <a href="docs/WHITEPAPER.md"><b>Documentation</b></a> &nbsp;&middot;&nbsp;
 <a href="#the-three-layers"><b>How it works</b></a> &nbsp;&middot;&nbsp;
-<a href="https://github.com/Danny-397/Quantum-Safe/issues"><b>Report a bug</b></a>
+<a href="https://github.com/Danny-397/Quantum-Safe-Scan/issues"><b>Report a bug</b></a>
 
 </div>
 
@@ -140,7 +140,7 @@ defense module (which *implements* the recommended fix). Full write-up in
   zero failures.
 - **Measured, not asserted** — a labeled benchmark with adversarial decoys, plus an
   empirical study (88% of real repos affected).
-- **Production practice** — one shared engine for CLI + API, **80 automated
+- **Production practice** — one shared engine for CLI + API, **102 automated
   tests**, CI, Docker, a reusable GitHub Action, and multi-service deploy configs.
 
 ---
@@ -398,7 +398,7 @@ line.
 ### Use in CI (GitHub Action)
 
 ```yaml
-- uses: Danny-397/Quantum-Safe@main
+- uses: Danny-397/Quantum-Safe-Scan@main
   with:
     path: .
     exclude: tests/*,vendor/*
@@ -495,7 +495,7 @@ window.QUANTUMSAFE_API = "https://quantumsafe-api.onrender.com";
 Requires Python 3.9+.
 
 ```bash
-git clone https://github.com/Danny-397/Quantum-Safe
+git clone https://github.com/Danny-397/Quantum-Safe-Scan
 cd Quantum-Safe
 
 # 1) Install the shared scanner package (CLI) in editable mode
@@ -527,7 +527,7 @@ docker compose up --build
 
 ```bash
 pip install -r requirements-dev.txt
-pytest -q                     # 80 tests; in-memory DB, no setup
+pytest -q                     # 102 tests; in-memory DB, no setup
 ```
 
 Seed a demo account so the dashboard is populated:
@@ -562,7 +562,7 @@ See [`.env.example`](.env.example).
 
 ## Deployment
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Danny-397/Quantum-Safe)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Danny-397/Quantum-Safe-Scan)
 
 See **[DEPLOYMENT.md](DEPLOYMENT.md)** for the full walkthrough. In short:
 

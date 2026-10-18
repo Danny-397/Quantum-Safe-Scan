@@ -316,7 +316,7 @@ plainly:
 - **No dependency / transitive analysis.** Cryptography invoked indirectly through
   third-party libraries (rather than named in the scanned source) is not detected
   — which is also why a clean scan is not a guarantee of safety.
-- **Benchmark scale.** The labeled corpus (12 files, 24 findings) is a regression
+- **Benchmark scale.** The labeled corpus (18 files, 26 findings) is a regression
   benchmark, not a large-scale field study; 100% on it is not a claim of 100% on
   arbitrary code.
 - **Demonstration scale.** Shor runs on `N = 15` and Grover on small key spaces —

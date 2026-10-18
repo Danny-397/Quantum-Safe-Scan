@@ -19,6 +19,7 @@ node_modules/
 # Env / secrets
 .env
 *.local
+*.local.*
 
 # Databases
 *.db

@@ -56,7 +56,7 @@ DEFAULT_PACKAGES = [
 ]
 
 PYPI_JSON = "https://pypi.org/pypi/{pkg}/json"
-_UA = {"User-Agent": "quantumsafe-benchmark/1.0 (+https://github.com/Danny-397/Quantum-Safe)"}
+_UA = {"User-Agent": "quantumsafe-benchmark/1.0 (+https://github.com/Danny-397/Quantum-Safe-Scan)"}
 
 
 def _sdist_url(pkg: str) -> tuple[str, str]:

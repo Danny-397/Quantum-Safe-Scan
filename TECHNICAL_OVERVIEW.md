@@ -43,7 +43,8 @@ both the CLI and the backend, so results never diverge.
 
 ### 2.1 Two complementary strategies
 
-**Regex engine** (all languages: Python, JS/TS, Java, Go, Ruby).
+**Regex engine** (all 11 languages: Python, JS/TS, Java, Go, Ruby, C#, PHP,
+Rust, C/C++, Kotlin, Swift).
 Each rule is a `(family, algorithm, risk, why, pattern, languages)` tuple. Word
 boundaries and language-specific idioms (e.g. `crypto.generateKeyPairSync('rsa'`,
 `rsa.GenerateKey`, `OpenSSL::PKey::RSA`, `MessageDigest.getInstance("MD5")`)
@@ -124,14 +125,14 @@ mechanism, which is exactly what makes the migration case credible.
 
 ## 2c. Evaluation
 
-The detector is measured, not assumed. `benchmark/` is a labeled corpus (12 files,
-9 languages, 24 ground-truth findings at (file, family) granularity) including
+The detector is measured, not assumed. `benchmark/` is a labeled corpus (18 files,
+9 languages, 26 ground-truth findings at (file, family) granularity) including
 adversarial decoys: crypto names that appear only in comments, and word-boundary
 traps (`md5sumLabel`, `rc4legacyName`, `dsaCount`). `benchmark/evaluate.py`
 computes precision/recall/F1 and prints the exact FPs/FNs; `tests/test_benchmark.py`
 enforces thresholds so accuracy can't silently regress.
 
-Current result: **precision 100%, recall 100%** (24/24, 0 FP, 0 FN). Building the
+Current result: **precision 100%, recall 100%** (26/26, 0 FP, 0 FN). Building the
 benchmark drove a real fix — skipping comment-only lines eliminated a class of
 false positives. Documented limits (inline comments, string literals, regex-only
 outside Python) are stated in `benchmark/README.md`; closing them is what the
@@ -209,9 +210,10 @@ A good engineer knows what their tool *doesn't* do:
   (crypto via an unrecognized wrapper) remain possible; false positives from
   crypto names in comments/strings are now masked across all languages, not just
   Python (see §2).
-- **No data-flow / taint analysis.** It can't tell a 2048-bit RSA key used for
-  signing from one used for key transport, so signature-vs-KEM advice is offered
-  jointly.
+- **Taint analysis tracks reach, not intent.** The optional `--taint` pass
+  propagates crypto through wrapper functions and across imported modules (see
+  §6), but it still can't tell a 2048-bit RSA key used for signing from one used
+  for key transport, so signature-vs-KEM advice is offered jointly.
 - **Language coverage is pattern-based** outside Python: every language gets
   usage-aware string/comment masking plus string-argument recovery, but only
   Python gets full AST precision.
@@ -233,6 +235,10 @@ A good engineer knows what their tool *doesn't* do:
   their lockfiles (`package-lock.json`, `poetry.lock`, `go.sum`, …).
 - **Reachability ranking** (`reachable` / `test-example` / `unreferenced`) so
   exploitable findings sort above dead or example code.
+- **Cross-file taint analysis** (`--taint`): an import-resolving call graph
+  (`cli/callgraph.py`) propagates taint to fixpoint across modules, catching
+  quantum-vulnerable crypto reached through wrapper functions and imported
+  helpers, not just direct call sites.
 - **Call-site remediation:** each finding carries a concrete before/after
   (drop-ins) or a PQC migration pointer with a language-appropriate library.
 - **Reusable GitHub Action** (`action.yml`) + a self-scan workflow that uploads
@@ -243,7 +249,5 @@ A good engineer knows what their tool *doesn't* do:
 ## 7. Possible future work
 
 - AST/Tree-sitter parsing for JS/Go/Java (full precision across all languages).
-- Cross-file (import-resolving) reachability and taint, beyond the current
-  intra-module analysis.
 - A larger hand-labeled real-world corpus to complement the seeded recall
   benchmark.
