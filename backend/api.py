@@ -190,6 +190,62 @@ def get_scan(scan_id: int):
     return jsonify({"scan": scan.to_dict(include_findings=True)})
 
 
+def _scan_as_report(scan: Scan) -> dict:
+    """A Scan row in the shape diff.diff_reports expects.
+
+    The row stores the location as repo_url; the canonical report calls it
+    target.
+    """
+    data = scan.to_dict(include_findings=True)
+    data["target"] = data.get("repo_url", "")
+    return data
+
+
+@api_bp.route("/scans/<int:scan_id>/diff", methods=["GET"])
+@jwt_required()
+def diff_scan(scan_id: int):
+    """Compare two of the caller's own scans: fixed / new / unchanged.
+
+    ``?against=<id>`` names the baseline; omitted, it defaults to the scan
+    immediately before this one, which is the common case of "what changed
+    since last time".
+
+    Both scans are looked up scoped to the authenticated user, so one account
+    cannot diff against another's history -- and a scan belonging to someone
+    else is reported as not found rather than as forbidden, which would
+    confirm that the id exists.
+    """
+    from quantumsafe.diff import diff_reports
+
+    user = _require_user()
+    current = Scan.query.filter_by(id=scan_id, user_id=user.id).first()
+    if current is None:
+        return jsonify({"error": "Scan not found."}), 404
+
+    against = request.args.get("against", type=int)
+    if against is not None:
+        baseline = Scan.query.filter_by(id=against, user_id=user.id).first()
+        if baseline is None:
+            return jsonify({"error": "Baseline scan not found."}), 404
+    else:
+        baseline = (Scan.query
+                    .filter(Scan.user_id == user.id, Scan.id < current.id)
+                    .order_by(Scan.id.desc())
+                    .first())
+        if baseline is None:
+            return jsonify({"error": "No earlier scan to compare against."}), 404
+
+    if baseline.id == current.id:
+        return jsonify({"error": "Cannot diff a scan against itself."}), 400
+
+    d = diff_reports(_scan_as_report(baseline), _scan_as_report(current))
+    return jsonify({
+        "diff": d.to_dict(),
+        "baseline_scan_id": baseline.id,
+        "scan_id": current.id,
+    })
+
+
 def _render_export(report: dict, fmt: str, filename_base: str):
     """Render a canonical report dict to a downloadable Response.
 

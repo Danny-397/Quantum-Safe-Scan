@@ -129,6 +129,54 @@ def print_terminal(report: dict) -> None:
     _print_horizon(console, report.get("horizon"))
 
 
+def print_diff(d: dict) -> None:
+    """Render a diff between two scans (see :mod:`diff`)."""
+    try:
+        from rich.console import Console
+    except ImportError:
+        print(f"\nSince baseline: {d['summary']}")
+        for f in d["new"]:
+            print(f"  NEW   {f.get('file_path')}:{f.get('line_number')} "
+                  f"{f.get('algorithm')}")
+        return
+
+    console = Console()
+    counts = d["counts"]
+    if d["regressed"]:
+        verdict, colour = "REGRESSED", "red"
+    elif d["improved"]:
+        verdict, colour = "IMPROVED", "green"
+    else:
+        verdict, colour = "UNCHANGED", "cyan"
+
+    console.print()
+    console.print(f"[bold]Since baseline[/bold]  [{colour}]{verdict}[/{colour}]")
+    if d["target"]["mismatch"]:
+        console.print(f"  [yellow]Warning: baseline scanned "
+                      f"{d['target']['before']!r} but this scan is "
+                      f"{d['target']['after']!r}; the comparison may be "
+                      f"meaningless.[/yellow]")
+    console.print(f"  [green]{counts['fixed']} fixed[/green]   "
+                  f"[red]{counts['new']} new[/red]   "
+                  f"{counts['unchanged']} unchanged   "
+                  f"score {d['risk_score']['before']} -> "
+                  f"{d['risk_score']['after']} "
+                  f"({d['risk_score']['delta']:+d})")
+
+    for label, colour, items in (("NEW", "red", d["new"]),
+                                 ("FIXED", "green", d["fixed"])):
+        for f in items[:12]:
+            loc = f.get("file_path", "?")
+            line = f.get("line_number")
+            where = f"{loc}:{line}" if line else loc
+            console.print(f"  [{colour}]{label:<5}[/{colour}] {where}  "
+                          f"{f.get('algorithm', '?')} [{f.get('risk_level', '?')}]")
+        if len(items) > 12:
+            console.print(f"  [dim]... and {len(items) - 12} more {label.lower()}[/dim]")
+
+    console.print(f"  [dim]{d['caveat']}[/dim]")
+
+
 def _print_endpoint(console, e: dict | None) -> None:
     """Render what the TLS handshake actually negotiated."""
     if not e:

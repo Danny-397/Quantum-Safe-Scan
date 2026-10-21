@@ -134,7 +134,30 @@ def cmd_scan(args: argparse.Namespace) -> int:
 
     _maybe_sync(report, args.no_sync)
 
-    # Non-zero exit on HIGH findings so the CLI is CI-friendly.
+    regressed = False
+    if args.baseline:
+        import json as _json
+        from .diff import diff_reports
+        try:
+            with open(args.baseline, encoding="utf-8") as fh:
+                baseline = _json.load(fh)
+        except (OSError, ValueError) as exc:
+            print(f"Error: could not read baseline {args.baseline!r}: {exc}",
+                  file=sys.stderr)
+            return 2
+        d = diff_reports(baseline, report)
+        reporter.print_diff(d.to_dict())
+        regressed = d.regressed
+
+    # Non-zero exit for CI. --fail-on-new is the ratchet: tolerate the existing
+    # backlog, fail only when it grows.
+    if args.fail_on_new:
+        if not args.baseline:
+            print("Error: --fail-on-new needs --baseline to compare against.",
+                  file=sys.stderr)
+            return 2
+        if regressed:
+            return 1
     return 1 if report["summary"]["high"] > 0 and args.fail_on_high else 0
 
 
@@ -222,6 +245,14 @@ def build_parser() -> argparse.ArgumentParser:
                              "exploitable findings sort above dead or example code.")
     p_scan.add_argument("--fail-on-high", action="store_true",
                         help="Exit with code 1 if any HIGH-risk finding is present (for CI).")
+    p_scan.add_argument("--baseline", metavar="REPORT.json",
+                        help="Compare this scan against a previously saved JSON "
+                             "report and print what was fixed, what is new and "
+                             "what is unchanged.")
+    p_scan.add_argument("--fail-on-new", action="store_true",
+                        help="With --baseline, exit 1 only when the scan finds "
+                             "something NEW. Lets CI ratchet down an existing "
+                             "backlog instead of failing every build on it.")
     p_scan.add_argument("--no-sync", action="store_true",
                         help="Don't upload results to your linked dashboard account.")
     p_scan.add_argument("--secrecy-years", type=float, metavar="X",

@@ -11,7 +11,7 @@
   <img src="https://img.shields.io/github/last-commit/Danny-397/Quantum-Safe-Scan?style=flat-square&color=555" alt="Last commit">
   <img src="https://img.shields.io/github/license/Danny-397/Quantum-Safe-Scan?style=flat-square&color=3fb950" alt="License: MIT">
   <br>
-  <img src="https://img.shields.io/badge/tests-455%20passing-3fb950?style=flat-square&logo=pytest&logoColor=white" alt="455 tests passing">
+  <img src="https://img.shields.io/badge/tests-487%20passing-3fb950?style=flat-square&logo=pytest&logoColor=white" alt="487 tests passing">
   <img src="https://img.shields.io/badge/benchmark-100%25%20precision-3fb950?style=flat-square" alt="100% precision on benchmark">
   <img src="https://img.shields.io/badge/SARIF%202.1.0-schema--validated-3fb950?style=flat-square" alt="SARIF schema-validated">
   <img src="https://img.shields.io/badge/NIST-FIPS%20203%2F204%2F205-5b73e8?style=flat-square" alt="NIST FIPS 203/204/205">
@@ -274,6 +274,59 @@ must resolve *entirely* to public addresses on port 443/8443, and the
 connection goes to the address that was checked — private ranges, loopback,
 link-local (including cloud metadata at `169.254.169.254`), carrier-grade NAT
 and IPv4-mapped IPv6 forms of all of those are refused.
+
+---
+
+## Scan diffing: a ratchet for CI
+
+A single scan is a snapshot, and a snapshot is a poor gate. A repository with
+forty known findings cannot adopt `--fail-on-high` without failing every build
+from day one — so in practice the check gets removed and nothing is enforced.
+What a team *can* adopt is a ratchet: tolerate the backlog, fail only when it
+grows.
+
+```bash
+quantumsafe scan --path . --output baseline.json     # once, committed
+quantumsafe scan --path . --baseline baseline.json --fail-on-new
+```
+
+```
+Since baseline  REGRESSED
+  0 fixed   2 new   19 unchanged   score 100 -> 100 (+0)
+  NEW   newly_added.py:1  DSA [HIGH]
+  NEW   newly_added.py:2  DSA [HIGH]
+```
+
+| | exit code |
+|---|---|
+| regression, `--fail-on-new` | **1** |
+| no regression, `--fail-on-new` | **0** — the 19-finding backlog is tolerated |
+| same scan, `--fail-on-high` | **1** — fails on the backlog |
+
+Note `score 100 -> 100 (+0)` above. The risk score caps at 100, so a codebase
+already at the cap can acquire new HIGH findings with the number unmoved. The
+verdict is therefore driven by new findings, never by the score delta — a
+score-driven gate would have waved that DSA file straight through.
+
+**Findings are identified without their line number.** Line numbers move when
+an import is added or a file is reformatted, and keying on them turns a no-op
+edit into one "fixed" plus one "new". A diff that cries wolf gets ignored,
+which is worse than no diff. Identity is `(file_path, family, algorithm)`, and
+because several findings of one kind can share a key, counts are tracked per
+key: three RSA call sites in a file becoming five is two new findings.
+
+**What a diff cannot tell you**, and says so in its output: a finding that is
+gone was not necessarily fixed — the file may have been deleted, excluded or
+renamed, and a rename appears as one fixed plus one new.
+
+Two saved scans can also be compared through the dashboard:
+
+```http
+GET /api/v1/scans/{id}/diff?against={other_id}   (JWT)
+```
+
+Both scans are looked up scoped to the caller, so one account cannot diff
+against another's history; omit `against` to compare with the previous scan.
 
 ---
 
@@ -627,6 +680,7 @@ GET  /api/v1/scans?page=1&per_page=20   (JWT)  -> paginated list
 GET  /api/v1/scans/{id}                 (JWT)  -> scan + findings
 GET  /api/v1/scans/{id}/export?format=json|html|csv|sarif|cbom|svg   (JWT)
 GET  /api/v1/scans/{id}/migration       (JWT)  -> grouped migration plan
+GET  /api/v1/scans/{id}/diff?against={id}  (JWT)  -> fixed / new / unchanged
 GET  /api/v1/overview                   (JWT)  -> dashboard stats + trend
 ```
 
@@ -710,7 +764,7 @@ docker compose up --build
 
 ```bash
 pip install -r requirements-dev.txt
-pytest -q                     # 455 tests; in-memory DB, no setup
+pytest -q                     # 487 tests; in-memory DB, no setup
 ```
 
 Seed a demo account so the dashboard is populated:
