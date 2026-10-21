@@ -2,18 +2,20 @@
 # project a stable, machine-readable citation. It is also what Zenodo reads when
 # you archive a release to mint a DOI.
 #
-# Before relying on this for a paper or a DOI:
-#   1. The name below is "Dan Lichtenberger", matching the form used on
-#      danny-397.github.io and the GitHub profile. Change it if you would
-#      rather be cited as Danny, or by a fuller legal name.
-#   2. Add your ORCID if you have one (uncomment the `orcid:` line).
-#   3. After minting a Zenodo DOI, put it in `doi:` so the two agree.
+# The name is "Daniel Lichtenberger", matching paper/rl_trader.tex and the
+# CITATION.cff files in the other projects. The site uses "Dan" as a display
+# byline, which is a separate thing from a citation name. If you would rather be
+# cited differently, change it in all five files together -- they disagreed once
+# already (this one said "Dan" while RL-Trader said "Daniel").
+#
+# Still optional: add your ORCID (uncomment `orcid:`), and after minting a Zenodo
+# DOI put it in `doi:` so the two agree.
 cff-version: 1.2.0
 title: "QuantumSafe — a scanner for quantum-vulnerable cryptography"
 message: "If you use this software or its findings, please cite it as below."
 type: software
 authors:
-  - given-names: Dan
+  - given-names: Daniel
     family-names: Lichtenberger
     # orcid: "https://orcid.org/0000-0000-0000-0000"
 repository-code: "https://github.com/Danny-397/Quantum-Safe-Scan"
