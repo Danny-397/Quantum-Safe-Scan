@@ -709,3 +709,28 @@ html.qs-anim .reveal.in { opacity: 1; transform: none; }
   .field input, .home-scan-row input[type="text"], .demo-input,
   .toolbar select, .toolbar input { font-size: 16px; }
 }
+
+/* ---- migration horizon (Mosca's inequality) ---- */
+.hz-controls {
+  display: grid; gap: 14px 24px; margin-bottom: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+.hz-controls label { display: block; font-size: 13px; }
+.hz-controls label > span { display: block; color: var(--muted); margin-bottom: 6px; }
+.hz-controls select { width: 100%; }
+.hz-controls input[type="range"] { width: 100%; accent-color: var(--accent); }
+.hz-verdict {
+  padding: 10px 12px; border-radius: 8px; font-size: 13.5px;
+  border: 1px solid var(--border-strong); background: var(--surface-2);
+}
+.hz-verdict b { display: block; font-family: var(--mono); font-size: 12px;
+  letter-spacing: .08em; margin-bottom: 4px; }
+.hz-verdict.hz-late { border-color: #f85149; }
+.hz-verdict.hz-late b { color: #f85149; }
+.hz-verdict.hz-risk { border-color: #d29922; }
+.hz-verdict.hz-risk b { color: #d29922; }
+.hz-verdict.hz-ok { border-color: #3fb950; }
+.hz-verdict.hz-ok b { color: #3fb950; }
+.hz-detail { margin-top: 10px; font-size: 12.5px; color: var(--muted); }
+#hz-assumptions { margin: 8px 0 0 18px; font-size: 12.5px; color: var(--muted); }
+#hz-assumptions li { margin-bottom: 4px; }

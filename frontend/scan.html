@@ -71,6 +71,56 @@
         </div>
       </div>
 
+      <!-- Mosca's inequality: will the migration finish before the data matters? -->
+      <div class="card" id="hz-card" style="margin-top:16px;" hidden>
+        <h3>Migration horizon</h3>
+        <p class="muted" style="margin:4px 0 14px;font-size:13.5px;">
+          The score says <em>how much</em> vulnerable cryptography you have. It cannot say
+          whether you finish migrating in time. Mosca's inequality can:
+          <span class="mono">X + Y &gt; Z</span> means data sent today is already exposed,
+          because an adversary records it now and decrypts it once Z arrives.
+        </p>
+
+        <div class="hz-controls">
+          <label for="hz-secrecy">
+            <span>X &mdash; this data must stay confidential for</span>
+            <select id="hz-secrecy">
+              <option value="0.02">a session (days)</option>
+              <option value="1">1 year</option>
+              <option value="5">5 years</option>
+              <option value="10" selected>10 years</option>
+              <option value="25">25 years &mdash; financial records</option>
+              <option value="50">50 years &mdash; health records</option>
+              <option value="75">75 years &mdash; state secrets</option>
+            </select>
+          </label>
+          <label for="hz-crqc">
+            <span>Z &mdash; assume a quantum computer arrives in
+              <b class="mono" id="hz-crqc-label">15</b> years</span>
+            <input type="range" id="hz-crqc" min="1" max="40" step="1" value="15" />
+          </label>
+        </div>
+
+        <div id="hz-verdict" class="hz-verdict"></div>
+        <div id="hz-detail" class="hz-detail mono"></div>
+        <details class="method" style="margin-top:12px;">
+          <summary>What this refuses to claim</summary>
+          <div class="inner">
+            <p><b>Z is unknowable, so nothing here predicts it.</b> The slider is your
+              scenario, not a forecast. The figure that needs no guess is the
+              <b>break-even year</b>: the latest a quantum computer could arrive while
+              still leaving time to migrate. That is a property of your code and your
+              data, not of the future.</p>
+            <p><b>Y is an estimate</b>, so it is reported as a range. Effort is counted per
+              cryptographic family rather than per finding, because the expensive part is
+              the design decision and that is paid once; call sites then scale
+              sub-linearly. The coefficients are assumptions &mdash; listed below &mdash;
+              and figures from your own migration would be strictly better.</p>
+            <ul id="hz-assumptions"></ul>
+          </div>
+        </details>
+      </div>
+
       <div class="card" style="margin-top:16px;">
         <div class="toolbar">
           <label class="muted" for="sd-filter" style="font-size:13px;">Filter risk</label>

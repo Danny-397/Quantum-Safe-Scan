@@ -256,3 +256,93 @@ def test_zero_secrecy_is_allowed():
     """Data that needs no confidentiality is a legitimate answer."""
     a = assess([F("rsa")], secrecy_years=0, crqc_years=50, today=TODAY)
     assert a.verdict == VERDICT_ON_TRACK
+
+
+# --------------------------------------------------------------------------- #
+# The HTTP endpoint
+#
+# The dashboard fetches Y once and then recomputes the verdict locally as the
+# sliders move, so this endpoint's job is to produce the migration estimate and
+# the assumptions behind it -- and to refuse nonsense input without a 500.
+# --------------------------------------------------------------------------- #
+def _post(client, **body):
+    return client.post("/api/v1/horizon", json=body)
+
+
+def test_endpoint_returns_a_migration_estimate(client):
+    res = _post(client, findings=[{"family": "rsa"}, {"family": "md5"}],
+                secrecy_years=10, crqc_years=12)
+    assert res.status_code == 200
+    h = res.get_json()["horizon"]
+    assert h["migration_years"]["low"] > 0
+    assert h["migration_years"]["high"] > h["migration_years"]["low"]
+    assert h["verdict"] in ("already_late", "at_risk", "on_track")
+    assert len(h["assumptions"]) >= 5
+
+
+def test_endpoint_only_needs_the_family(client):
+    """The dashboard sends nothing but the family, by design."""
+    res = _post(client, findings=[{"family": "rsa"}], secrecy_years=0)
+    assert res.status_code == 200
+    assert res.get_json()["horizon"]["migration_years"]["high"] > 0
+
+
+def test_endpoint_ignores_extra_finding_fields(client):
+    """File paths and snippets are irrelevant to the estimate and unneeded."""
+    plain = _post(client, findings=[{"family": "rsa"}], secrecy_years=0)
+    noisy = _post(client, findings=[{"family": "rsa", "file_path": "/etc/passwd",
+                                     "snippet": "x" * 500, "line_number": 9}],
+                  secrecy_years=0)
+    assert (plain.get_json()["horizon"]["migration_years"]
+            == noisy.get_json()["horizon"]["migration_years"])
+
+
+def test_endpoint_gives_no_verdict_without_a_quantum_year(client):
+    res = _post(client, findings=[{"family": "rsa"}], secrecy_years=10)
+    h = res.get_json()["horizon"]
+    assert h["verdict"] == "no_verdict"
+    assert h["crqc_years"] is None
+    # The break-even is still returned: it needs no guess about Z.
+    assert h["breakeven_year"]["low"] >= 2026
+
+
+def test_endpoint_requires_a_findings_list(client):
+    for body in ({}, {"findings": "rsa"}, {"findings": 5}):
+        res = client.post("/api/v1/horizon", json=body)
+        assert res.status_code == 400
+        assert "findings" in res.get_json()["error"].lower()
+
+
+def test_endpoint_caps_the_findings_count(client):
+    res = _post(client, findings=[{"family": "rsa"}] * 5001, secrecy_years=0)
+    assert res.status_code == 413
+
+
+def test_empty_findings_list_is_accepted(client):
+    """A clean scan is a legitimate thing to ask about."""
+    res = _post(client, findings=[], secrecy_years=50, crqc_years=1)
+    assert res.status_code == 200
+    h = res.get_json()["horizon"]
+    assert h["migration_years"] == {"low": 0.0, "high": 0.0}
+    assert h["verdict"] == "on_track"
+
+
+@pytest.mark.parametrize("bad", ["abc", -1, 10_000, [1], {"a": 1}])
+def test_endpoint_rejects_nonsense_years(client, bad):
+    res = _post(client, findings=[{"family": "rsa"}], secrecy_years=bad)
+    assert res.status_code == 400, f"{bad!r} should be refused"
+
+
+def test_endpoint_tolerates_malformed_finding_entries(client):
+    """A non-dict in the list must not 500."""
+    res = _post(client, findings=[{"family": "rsa"}, "garbage", None, 7],
+                secrecy_years=0)
+    assert res.status_code == 200
+    assert res.get_json()["horizon"]["asymmetric_families"] == ["rsa"]
+
+
+def test_endpoint_stores_nothing_and_needs_no_auth(client):
+    """No token is sent; the call must still work and persist nothing."""
+    res = _post(client, findings=[{"family": "ecc"}], secrecy_years=5)
+    assert res.status_code == 200
+    assert "scan_id" not in res.get_json()

@@ -11,7 +11,7 @@
   <img src="https://img.shields.io/github/last-commit/Danny-397/Quantum-Safe-Scan?style=flat-square&color=555" alt="Last commit">
   <img src="https://img.shields.io/github/license/Danny-397/Quantum-Safe-Scan?style=flat-square&color=3fb950" alt="License: MIT">
   <br>
-  <img src="https://img.shields.io/badge/tests-531%20passing-3fb950?style=flat-square&logo=pytest&logoColor=white" alt="531 tests passing">
+  <img src="https://img.shields.io/badge/tests-545%20passing-3fb950?style=flat-square&logo=pytest&logoColor=white" alt="545 tests passing">
   <img src="https://img.shields.io/badge/benchmark-100%25%20precision-3fb950?style=flat-square" alt="100% precision on benchmark">
   <img src="https://img.shields.io/badge/SARIF%202.1.0-schema--validated-3fb950?style=flat-square" alt="SARIF schema-validated">
   <img src="https://img.shields.io/badge/NIST-FIPS%20203%2F204%2F205-5b73e8?style=flat-square" alt="NIST FIPS 203/204/205">
@@ -718,6 +718,11 @@ POST /api/v1/demo-scan          (public, rate-limited)  # landing-page live demo
 POST /api/v1/scan-url           (public, 10/hour)   # live TLS endpoint scan
      { "url": "example.com" } -> { report }   # one handshake, stores nothing
 
+POST /api/v1/horizon            (public, 120/hour)  # Mosca's inequality
+     { "findings": [{"family": "rsa"}], "secrecy_years": 10 } -> { horizon }
+     # only the family is read; the dashboard fetches Y once and moves its
+     # sliders locally, since X + Y > Z is arithmetic
+
 GET  /api/v1/scans?page=1&per_page=20   (JWT)  -> paginated list
 GET  /api/v1/scans/{id}                 (JWT)  -> scan + findings
 GET  /api/v1/scans/{id}/export?format=json|html|csv|sarif|cbom|svg   (JWT)
@@ -806,7 +811,7 @@ docker compose up --build
 
 ```bash
 pip install -r requirements-dev.txt
-pytest -q                     # 531 tests; in-memory DB, no setup
+pytest -q                     # 545 tests; in-memory DB, no setup
 ```
 
 Seed a demo account so the dashboard is populated:

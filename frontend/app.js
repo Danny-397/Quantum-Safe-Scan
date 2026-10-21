@@ -1181,6 +1181,100 @@
     });
   }
 
+
+  // ---- Migration horizon (Mosca's inequality) ----
+  //
+  // Y -- how long the migration takes -- is estimated from the findings by the
+  // server, so the effort model stays single-sourced with the CLI. It is
+  // fetched ONCE. The sliders then recompute the verdict here, because
+  // X + Y > Z is arithmetic and a round trip per drag would make the control
+  // unusable. The comparison below is deliberately the only logic duplicated.
+  let hzY = null;   // { low, high } years, from /api/v1/horizon
+
+  function hzRender() {
+    const card = $("#hz-card");
+    if (!card || !hzY) return;
+    const X = parseFloat($("#hz-secrecy").value);
+    const Z = parseFloat($("#hz-crqc").value);
+    const label = $("#hz-crqc-label");
+    if (label) label.textContent = String(Z);
+
+    const beLow = X + hzY.low;
+    const beHigh = X + hzY.high;
+    const thisYear = new Date().getFullYear();
+
+    let verdict, cls, message;
+    if (hzY.low === 0 && hzY.high === 0) {
+      verdict = "NOTHING TO MIGRATE";
+      cls = "hz-ok";
+      message = "No quantum-vulnerable cryptography was found, so the inequality " +
+                "does not apply. This says nothing about cryptography the scanner " +
+                "cannot see.";
+    } else if (beLow > Z) {
+      verdict = "ALREADY TOO LATE";
+      cls = "hz-late";
+      message = "Even on the optimistic estimate, data sent today that must stay " +
+                "confidential this long will still be sensitive when the migration " +
+                "finishes.";
+    } else if (beHigh > Z) {
+      verdict = "AT RISK";
+      cls = "hz-risk";
+      message = "The optimistic estimate finishes in time; the pessimistic one does " +
+                "not. The margin rests on assumptions you should replace with your own.";
+    } else {
+      verdict = "ON TRACK";
+      cls = "hz-ok";
+      message = "The migration finishes with room to spare even on the pessimistic " +
+                "estimate, for this choice of Z.";
+    }
+
+    const v = $("#hz-verdict");
+    if (v) {
+      v.className = "hz-verdict " + cls;
+      v.innerHTML = `<b>${verdict}</b> <span>${esc(message)}</span>`;
+    }
+    const d = $("#hz-detail");
+    if (d) {
+      const beYears = beLow.toFixed(1) === beHigh.toFixed(1)
+        ? `${beLow.toFixed(1)}`
+        : `${beLow.toFixed(1)}\u2013${beHigh.toFixed(1)}`;
+      const beYear = Math.floor(beLow) === Math.floor(beHigh)
+        ? `${thisYear + Math.floor(beLow)}`
+        : `${thisYear + Math.floor(beLow)}\u2013${thisYear + Math.floor(beHigh)}`;
+      d.innerHTML =
+        `X = ${X}y &nbsp;+&nbsp; Y = ${hzY.low}\u2013${hzY.high}y ` +
+        `&nbsp;&rarr;&nbsp; migration must be done within <b>${beYears} years</b> ` +
+        `(break-even <b>${beYear}</b>) &nbsp;vs&nbsp; Z = ${Z}y`;
+    }
+  }
+
+  async function initHorizon(findings) {
+    const card = $("#hz-card");
+    if (!card || !findings || !findings.length) return;
+    try {
+      const d = await api("/api/v1/horizon", {
+        noAuth: true, noRedirect: true,
+        json: {
+          // Only the family is needed, and only the family is sent.
+          findings: findings.map((f) => ({ family: f.family || "" })),
+          secrecy_years: 0,
+        },
+      });
+      const h = d.horizon;
+      hzY = h.migration_years;
+      const ul = $("#hz-assumptions");
+      if (ul) ul.innerHTML = (h.assumptions || [])
+        .map((a) => `<li>${esc(a)}</li>`).join("");
+      card.hidden = false;
+      $("#hz-secrecy").addEventListener("change", hzRender);
+      $("#hz-crqc").addEventListener("input", hzRender);
+      hzRender();
+    } catch (_) {
+      // The horizon is additive: if the backend is cold or gone, the findings
+      // table is still the point of this page, so the card simply stays hidden.
+    }
+  }
+
   // =========================================================================
   //  SCAN DETAIL
   // =========================================================================
@@ -1239,6 +1333,7 @@
     $("#sd-med").textContent = scan.summary.medium;
     $("#sd-low").textContent = scan.summary.low;
     sdCache = scan.findings || [];
+    initHorizon(sdCache);
     renderSd();
     $("#sd-filter").onchange = renderSd;
   }

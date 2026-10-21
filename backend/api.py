@@ -482,6 +482,56 @@ def demo_scan():
     return jsonify({"report": build_report(findings, "in-browser snippet")})
 
 
+@api_bp.route("/horizon", methods=["POST"])
+@limiter.limit("120 per hour")
+def horizon_endpoint():
+    """Apply Mosca's inequality to a set of findings. Stores nothing.
+
+    Only each finding's ``family`` is read -- the migration estimate depends on
+    which cryptographic decisions have to be made, not on file paths or
+    snippets, so nothing else needs to cross the wire.
+
+    The dashboard calls this once and then recomputes the verdict locally as
+    the visitor moves the sliders: X + Y > Z is arithmetic, and a round trip
+    per drag would make the control unusable. The effort model that produces Y
+    stays here, single-sourced with the CLI.
+    """
+    from quantumsafe.horizon import assess
+    from quantumsafe.scanner import Finding
+
+    data = request.get_json(silent=True) or {}
+    raw = data.get("findings")
+    if not isinstance(raw, list):
+        return jsonify({"error": "Provide a 'findings' list."}), 400
+    if len(raw) > 5000:
+        return jsonify({"error": "Too many findings (5000 max)."}), 413
+
+    def number(key, default=None, limit=500.0):
+        value = data.get(key, default)
+        if value is None:
+            return None
+        try:
+            value = float(value)
+        except (TypeError, ValueError):
+            raise ValueError(f"{key} must be a number.")
+        if not 0 <= value <= limit:
+            raise ValueError(f"{key} must be between 0 and {limit:g}.")
+        return value
+
+    try:
+        secrecy = number("secrecy_years", 0.0)
+        crqc = number("crqc_years", None)
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+
+    findings = [
+        Finding(file_path="", line_number=0, algorithm="", risk_level="LOW",
+                why="", family=str(f.get("family") or ""))
+        for f in raw if isinstance(f, dict)
+    ]
+    return jsonify({"horizon": assess(findings, secrecy, crqc).to_dict()})
+
+
 @api_bp.route("/scan-url", methods=["POST"])
 # Deliberately tighter than demo-scan. This endpoint opens an outbound
 # connection to a host the caller names, so a generous limit would turn the

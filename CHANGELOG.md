@@ -47,6 +47,16 @@ All notable changes to QuantumSafe are documented here. This project follows
   findings with the number unmoved.
 - **`baseline` / `fail-on-new` inputs on the GitHub Action.** A missing baseline
   file warns and skips the comparison instead of failing, so a first run works.
+- **Migration horizon on the dashboard** (`POST /api/v1/horizon`, scan results page).
+  Two controls -- how long the data must stay confidential, and a slider for the
+  quantum year -- with the verdict flipping live between ALREADY TOO LATE / AT RISK /
+  ON TRACK. Y is estimated server-side from the findings and fetched **once**, so the
+  effort model stays single-sourced with the CLI; the sliders then recompute
+  `X + Y > Z` locally, because a round trip per drag would make the control unusable.
+  Only each finding's `family` crosses the wire -- file paths and snippets are
+  irrelevant to the estimate. The card carries a "What this refuses to claim" panel
+  listing all six coefficients, and degrades to hidden if the backend is cold, since
+  the findings table is the point of that page.
 - **"Scan a live website" on the dashboard.** The home page exposes the TLS scan
   with the key exchange, protocol, cipher and full certificate chain rendered,
   and shows the server's own refusal reason for a rejected target.
