@@ -75,6 +75,18 @@ All notable changes to QuantumSafe are documented here. This project follows
   has already migrated is not billed migration effort, and a post-quantum key
   exchange is not told to consider SHA-384.
 
+- **A CI check that the documented test counts are true**
+  (`tools/check_test_count.py`). Every "N tests" in the README and the technical
+  report is a claim a reader can check by cloning and running pytest, so a stale
+  one is a published inaccuracy. Keeping them current by hand did not work -- they
+  drifted five times in a day of feature work, and the figure that stayed wrong
+  longest was a shields badge, because the badge spells the number differently
+  from the prose and searching for one does not find the other. The check
+  collects the count from pytest, compares it against every documented figure,
+  fails the build on a mismatch, and also fails if a pattern stops matching --
+  which is what would otherwise happen silently when the wording is reworded.
+  `--fix` rewrites the counts in place.
+
 ### Fixed
 - **SARIF no longer invents a file and a line for endpoint findings.** They were
   emitted with `artifactLocation.uri` set to a bare host plus a bracketed suffix

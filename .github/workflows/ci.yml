@@ -31,3 +31,11 @@ jobs:
 
       - name: Run test suite
         run: pytest -q
+
+      # Every "N tests" in the README and the technical report is a claim a
+      # reader can check by cloning and running pytest, so a stale one is a
+      # published inaccuracy rather than a cosmetic slip. Keeping them current
+      # by hand did not work: the shields badge spells the number differently
+      # from the prose, so searching for one does not find the other.
+      - name: Check the documented test counts
+        run: python tools/check_test_count.py
