@@ -206,7 +206,73 @@ NIST standardized lattice schemes. *(Honest scope: this is a faithful teaching
 implementation of plain LWE, not the constant-time Module-LWE + NTT + Fujisaki–Okamoto
 construction of production Kyber; real systems should use vetted ML-KEM such as `liboqs`.)*
 
-## 6. Engineering
+## 6. Beyond the codebase: live endpoints and deadlines
+
+Two things a code scan cannot answer: what a deployed service actually negotiates,
+and whether the migration finishes in time.
+
+**The TLS handshake (`cli/tlsscan.py`).** A website's quantum exposure is not in its
+source — it is in two brief public-key steps of the handshake. The **key exchange** is
+the urgent one: Shor recovers the session secret, and because an adversary can record
+traffic now and decrypt it later, data sent today is exposed *retroactively*. The
+**certificate signature** is also Shor-breakable, but only to forge *future*
+certificates, and those rotate every ~90 days. Symmetric cryptography is not the
+problem at all: Grover square-roots a brute-force search, so AES-128 retains ~64-bit
+security and AES-256 is comfortable.
+
+Reading the key exchange needed a hand-built ClientHello. TLS 1.2 named the key exchange
+in the cipher suite (`ECDHE_RSA_WITH_AES_128_GCM_SHA256`); TLS 1.3 removed it, so every
+modern site reports only `TLS_AES_128_GCM_SHA256` — which says nothing. The group lives
+in the `key_share` extension, and Python's `ssl` cannot report it (`set_groups` and
+`group_used` need OpenSSL 3.5+ and Python 3.14; ML-KEM groups need OpenSSL 3.5 at all).
+So the scanner offers the hybrid groups in `supported_groups` but a `key_share` for
+X25519 only: a server preferring a hybrid cannot proceed from that share and must answer
+with a HelloRetryRequest naming the group it wants (RFC 8446 §4.1.3). No ML-KEM
+implementation and no new dependency are needed to ask the question. One handshake,
+89–257 ms.
+
+**The whole certificate chain (`cli/certchain.py`).** A chain is only as strong as its
+weakest signature, and the weak link is usually not the leaf: `cloudflare.com` serves an
+ECDSA P-256 leaf, but an intermediate above it is signed **SHA-256 with RSA**. Forging
+that signature mints a leaf for any name beneath it. The signature algorithm and public
+key are precisely the two fields `ssl.getpeercert()` omits, so rather than take on a
+`cryptography` dependency they are walked out of the DER with a minimal
+tag-length-value reader that parses structure and OIDs and verifies nothing — `ssl` has
+already validated the chain by then. A root's self-signature is shown but not scored: a
+root is trusted because it is in the client's trust store, so forging that signature
+gains an attacker nothing.
+
+**Mosca's inequality (`cli/horizon.py`).** The risk score says *how much* vulnerable
+cryptography exists. It cannot say whether the migration lands in time, which is the
+question the threat model actually poses: one RSA key exchange protecting data that must
+stay secret for fifty years is worse than forty MD5 checksums.
+
+```
+X  how long the data must stay confidential
+Y  how long the migration takes
+Z  how long until a quantum computer can break it
+
+X + Y > Z   ->   data sent today is already exposed
+```
+
+What the tool refuses to claim matters as much as what it reports. **Z is unknowable, so
+there is no default for it** — omitting it yields `no_verdict` rather than a guess. What
+is always computed is the **break-even year**: the latest a quantum computer could arrive
+while still leaving time to migrate, which needs no estimate of Z and is a property of
+the code and the data rather than a forecast. Y is an engineering estimate, so it is a
+range, counted per cryptographic *family* rather than per finding (the design decision is
+paid once; call sites scale sub-linearly), and all six coefficients are emitted under
+`horizon.assumptions` so a reader can reject a specific number instead of the whole figure.
+
+**Scanning someone else's server** is bounded to a single TLS handshake — what any
+browser does on every visit. It is not port or vulnerability scanning. The target must
+resolve *entirely* to public addresses on port 443/8443, and the connection is made to
+the address that was checked rather than re-resolved, which closes the DNS-rebinding
+window; private ranges, loopback, link-local (cloud instance metadata at
+`169.254.169.254`), carrier-grade NAT and the IPv4-mapped IPv6 forms of all of them are
+refused.
+
+## 7. Engineering
 
 One shared engine behind CLI + API + dashboard; **496 automated tests**; CI; Docker and
 `docker-compose`; a reusable **GitHub Action** (`action.yml`) that fails a build over a
@@ -215,7 +281,7 @@ risk threshold; multi-service deploy configs; and a published PyPI package
 harness, comparison, and every chart are **reproducible from scripts** and generated
 from live scanner output, not hand-drawn.
 
-## 7. Honest limitations
+## 8. Honest limitations
 
 - **Heuristic, not a proof.** It detects *usage patterns*; reachability is a conservative
   ranking signal, not a proof that a primitive is exploitable or live.
@@ -233,8 +299,23 @@ from live scanner output, not hand-drawn.
   the seeded harness adds 50 constructed recall cases. Neither is a claim of 100% on
   arbitrary real-world code.
 - **Demonstration scale.** Shor runs on `N = 15`; the LWE KEM is teaching-grade.
+- **The TLS scan reports what a server *selects*, not everything it supports.** The
+  result is the group chosen from the set offered — the same answer a browser offering
+  that set would get — so a server that supports a hybrid but ranks it lower reads as
+  classical. Findings say "negotiated", not "supports", for exactly that reason.
+- **One endpoint, one handshake.** It does not follow redirects, probe other ports, or
+  sweep the third-party origins a page actually loads from, so a site whose own TLS is
+  post-quantum may still pull sub-resources over classical key exchange.
+- **Migration time is an estimate, not a measurement.** The horizon's coefficients are
+  assumptions about how long cryptographic work takes, and they are printed alongside
+  the result precisely because they should be replaced with figures from a real
+  migration. The break-even year is the only number there that rests on no guess about
+  the future.
+- **A diff cannot prove a fix.** A finding that disappeared may have been deleted,
+  excluded or renamed — a rename reads as one fixed plus one new. The diff reports
+  counts and locations, not conclusions, and says so in its own output.
 
-## 8. What's next
+## 9. What's next
 
 Tree-sitter AST parsing to bring non-Python languages up to AST-level precision;
 import-resolving reachability (the taint pass is already cross-file); a larger hand-labeled real-world
