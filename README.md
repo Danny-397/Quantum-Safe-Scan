@@ -11,7 +11,7 @@
   <img src="https://img.shields.io/github/last-commit/Danny-397/Quantum-Safe-Scan?style=flat-square&color=555" alt="Last commit">
   <img src="https://img.shields.io/github/license/Danny-397/Quantum-Safe-Scan?style=flat-square&color=3fb950" alt="License: MIT">
   <br>
-  <img src="https://img.shields.io/badge/tests-232%20passing-3fb950?style=flat-square&logo=pytest&logoColor=white" alt="232 tests passing">
+  <img src="https://img.shields.io/badge/tests-265%20passing-3fb950?style=flat-square&logo=pytest&logoColor=white" alt="265 tests passing">
   <img src="https://img.shields.io/badge/benchmark-100%25%20precision-3fb950?style=flat-square" alt="100% precision on benchmark">
   <img src="https://img.shields.io/badge/SARIF%202.1.0-schema--validated-3fb950?style=flat-square" alt="SARIF schema-validated">
   <img src="https://img.shields.io/badge/NIST-FIPS%20203%2F204%2F205-5b73e8?style=flat-square" alt="NIST FIPS 203/204/205">
@@ -175,6 +175,57 @@ score = min(100, 15*HIGH + 5*MEDIUM + 1*LOW)
 | 31–60 | Medium | Plan migration |
 | 61–80 | High | Prioritize migration |
 | 81–100 | Critical | Immediate action required |
+
+---
+
+## Migration horizon (Mosca's inequality)
+
+The risk score says *how much* vulnerable cryptography you have. It cannot say
+whether you will finish migrating in time, which is the question the threat
+model actually poses. One RSA key exchange protecting data that must stay
+secret for fifty years is worse than forty MD5 checksums.
+
+Michele Mosca's formulation:
+
+```
+X  how long the data must stay confidential
+Y  how long the migration takes
+Z  how long until a quantum computer can break it
+
+X + Y > Z   ->   data sent today is already exposed
+```
+
+The reason is harvest-now-decrypt-later: an adversary records ciphertext today
+and decrypts it when Z arrives. Migration has to *finish* by `Z - X`, not at Z.
+
+```bash
+quantumsafe scan --path . --secrecy-years 10 --crqc-years 12
+```
+
+```
+Migration horizon (Mosca's inequality)
+  Data must stay confidential (X) : 10 years
+  Estimated migration (Y)         : 2.77-8.66 years
+  Assumed quantum threat (Z)      : 12 years
+  Break-even year                 : 2038-2044
+  ALREADY LATE  Already too late: even on the optimistic estimate, data sent
+  today that must stay confidential for this long will still be sensitive when
+  the migration finishes.
+  Design changes needed           : dsa, ecc, rsa
+```
+
+**What this will not claim.** Z is unknowable, so there is no default for it —
+`--crqc-years` is yours to choose, and omitting it gives no verdict rather than
+a guess. What is always computed is the **break-even year**: the latest a
+quantum computer could arrive while still leaving time to migrate. That is a
+property of your code and your data, not a forecast.
+
+Y is an engineering estimate, so it is reported as a range, counted per
+cryptographic *family* rather than per call site (five hundred RSA call sites
+are not five hundred migrations), and every coefficient is printed in the JSON
+report under `horizon.assumptions` so you can disagree with a specific number
+rather than with the whole figure. Replace them with measurements from your own
+migration if you have them — that is strictly better.
 
 ---
 
@@ -557,7 +608,7 @@ docker compose up --build
 
 ```bash
 pip install -r requirements-dev.txt
-pytest -q                     # 232 tests; in-memory DB, no setup
+pytest -q                     # 265 tests; in-memory DB, no setup
 ```
 
 Seed a demo account so the dashboard is populated:

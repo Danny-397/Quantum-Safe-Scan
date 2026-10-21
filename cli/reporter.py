@@ -21,8 +21,19 @@ _RISK_COLOR = {RISK_HIGH: "red", RISK_MEDIUM: "yellow", RISK_LOW: "green"}
 _BAND_COLOR = {"Low": "green", "Medium": "yellow", "High": "red", "Critical": "red"}
 
 
-def build_report(findings: list[Finding], target: str) -> dict:
-    """Assemble the canonical report structure from real findings."""
+def build_report(
+    findings: list[Finding],
+    target: str,
+    secrecy_years: float | None = None,
+    crqc_years: float | None = None,
+) -> dict:
+    """Assemble the canonical report structure from real findings.
+
+    ``secrecy_years`` opts in to the Mosca's-inequality assessment (see
+    :mod:`horizon`): how long the migration takes measured against how long
+    the data has to stay confidential. It is absent from the report unless
+    asked for, because it needs an input only the caller knows.
+    """
     score = calculate_score(findings)
     band = risk_band(score)
     counts = count_by_severity(findings)
@@ -34,7 +45,7 @@ def build_report(findings: list[Finding], target: str) -> dict:
                        _REACH_ORDER.get(f.reachability, 0),
                        f.file_path, f.line_number),
     )
-    return {
+    report = {
         "tool": "quantumsafe",
         "version": __version__,
         "target": target,
@@ -50,6 +61,10 @@ def build_report(findings: list[Finding], target: str) -> dict:
         },
         "findings": [f.to_dict() for f in ordered],
     }
+    if secrecy_years is not None:
+        from .horizon import assess
+        report["horizon"] = assess(findings, secrecy_years, crqc_years).to_dict()
+    return report
 
 
 # --------------------------------------------------------------------------- #
@@ -106,6 +121,45 @@ def print_terminal(report: dict) -> None:
             f["recommendation"],
         )
     console.print(table)
+    _print_horizon(console, report.get("horizon"))
+
+
+_HORIZON_COLOR = {
+    "already_late": "red",
+    "at_risk": "yellow",
+    "on_track": "green",
+    "no_verdict": "cyan",
+}
+
+
+def _print_horizon(console, h: dict | None) -> None:
+    """Render the Mosca assessment, if one was requested."""
+    if not h:
+        return
+    y = h["migration_years"]
+    be = h["breakeven_year"]
+    color = _HORIZON_COLOR.get(h["verdict"], "white")
+
+    console.print()
+    console.print("[bold]Migration horizon[/bold] (Mosca's inequality)")
+    console.print(f"  Data must stay confidential (X) : {h['secrecy_years']:g} years")
+    console.print(f"  Estimated migration (Y)         : {y['low']:g}-{y['high']:g} years")
+    if h["crqc_years"] is not None:
+        console.print(f"  Assumed quantum threat (Z)      : {h['crqc_years']:g} years")
+    else:
+        console.print("  Assumed quantum threat (Z)      : not supplied")
+    # X + Y: the deadline, and the only figure here that needs no guess about Z.
+    if be["low"] == be["high"]:
+        console.print(f"  Break-even year                 : {be['low']}")
+    else:
+        console.print(f"  Break-even year                 : {be['low']}-{be['high']}")
+    console.print(f"  [{color}]{h['verdict'].replace('_', ' ').upper()}[/{color}] "
+                  f"{h['message']}")
+    if h["asymmetric_families"]:
+        console.print(f"  Design changes needed           : "
+                      f"{', '.join(h['asymmetric_families'])}")
+    console.print("  [dim]Estimate rests on stated assumptions; see "
+                  "\"assumptions\" in the JSON report.[/dim]")
 
 
 def _location(f: dict) -> str:

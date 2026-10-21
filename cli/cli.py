@@ -69,6 +69,13 @@ def cmd_scan(args: argparse.Namespace) -> int:
     if bool(args.path) == bool(args.repo):
         print("Error: provide exactly one of --path or --repo.", file=sys.stderr)
         return 2
+    # Z on its own says nothing: the inequality needs X. Fail rather than
+    # silently ignore the flag the user bothered to pass.
+    if args.crqc_years is not None and args.secrecy_years is None:
+        print("Error: --crqc-years needs --secrecy-years (Mosca's inequality "
+              "compares X + Y against Z; without X there is nothing to compare).",
+              file=sys.stderr)
+        return 2
 
     exclude = args.exclude or None
     scan_deps = not args.no_deps
@@ -86,7 +93,11 @@ def cmd_scan(args: argparse.Namespace) -> int:
         print(f"Error: {exc}", file=sys.stderr)
         return 1
 
-    report = reporter.build_report(findings, target)
+    report = reporter.build_report(
+        findings, target,
+        secrecy_years=getattr(args, "secrecy_years", None),
+        crqc_years=getattr(args, "crqc_years", None),
+    )
 
     if args.output:
         name = args.output.lower()
@@ -198,6 +209,16 @@ def build_parser() -> argparse.ArgumentParser:
                         help="Exit with code 1 if any HIGH-risk finding is present (for CI).")
     p_scan.add_argument("--no-sync", action="store_true",
                         help="Don't upload results to your linked dashboard account.")
+    p_scan.add_argument("--secrecy-years", type=float, metavar="X",
+                        help="How long the data this code protects must stay "
+                             "confidential, in years (a session cookie: ~0; health "
+                             "records: ~50). Enables the horizon assessment: whether "
+                             "the migration finishes before that data is exposed.")
+    p_scan.add_argument("--crqc-years", type=float, metavar="Z",
+                        help="Years until you assume a cryptographically relevant "
+                             "quantum computer exists. No default is supplied because "
+                             "nobody knows it; omit it and you still get the break-even "
+                             "year, which requires no such assumption.")
     p_scan.set_defaults(func=cmd_scan)
 
     p_version = sub.add_parser("version", help="Print the version.")
