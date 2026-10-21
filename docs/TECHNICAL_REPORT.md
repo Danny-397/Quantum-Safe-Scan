@@ -264,6 +264,26 @@ range, counted per cryptographic *family* rather than per finding (the design de
 paid once; call sites scale sub-linearly), and all six coefficients are emitted under
 `horizon.assumptions` so a reader can reject a specific number instead of the whole figure.
 
+**The origins a page depends on (`cli/origins.py`).** A site can negotiate a hybrid on
+its own domain and still pull scripts, fonts and analytics from a dozen other origins
+over classical key exchange — and the author chose every one of them, so the weakest is
+part of the page's exposure. `--origins` fetches the entry page, extracts the hosts its
+sub-resources reference, and runs the same scan against each. Measured on
+`github.com`: **2 of 5 third-party origins post-quantum, 3 classical.** On
+`quantumsafescan.com`: 2 of 2 ready.
+
+The result is one aggregate finding rather than one per origin — a dozen separate HIGHs
+for other people's servers would bury the findings a reader can act on — and it is
+MEDIUM rather than HIGH when the page's own key exchange is fine, because a third-party
+server is not the author's to fix. The action there is to drop the dependency or press
+the vendor, which is a different call to action from repairing your own endpoint.
+
+A page is attacker-controlled input, so the SSRF guard is applied to every *discovered*
+origin rather than once to the entry URL and then trusted: anyone can publish markup
+whose script tags point at `169.254.169.254`, and a sweep that followed what it found
+would be an SSRF with extra steps. The page read, the origin count and each handshake
+are all bounded, so one hostile page cannot turn a scan into an unbounded crawl.
+
 **Scanning someone else's server** is bounded to a single TLS handshake — what any
 browser does on every visit. It is not port or vulnerability scanning. The target must
 resolve *entirely* to public addresses on port 443/8443, and the connection is made to
@@ -274,7 +294,7 @@ refused.
 
 ## 7. Engineering
 
-One shared engine behind CLI + API + dashboard; **496 automated tests**; CI; Docker and
+One shared engine behind CLI + API + dashboard; **531 automated tests**; CI; Docker and
 `docker-compose`; a reusable **GitHub Action** (`action.yml`) that fails a build over a
 risk threshold; multi-service deploy configs; and a published PyPI package
 (`pip install quantumsafe-scan`, v0.2.0). The benchmark, real-world study, seeded recall
@@ -303,9 +323,10 @@ from live scanner output, not hand-drawn.
   result is the group chosen from the set offered — the same answer a browser offering
   that set would get — so a server that supports a hybrid but ranks it lower reads as
   classical. Findings say "negotiated", not "supports", for exactly that reason.
-- **One endpoint, one handshake.** It does not follow redirects, probe other ports, or
-  sweep the third-party origins a page actually loads from, so a site whose own TLS is
-  post-quantum may still pull sub-resources over classical key exchange.
+- **One endpoint per handshake, and only the entry page is fetched.** `--origins`
+  sweeps the hosts a page's sub-resources reference, but it does not follow redirects,
+  probe other ports, or recurse into those origins' own dependencies, and it reads
+  markup only — a resource pulled later by JavaScript is invisible to it.
 - **Migration time is an estimate, not a measurement.** The horizon's coefficients are
   assumptions about how long cryptographic work takes, and they are printed alongside
   the result precisely because they should be replaced with figures from a real

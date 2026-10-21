@@ -73,6 +73,10 @@ def cmd_scan(args: argparse.Namespace) -> int:
         return 2
     # Z on its own says nothing: the inequality needs X. Fail rather than
     # silently ignore the flag the user bothered to pass.
+    if args.origins and not args.url:
+        print("Error: --origins needs --url (there are no third-party origins "
+              "to sweep in a local path or a repository).", file=sys.stderr)
+        return 2
     if args.crqc_years is not None and args.secrecy_years is None:
         print("Error: --crqc-years needs --secrecy-years (Mosca's inequality "
               "compares X + Y against Z; without X there is nothing to compare).",
@@ -88,6 +92,11 @@ def cmd_scan(args: argparse.Namespace) -> int:
             from .tlsscan import scan_url
             target = args.url
             findings, endpoint = scan_url(args.url)
+            if args.origins:
+                from .origins import sweep
+                origin_findings, origin_summary = sweep(args.url)
+                findings = findings + origin_findings
+                endpoint["third_party"] = origin_summary
         elif args.repo:
             target = args.repo
             findings = scan_repo(args.repo, exclude=exclude, taint=args.taint,
@@ -217,6 +226,12 @@ def build_parser() -> argparse.ArgumentParser:
     p_scan = sub.add_parser("scan", help="Scan a local path or GitHub repo.")
     p_scan.add_argument("--path", help="Local directory or file to scan.")
     p_scan.add_argument("--repo", help="Public GitHub repository URL to scan.")
+    p_scan.add_argument("--origins", action="store_true",
+                        help="With --url, also scan the TLS of every third-party "
+                             "origin the page loads from (fonts, CDNs, analytics). "
+                             "A site can be post-quantum on its own domain while "
+                             "its dependencies are not. Costs one handshake per "
+                             "origin, so it is opt-in.")
     p_scan.add_argument("--url", metavar="HOST",
                         help="Live HTTPS endpoint to scan (e.g. example.com). "
                              "Reports the TLS key exchange -- including whether "

@@ -237,6 +237,25 @@ def _print_endpoint(console, e: dict | None) -> None:
                   "this is the group the server selects from what we offer, "
                   "not everything it could support.[/dim]")
 
+    tp = e.get("third_party")
+    if tp and not tp.get("error"):
+        console.print()
+        pq, cls = tp["origins_post_quantum"], tp["origins_classical"]
+        colour = "green" if not cls else ("yellow" if pq else "red")
+        console.print(f"[bold]Third-party origins[/bold]  "
+                      f"[{colour}]{pq} post-quantum, {cls} classical[/{colour}]"
+                      f"  of {tp['origins_scanned']} scanned"
+                      f"{' (list truncated)' if tp.get('truncated') else ''}")
+        for r in tp["origins"]:
+            if r["status"] != "scanned":
+                console.print(f"  [dim]{r['host']:<36} {r['status']}[/dim]")
+                continue
+            c = "green" if r["post_quantum"] else "red"
+            console.print(f"  [{c}]{r['host']:<36}[/{c}] {r['key_exchange']}")
+    elif tp and tp.get("error"):
+        console.print()
+        console.print(f"[yellow]Third-party origins: {tp['error']}[/yellow]")
+
     chain = e.get("chain") or []
     if chain:
         console.print()

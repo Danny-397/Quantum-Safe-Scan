@@ -50,6 +50,16 @@ All notable changes to QuantumSafe are documented here. This project follows
 - **"Scan a live website" on the dashboard.** The home page exposes the TLS scan
   with the key exchange, protocol, cipher and full certificate chain rendered,
   and shows the server's own refusal reason for a rejected target.
+- **Third-party origin sweep (`origins.py`, `--origins`).** A site can negotiate a
+  hybrid on its own domain and still pull scripts, fonts and analytics from a dozen
+  other origins over classical key exchange. Measured on `github.com`: 2 of 5
+  third-party origins post-quantum, 3 classical. Produces one aggregate finding rather
+  than one per origin, at MEDIUM when the page's own key exchange is fine, because a
+  third-party server is not the author's to fix. A page is attacker-controlled input,
+  so the SSRF guard runs on every *discovered* origin, not once on the entry URL;
+  markup pointing at `169.254.169.254` is refused and recorded, never followed. Page
+  size, origin count and each handshake are all bounded. No HTML dependency —
+  `html.parser` is in the standard library.
 - **`pqc_hybrid` and `pqc_signature` families**, with `NO_ACTION_FAMILIES`
   marking families that are reported but need no migration — so an endpoint that
   has already migrated is not billed migration effort, and a post-quantum key

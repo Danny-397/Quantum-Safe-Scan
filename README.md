@@ -11,7 +11,7 @@
   <img src="https://img.shields.io/github/last-commit/Danny-397/Quantum-Safe-Scan?style=flat-square&color=555" alt="Last commit">
   <img src="https://img.shields.io/github/license/Danny-397/Quantum-Safe-Scan?style=flat-square&color=3fb950" alt="License: MIT">
   <br>
-  <img src="https://img.shields.io/badge/tests-496%20passing-3fb950?style=flat-square&logo=pytest&logoColor=white" alt="496 tests passing">
+  <img src="https://img.shields.io/badge/tests-531%20passing-3fb950?style=flat-square&logo=pytest&logoColor=white" alt="531 tests passing">
   <img src="https://img.shields.io/badge/benchmark-100%25%20precision-3fb950?style=flat-square" alt="100% precision on benchmark">
   <img src="https://img.shields.io/badge/SARIF%202.1.0-schema--validated-3fb950?style=flat-square" alt="SARIF schema-validated">
   <img src="https://img.shields.io/badge/NIST-FIPS%20203%2F204%2F205-5b73e8?style=flat-square" alt="NIST FIPS 203/204/205">
@@ -266,6 +266,36 @@ Rather than take on `cryptography` as a runtime dependency, the handful of
 fields needed are walked out of the DER directly — a minimal tag-length-value
 reader that parses structure and OIDs and verifies nothing, since `ssl` has
 already validated the chain by the time it arrives.
+
+### The origins a page actually depends on (`--origins`)
+
+A site can negotiate a hybrid on its own domain and still pull scripts, fonts
+and analytics from a dozen other origins over classical key exchange — and the
+author chose every one of them.
+
+```bash
+quantumsafe scan --url github.com --origins
+```
+
+```
+Third-party origins  2 post-quantum, 3 classical  of 5 scanned
+  github.githubassets.com              X25519
+  avatars.githubusercontent.com        X25519
+  github-cloud.s3.amazonaws.com        X25519MLKEM768
+  user-images.githubusercontent.com    X25519
+  images.ctfassets.net                 X25519MLKEM768
+```
+
+One aggregate finding, not one per origin — a dozen separate HIGHs for other
+people's servers would bury the findings you can act on. It is MEDIUM rather
+than HIGH when your own key exchange is fine, because a third-party server is
+not yours to fix: the action is to drop the dependency or press the vendor.
+
+**A page is attacker-controlled input**, so the SSRF guard runs on every
+*discovered* origin, not once on the entry URL. Anyone can publish markup whose
+script tags point at `169.254.169.254`, and a sweep that followed what it found
+would be an SSRF with extra steps. The page read, the origin count and each
+handshake are all bounded.
 
 **Scanning someone else's server.** This is exactly one TLS handshake, which is
 what a browser does on every visit: passive and non-intrusive. It is not port
@@ -584,6 +614,7 @@ quantumsafe version
 | `--path` | Local directory or file to scan |
 | `--repo` | Public `https://github.com/<org>/<repo>` URL |
 | `--url` | Live HTTPS host — scans the TLS handshake and certificate chain |
+| `--origins` | With `--url`, also scan every third-party origin the page loads from |
 | `--output` | Write to `.json`, `.cbom.json` (CycloneDX CBOM), `.html`, `.sarif`, or `.svg` (risk badge); terminal summary still printed |
 | `--exclude` | Glob of paths to skip (repeatable) |
 | `--taint` | Also run interprocedural data-flow analysis (Python): flag quantum-vulnerable crypto reached through wrapper functions, **across files** (whole-program call graph with import resolution), not just direct calls |
@@ -775,7 +806,7 @@ docker compose up --build
 
 ```bash
 pip install -r requirements-dev.txt
-pytest -q                     # 496 tests; in-memory DB, no setup
+pytest -q                     # 531 tests; in-memory DB, no setup
 ```
 
 Seed a demo account so the dashboard is populated:
