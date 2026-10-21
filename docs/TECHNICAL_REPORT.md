@@ -208,7 +208,7 @@ construction of production Kyber; real systems should use vetted ML-KEM such as 
 
 ## 6. Engineering
 
-One shared engine behind CLI + API + dashboard; **213 automated tests**; CI; Docker and
+One shared engine behind CLI + API + dashboard; **232 automated tests**; CI; Docker and
 `docker-compose`; a reusable **GitHub Action** (`action.yml`) that fails a build over a
 risk threshold; multi-service deploy configs; and a published PyPI package
 (`pip install quantumsafe-scan`, v0.2.0). The benchmark, real-world study, seeded recall

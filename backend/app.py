@@ -27,10 +27,19 @@ def create_app(config_object: type = Config) -> Flask:
     limiter.init_app(app)
     app.config["RATELIMIT_STORAGE_URI"] = app.config.get("RATELIMIT_STORAGE_URI", "memory://")
 
-    # CORS restricted to the dashboard origin(s) only, for the API surface.
+    # CORS restricted to the dashboard origin(s) only.
+    #
+    # /health is covered alongside /api/*: the dashboard pre-warms the Render
+    # instance by fetching it on page load, and with only /api/* in the map
+    # that fetch was blocked by CORS on every visit. The ping never landed, so
+    # the cold start it exists to absorb was paid by the user's first real
+    # scan instead (~23s).
     CORS(
         app,
-        resources={r"/api/*": {"origins": app.config["CORS_ORIGINS"]}},
+        resources={
+            r"/api/*": {"origins": app.config["CORS_ORIGINS"]},
+            r"/health": {"origins": app.config["CORS_ORIGINS"]},
+        },
         supports_credentials=True,
     )
 
