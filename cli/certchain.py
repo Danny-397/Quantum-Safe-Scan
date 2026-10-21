@@ -298,10 +298,19 @@ def chain_der(tls_socket) -> list[bytes]:
 
 
 def role_for(index: int, total: int) -> str:
-    """Position in the chain, from the server outwards."""
+    """Position in the chain, from the server outwards.
+
+    Intermediates are numbered when there is more than one. Two intermediates
+    signed with the same algorithm are otherwise indistinguishable in the
+    findings table, and two identical-looking rows read as a duplicate rather
+    than as two separate certificates.
+    """
     if index == 0:
         return "leaf"
-    return "root" if index == total - 1 else "intermediate"
+    if index == total - 1:
+        return "root"
+    # total - 2 non-leaf, non-root positions; number them only if there are 2+.
+    return f"intermediate {index}" if total > 3 else "intermediate"
 
 
 # --------------------------------------------------------------------------- #
@@ -327,7 +336,7 @@ def analyse_chain(host: str, ders: list[bytes]) -> tuple[list[Finding], list[dic
         # A root is trusted because it is in the client's trust store, not
         # because of its self-signature, so forging that signature buys an
         # attacker nothing. Reported above, but not a finding.
-        if role == "root":
+        if role.startswith("root"):
             continue
 
         findings.extend(_cert_findings(host, role, entry))

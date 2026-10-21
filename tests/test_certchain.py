@@ -271,13 +271,35 @@ def test_truncated_tbs_is_refused():
 @pytest.mark.parametrize("index,total,expected", [
     (0, 1, "leaf"),
     (0, 4, "leaf"),
-    (1, 4, "intermediate"),
-    (2, 4, "intermediate"),
+    (1, 3, "intermediate"),       # a lone intermediate needs no number
+    (1, 4, "intermediate 1"),     # two of them must be distinguishable
+    (2, 4, "intermediate 2"),
     (3, 4, "root"),
     (1, 2, "root"),
+    (2, 3, "root"),
 ])
 def test_role_for_position(index, total, expected):
     assert role_for(index, total) == expected
+
+
+def test_multiple_intermediates_get_distinct_labels():
+    """Two intermediates with the same algorithm are otherwise identical rows."""
+    chain = [make_cert(ECDSA_SHA256, ec_spki()),
+             make_cert(ECDSA_SHA256, ec_spki()),
+             make_cert(ECDSA_SHA256, ec_spki()),
+             make_cert(ECDSA_SHA256, ec_spki())]
+    findings, parsed = analyse_chain("example.com", chain)
+    roles = [c["role"] for c in parsed]
+    assert roles == ["leaf", "intermediate 1", "intermediate 2", "root"]
+    locations = {f.file_path for f in findings}
+    assert len(locations) == 3, "each reported certificate needs its own label"
+
+
+def test_a_numbered_root_is_still_excluded():
+    """role.startswith("root") must not accidentally match an intermediate."""
+    chain = [make_cert(ECDSA_SHA256, ec_spki()) for _ in range(4)]
+    findings, _ = analyse_chain("example.com", chain)
+    assert not any("root" in f.file_path for f in findings)
 
 
 # --------------------------------------------------------------------------- #
