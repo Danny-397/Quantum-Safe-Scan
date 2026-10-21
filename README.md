@@ -11,7 +11,7 @@
   <img src="https://img.shields.io/github/last-commit/Danny-397/Quantum-Safe-Scan?style=flat-square&color=555" alt="Last commit">
   <img src="https://img.shields.io/github/license/Danny-397/Quantum-Safe-Scan?style=flat-square&color=3fb950" alt="License: MIT">
   <br>
-  <img src="https://img.shields.io/badge/tests-265%20passing-3fb950?style=flat-square&logo=pytest&logoColor=white" alt="265 tests passing">
+  <img src="https://img.shields.io/badge/tests-366%20passing-3fb950?style=flat-square&logo=pytest&logoColor=white" alt="366 tests passing">
   <img src="https://img.shields.io/badge/benchmark-100%25%20precision-3fb950?style=flat-square" alt="100% precision on benchmark">
   <img src="https://img.shields.io/badge/SARIF%202.1.0-schema--validated-3fb950?style=flat-square" alt="SARIF schema-validated">
   <img src="https://img.shields.io/badge/NIST-FIPS%20203%2F204%2F205-5b73e8?style=flat-square" alt="NIST FIPS 203/204/205">
@@ -175,6 +175,67 @@ score = min(100, 15*HIGH + 5*MEDIUM + 1*LOW)
 | 31–60 | Medium | Plan migration |
 | 61–80 | High | Prioritize migration |
 | 81–100 | Critical | Immediate action required |
+
+---
+
+## Scanning a live website (`--url`)
+
+A website's quantum exposure is not in its source code — it is in the TLS
+handshake, and almost all of it sits in two brief public-key steps:
+
+- the **key exchange**, which Shor's algorithm breaks to recover the session
+  key. This is harvest-now-decrypt-later: traffic recorded today becomes
+  readable when a quantum computer exists, so it is *retroactive* and cannot be
+  fixed afterwards.
+- the **certificate signature**, which Shor also breaks — but only to forge
+  *future* certificates, and those rotate every ~90 days anyway.
+
+Symmetric cryptography is not the problem: Grover's algorithm square-roots a
+brute-force search, so AES-128 drops to ~2⁶⁴ work and AES-256 is comfortable.
+
+```bash
+quantumsafe scan --url github.com
+```
+
+```
+TLS handshake  github.com:443  (140.82.112.4)
+  Key exchange   : X25519 (classical)
+  Protocol       : TLSv1.3
+  Cipher         : TLS_AES_128_GCM_SHA256 (128-bit symmetric)
+  Certificate    : github.com issued by Sectigo Limited, expires Nov 29 2026
+```
+
+| Host | Key exchange | |
+|---|---|---|
+| `cloudflare.com` | `X25519MLKEM768` | post-quantum |
+| `google.com` | `X25519MLKEM768` | post-quantum |
+| `github.com` | `X25519` | classical |
+
+**Why this needs a hand-built ClientHello.** In TLS 1.2 the cipher suite named
+the key exchange (`ECDHE_RSA_WITH_AES_128_GCM_SHA256`). TLS 1.3 removed it —
+every modern site reports only `TLS_AES_128_GCM_SHA256`, which says nothing
+about key exchange. The group lives in the `key_share` extension, and Python's
+`ssl` cannot read it: `SSLContext.set_groups` and `SSLObject.group_used` need
+OpenSSL 3.5+ and Python 3.14, and ML-KEM groups need OpenSSL 3.5 at all. On
+OpenSSL 3.0 the most important fact about the connection is invisible.
+
+So the scanner speaks the handshake directly: it offers the hybrid groups in
+`supported_groups` but a `key_share` for X25519 only. A server preferring a
+hybrid must then reply with a HelloRetryRequest naming it (RFC 8446 §4.1.3).
+The server states its choice, and no ML-KEM implementation is needed to ask.
+No new dependencies.
+
+**What it measures.** The group the server *selects from what we offer* — the
+same answer a browser offering that set would get. Not proof of everything the
+server could support, which is why findings say "negotiated", not "supports".
+
+**Scanning someone else's server.** This is exactly one TLS handshake, which is
+what a browser does on every visit: passive and non-intrusive. It is not port
+scanning or vulnerability probing, and stays that way deliberately. The target
+must resolve *entirely* to public addresses on port 443/8443, and the
+connection goes to the address that was checked — private ranges, loopback,
+link-local (including cloud metadata at `169.254.169.254`), carrier-grade NAT
+and IPv4-mapped IPv6 forms of all of those are refused.
 
 ---
 
@@ -521,6 +582,9 @@ POST /api/v1/scan/import        (X-API-Key)   # used by the CLI to upload result
 POST /api/v1/demo-scan          (public, rate-limited)  # landing-page live demo
      { "code": "..." } -> { report }   # runs the real engine, stores nothing
 
+POST /api/v1/scan-url           (public, 10/hour)   # live TLS endpoint scan
+     { "url": "example.com" } -> { report }   # one handshake, stores nothing
+
 GET  /api/v1/scans?page=1&per_page=20   (JWT)  -> paginated list
 GET  /api/v1/scans/{id}                 (JWT)  -> scan + findings
 GET  /api/v1/scans/{id}/export?format=json|html|csv|sarif|cbom|svg   (JWT)
@@ -608,7 +672,7 @@ docker compose up --build
 
 ```bash
 pip install -r requirements-dev.txt
-pytest -q                     # 265 tests; in-memory DB, no setup
+pytest -q                     # 366 tests; in-memory DB, no setup
 ```
 
 Seed a demo account so the dashboard is populated:

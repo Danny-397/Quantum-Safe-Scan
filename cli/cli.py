@@ -66,8 +66,10 @@ def cmd_auth(args: argparse.Namespace) -> int:
 
 
 def cmd_scan(args: argparse.Namespace) -> int:
-    if bool(args.path) == bool(args.repo):
-        print("Error: provide exactly one of --path or --repo.", file=sys.stderr)
+    chosen = [n for n in ("path", "repo", "url") if getattr(args, n, None)]
+    if len(chosen) != 1:
+        print("Error: provide exactly one of --path, --repo or --url.",
+              file=sys.stderr)
         return 2
     # Z on its own says nothing: the inequality needs X. Fail rather than
     # silently ignore the flag the user bothered to pass.
@@ -80,8 +82,13 @@ def cmd_scan(args: argparse.Namespace) -> int:
     exclude = args.exclude or None
     scan_deps = not args.no_deps
     reachability = not args.no_rank
+    endpoint = None
     try:
-        if args.repo:
+        if args.url:
+            from .tlsscan import scan_url
+            target = args.url
+            findings, endpoint = scan_url(args.url)
+        elif args.repo:
             target = args.repo
             findings = scan_repo(args.repo, exclude=exclude, taint=args.taint,
                                  scan_deps=scan_deps, reachability=reachability)
@@ -89,12 +96,13 @@ def cmd_scan(args: argparse.Namespace) -> int:
             target = os.path.abspath(args.path)
             findings = scan_path(args.path, exclude=exclude, taint=args.taint,
                                  scan_deps=scan_deps, reachability=reachability)
-    except (FileNotFoundError, ValueError, RuntimeError) as exc:
+    except (FileNotFoundError, ValueError, RuntimeError, OSError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return 1
 
     report = reporter.build_report(
         findings, target,
+        endpoint=endpoint,
         secrecy_years=getattr(args, "secrecy_years", None),
         crqc_years=getattr(args, "crqc_years", None),
     )
@@ -186,6 +194,13 @@ def build_parser() -> argparse.ArgumentParser:
     p_scan = sub.add_parser("scan", help="Scan a local path or GitHub repo.")
     p_scan.add_argument("--path", help="Local directory or file to scan.")
     p_scan.add_argument("--repo", help="Public GitHub repository URL to scan.")
+    p_scan.add_argument("--url", metavar="HOST",
+                        help="Live HTTPS endpoint to scan (e.g. example.com). "
+                             "Reports the TLS key exchange -- including whether "
+                             "a post-quantum hybrid was negotiated -- plus the "
+                             "protocol version and cipher. One handshake, which "
+                             "is what any browser does; no port or vulnerability "
+                             "scanning.")
     p_scan.add_argument("--output",
                         help="Write report to this file: .json, .cbom.json (CycloneDX CBOM), "
                              ".html, .sarif, or .svg (risk badge).")

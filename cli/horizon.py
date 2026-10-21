@@ -38,7 +38,7 @@ import datetime as _dt
 import math
 from dataclasses import dataclass, field
 
-from .recommender import RECOMMENDATIONS
+from .recommender import NO_ACTION_FAMILIES, RECOMMENDATIONS
 from .scanner import Finding
 
 # --------------------------------------------------------------------------- #
@@ -163,7 +163,10 @@ def estimate_migration_months(findings: list[Finding]) -> tuple[float, float, li
     """
     sites: dict[str, int] = {}
     for f in findings:
-        if f.family:
+        # Families that need no migration contribute no migration time. Without
+        # this, a scan whose only findings are "SHA-256 is fine" or "already
+        # using a PQC hybrid" would be charged months of work for nothing.
+        if f.family and f.family not in NO_ACTION_FAMILIES:
             sites[f.family] = sites.get(f.family, 0) + 1
 
     asymmetric: list[str] = []

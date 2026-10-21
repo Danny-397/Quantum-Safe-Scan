@@ -24,7 +24,7 @@ from quantumsafe.horizon import (
     estimate_migration_months,
     site_multiplier,
 )
-from quantumsafe.recommender import RECOMMENDATIONS
+from quantumsafe.recommender import NO_ACTION_FAMILIES, RECOMMENDATIONS
 from quantumsafe.scanner import RISK_HIGH, RISK_LOW, Finding
 
 TODAY = datetime.date(2026, 10, 21)
@@ -160,7 +160,7 @@ def test_asymmetric_families_cost_more_than_drop_ins():
     assert rsa > md5
 
 
-@pytest.mark.parametrize("family", sorted(RECOMMENDATIONS))
+@pytest.mark.parametrize("family", sorted(set(RECOMMENDATIONS) - NO_ACTION_FAMILIES))
 def test_family_classification_follows_the_recommender(family):
     """The split must not drift from recommender.RECOMMENDATIONS."""
     _, _, asym, drop_in = estimate_migration_months([F(family)])
@@ -168,6 +168,29 @@ def test_family_classification_follows_the_recommender(family):
     assert (family in asym) is expected_asym
     assert (family in drop_in) is (not expected_asym)
     assert not (asym and drop_in), "a family cannot be in both lists"
+
+
+@pytest.mark.parametrize("family", sorted(NO_ACTION_FAMILIES))
+def test_no_action_families_cost_nothing(family):
+    """Reported-but-fine findings must not be charged as migration work.
+
+    "SHA-256 is acceptable" and "already using a post-quantum hybrid" are
+    findings so a scan can show what is already right. Counting them as
+    effort would bill months of work for nothing, and would make a
+    fully-migrated endpoint look like it still had a migration pending.
+    """
+    low, high, asym, drop_in = estimate_migration_months([F(family)])
+    assert (low, high) == (0.0, 0.0)
+    assert asym == [] and drop_in == []
+
+
+def test_no_action_findings_do_not_mask_real_ones():
+    """Mixing them in must not change the estimate for the real work."""
+    real = estimate_migration_months([F("rsa")])
+    mixed = estimate_migration_months(
+        [F("rsa")] + [F(f, RISK_LOW) for f in sorted(NO_ACTION_FAMILIES)])
+    assert mixed[:2] == real[:2]
+    assert mixed[2] == ["rsa"]
 
 
 def test_unknown_family_is_costed_as_a_design_change():

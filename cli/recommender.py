@@ -135,7 +135,25 @@ RECOMMENDATIONS: dict[str, Recommendation] = {
             "exchange. Plan migration to TLS 1.3 with hybrid PQC key exchange."
         ),
     ),
+    # Not a vulnerability. Reported so a scan can state what is already right:
+    # an endpoint negotiating X25519MLKEM768 has done the thing the rest of
+    # this table recommends.
+    "pqc_hybrid": Recommendation(
+        replacement="None required",
+        nist_reference="FIPS 203 (ML-KEM)",
+        complexity="Low",
+        detail=(
+            "Post-quantum hybrid key exchange is already in use: the session "
+            "secret is derived from ML-KEM alongside a classical curve, so "
+            "Shor's algorithm alone does not recover it. Nothing to migrate."
+        ),
+    ),
 }
+
+#: Families that are reported but require no migration. They exist as findings
+#: so a scan can show what is already correct, and they must not be counted as
+#: migration effort -- see horizon.estimate_migration_months.
+NO_ACTION_FAMILIES = frozenset({"sha256", "pqc_hybrid"})
 
 _FALLBACK = Recommendation(
     replacement="Review against NIST PQC guidance",

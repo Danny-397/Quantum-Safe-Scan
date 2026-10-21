@@ -24,6 +24,7 @@ _BAND_COLOR = {"Low": "green", "Medium": "yellow", "High": "red", "Critical": "r
 def build_report(
     findings: list[Finding],
     target: str,
+    endpoint: dict | None = None,
     secrecy_years: float | None = None,
     crqc_years: float | None = None,
 ) -> dict:
@@ -61,6 +62,8 @@ def build_report(
         },
         "findings": [f.to_dict() for f in ordered],
     }
+    if endpoint:
+        report["endpoint"] = endpoint
     if secrecy_years is not None:
         from .horizon import assess
         report["horizon"] = assess(findings, secrecy_years, crqc_years).to_dict()
@@ -100,6 +103,8 @@ def print_terminal(report: dict) -> None:
         )
     )
 
+    _print_endpoint(console, report.get("endpoint"))
+
     if not report["findings"]:
         console.print("[green]No quantum-vulnerable cryptography detected.[/green]")
         return
@@ -122,6 +127,32 @@ def print_terminal(report: dict) -> None:
         )
     console.print(table)
     _print_horizon(console, report.get("horizon"))
+
+
+def _print_endpoint(console, e: dict | None) -> None:
+    """Render what the TLS handshake actually negotiated."""
+    if not e:
+        return
+    pq = e.get("key_exchange_post_quantum")
+    kex_color = "green" if pq else "red"
+    label = "post-quantum hybrid" if pq else "classical"
+
+    console.print()
+    console.print(f"[bold]TLS handshake[/bold]  {e['host']}:{e['port']}  "
+                  f"[dim]({', '.join(e.get('addresses', []))})[/dim]")
+    console.print(f"  Key exchange   : [{kex_color}]{e['key_exchange']}[/{kex_color}] "
+                  f"({label})")
+    console.print(f"  Protocol       : {e.get('protocol') or 'unknown'}")
+    console.print(f"  Cipher         : {e.get('cipher') or 'unknown'} "
+                  f"({e.get('symmetric_bits')}-bit symmetric)")
+    cert = e.get("certificate") or {}
+    if cert:
+        console.print(f"  Certificate    : {cert.get('subject') or '(see SAN)'} "
+                      f"issued by {cert.get('issuer') or 'unknown'}, "
+                      f"expires {cert.get('not_after') or 'unknown'}")
+    console.print(f"  [dim]Key exchange read via {e.get('key_exchange_observed_via')}; "
+                  "this is the group the server selects from what we offer, "
+                  "not everything it could support.[/dim]")
 
 
 _HORIZON_COLOR = {

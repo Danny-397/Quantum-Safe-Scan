@@ -14,7 +14,7 @@ rather than failing. The two tables are therefore pinned to each other.
 
 import pytest
 
-from quantumsafe.recommender import RECOMMENDATIONS
+from quantumsafe.recommender import NO_ACTION_FAMILIES, RECOMMENDATIONS
 from quantumsafe.remediation import Fix, remediate
 
 # Families with no like-for-like replacement: these need a PQC migration.
@@ -73,7 +73,7 @@ def test_drop_in_families_are_marked_drop_in(family):
     assert fix.drop_in is True
 
 
-@pytest.mark.parametrize("family", sorted(DROP_IN - {"sha256"}))
+@pytest.mark.parametrize("family", sorted(DROP_IN - NO_ACTION_FAMILIES))
 def test_drop_in_families_show_a_before_and_an_after(family):
     """A drop-in fix is only useful if it shows the actual swap."""
     fix = remediate(family, "python")

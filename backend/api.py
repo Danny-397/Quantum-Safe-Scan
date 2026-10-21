@@ -426,6 +426,44 @@ def demo_scan():
     return jsonify({"report": build_report(findings, "in-browser snippet")})
 
 
+@api_bp.route("/scan-url", methods=["POST"])
+# Deliberately tighter than demo-scan. This endpoint opens an outbound
+# connection to a host the caller names, so a generous limit would turn the
+# service into a scanning proxy pointed at someone else's infrastructure.
+@limiter.limit("10 per hour")
+@limiter.limit("60 per day")
+def scan_url_endpoint():
+    """Public, rate-limited TLS scan of one HTTPS endpoint.
+
+    Performs a single TLS handshake -- what any browser does on every visit --
+    and reports the key exchange, protocol version and cipher. Nothing is
+    stored. See quantumsafe.tlsscan for the SSRF guard: the target must resolve
+    entirely to public addresses on port 443/8443, and the connection is made
+    to the address that was actually checked.
+    """
+    from quantumsafe.tlsscan import UnsafeTarget, scan_url
+
+    data = request.get_json(silent=True) or {}
+    target = data.get("url") or data.get("host") or ""
+    if not isinstance(target, str) or not target.strip():
+        return jsonify({"error": "Provide a 'url' to scan, e.g. example.com."}), 400
+    if len(target) > 255:
+        return jsonify({"error": "Target too long."}), 400
+
+    try:
+        findings, endpoint = scan_url(target)
+    except UnsafeTarget as exc:
+        # Refused on purpose; tell the caller which rule they hit.
+        return jsonify({"error": str(exc)}), 400
+    except (OSError, ConnectionError) as exc:
+        # The handshake itself failed: unreachable, timed out, or not TLS.
+        return jsonify({"error": f"Could not complete a TLS handshake: {exc}"}), 502
+
+    return jsonify({
+        "report": build_report(findings, endpoint["host"], endpoint=endpoint)
+    })
+
+
 @api_bp.route("/user/data", methods=["GET"])
 @jwt_required()
 def export_user_data():
