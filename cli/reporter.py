@@ -154,6 +154,35 @@ def _print_endpoint(console, e: dict | None) -> None:
                   "this is the group the server selects from what we offer, "
                   "not everything it could support.[/dim]")
 
+    chain = e.get("chain") or []
+    if chain:
+        console.print()
+        console.print("[bold]Certificate chain[/bold] "
+                      "[dim](a chain is only as strong as its weakest "
+                      "signature)[/dim]")
+        for c in chain:
+            if "error" in c:
+                console.print(f"  {c['role']:<13} [yellow]unparseable: "
+                              f"{c['error']}[/yellow]")
+                continue
+            key = c.get("key_algorithm", "?")
+            if c.get("key_curve"):
+                key += f" {c['key_curve']}"
+            elif c.get("key_bits"):
+                key += f"-{c['key_bits']}"
+            safe = c.get("signature_post_quantum") or c.get("key_post_quantum")
+            # A root is trusted via the client's trust store, not its own
+            # self-signature, so it is shown without a risk colour.
+            if c["role"] == "root":
+                colour = "dim"
+                note = ("  [dim](trust-store anchored; its own signature is "
+                        "not a forgery risk)[/dim]")
+            else:
+                colour = "green" if safe else "red"
+                note = ""
+            console.print(f"  [{colour}]{c['role']:<13}[/{colour}] "
+                          f"sig={c.get('signature', '?'):<22} key={key}{note}")
+
 
 _HORIZON_COLOR = {
     "already_late": "red",

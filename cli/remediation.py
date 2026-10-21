@@ -160,6 +160,14 @@ def remediate(family: str, language: str = "", snippet: str = "") -> Fix:
                      "Keep the classical half: hybrid is what protects you if a "
                      "weakness is found in the PQC scheme itself.",
         )
+    if family == "pqc_signature":
+        return Fix(
+            action="No change required — a post-quantum signature scheme is "
+                   "already in use.",
+            drop_in=True,
+            guidance="ML-DSA (FIPS 204) is not broken by Shor's algorithm, so "
+                     "the signature cannot be forged by a quantum attacker.",
+        )
     if family in _ASYM:
         target, role = _ASYM[family]
         return Fix(

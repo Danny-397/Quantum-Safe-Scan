@@ -278,6 +278,8 @@ def preferred_group(host: str, ip: str, port: int = 443,
 def negotiated(host: str, ip: str, port: int = 443,
                timeout: float = DEFAULT_TIMEOUT) -> dict:
     """Complete a normal handshake and report what was negotiated."""
+    from .certchain import chain_der
+
     ctx = ssl.create_default_context()
     with socket.create_connection((ip, port), timeout=timeout) as sock:
         with ctx.wrap_socket(sock, server_hostname=host) as tls:
@@ -288,6 +290,7 @@ def negotiated(host: str, ip: str, port: int = 443,
                 "symmetric_bits": bits,
                 "certificate": tls.getpeercert(),
                 "certificate_der": tls.getpeercert(binary_form=True),
+                "chain_der": chain_der(tls),
             }
 
 
@@ -386,10 +389,16 @@ def scan_url(target: str, timeout: float = DEFAULT_TIMEOUT) -> tuple[list[Findin
             snippet=f"cipher: {info['cipher']}",
         ))
 
+    # 4. The certificate chain -- every signature, not just the leaf's.
+    from .certchain import analyse_chain
+    chain_findings, chain = analyse_chain(host, info.get("chain_der") or [])
+    findings.extend(chain_findings)
+
     details = {
         "host": host,
         "port": port,
         "addresses": addrs,
+        "chain": chain,
         "protocol": proto,
         "cipher": info["cipher"],
         "symmetric_bits": info["symmetric_bits"],

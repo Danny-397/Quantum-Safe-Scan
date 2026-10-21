@@ -148,12 +148,23 @@ RECOMMENDATIONS: dict[str, Recommendation] = {
             "Shor's algorithm alone does not recover it. Nothing to migrate."
         ),
     ),
+    # The signature counterpart of pqc_hybrid: a certificate signed with, or
+    # carrying a key for, a NIST post-quantum signature scheme.
+    "pqc_signature": Recommendation(
+        replacement="None required",
+        nist_reference="FIPS 204 (ML-DSA)",
+        complexity="Low",
+        detail=(
+            "A NIST post-quantum signature scheme is already in use, so Shor's "
+            "algorithm does not permit forging it. Nothing to migrate."
+        ),
+    ),
 }
 
 #: Families that are reported but require no migration. They exist as findings
 #: so a scan can show what is already correct, and they must not be counted as
 #: migration effort -- see horizon.estimate_migration_months.
-NO_ACTION_FAMILIES = frozenset({"sha256", "pqc_hybrid"})
+NO_ACTION_FAMILIES = frozenset({"sha256", "pqc_hybrid", "pqc_signature"})
 
 _FALLBACK = Recommendation(
     replacement="Review against NIST PQC guidance",

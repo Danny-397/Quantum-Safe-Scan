@@ -11,7 +11,7 @@
   <img src="https://img.shields.io/github/last-commit/Danny-397/Quantum-Safe-Scan?style=flat-square&color=555" alt="Last commit">
   <img src="https://img.shields.io/github/license/Danny-397/Quantum-Safe-Scan?style=flat-square&color=3fb950" alt="License: MIT">
   <br>
-  <img src="https://img.shields.io/badge/tests-366%20passing-3fb950?style=flat-square&logo=pytest&logoColor=white" alt="366 tests passing">
+  <img src="https://img.shields.io/badge/tests-455%20passing-3fb950?style=flat-square&logo=pytest&logoColor=white" alt="455 tests passing">
   <img src="https://img.shields.io/badge/benchmark-100%25%20precision-3fb950?style=flat-square" alt="100% precision on benchmark">
   <img src="https://img.shields.io/badge/SARIF%202.1.0-schema--validated-3fb950?style=flat-square" alt="SARIF schema-validated">
   <img src="https://img.shields.io/badge/NIST-FIPS%20203%2F204%2F205-5b73e8?style=flat-square" alt="NIST FIPS 203/204/205">
@@ -228,6 +228,44 @@ No new dependencies.
 **What it measures.** The group the server *selects from what we offer* — the
 same answer a browser offering that set would get. Not proof of everything the
 server could support, which is why findings say "negotiated", not "supports".
+
+### The whole certificate chain, not just the leaf
+
+A chain is only as strong as its weakest signature, and the weak link is
+usually not the server certificate. Real output:
+
+```
+Certificate chain (a chain is only as strong as its weakest signature)
+  leaf          sig=ECDSA with SHA-256     key=EC P-256
+  intermediate  sig=ECDSA with SHA-384     key=EC P-256
+  intermediate  sig=SHA-256 with RSA       key=EC P-384
+  root          sig=SHA-1 with RSA         key=RSA-2048  (trust-store anchored)
+```
+
+Cloudflare's leaf is modern ECDSA — but an intermediate above it is signed
+**SHA-256 with RSA**. Forging that signature mints a leaf for any name under
+it, and a checker that reads only the server certificate reports "ECDSA,
+modern" and never sees it.
+
+Two deliberate distinctions:
+
+- **Certificate signatures are a forgery risk, not a retroactive one.** Shor
+  breaks them, but that forges *future* certificates — it does not decrypt
+  traffic already recorded, and certificates rotate every ~90 days, so this
+  largely follows the CA ecosystem's own migration. The key exchange above is
+  the urgent one. The findings say so rather than implying equal urgency.
+- **A root's own signature is not a finding.** A root is trusted because it is
+  in the client's trust store, not because of its self-signature, so forging
+  that signature gains an attacker nothing. Roots are shown for completeness
+  and excluded from the score — otherwise every chain carries an unactionable
+  HIGH, as the SHA-1 root above would.
+
+The signature algorithm and public key are the only two certificate fields
+that matter here, and they are the two `ssl.getpeercert()` does not return.
+Rather than take on `cryptography` as a runtime dependency, the handful of
+fields needed are walked out of the DER directly — a minimal tag-length-value
+reader that parses structure and OIDs and verifies nothing, since `ssl` has
+already validated the chain by the time it arrives.
 
 **Scanning someone else's server.** This is exactly one TLS handshake, which is
 what a browser does on every visit: passive and non-intrusive. It is not port
@@ -672,7 +710,7 @@ docker compose up --build
 
 ```bash
 pip install -r requirements-dev.txt
-pytest -q                     # 366 tests; in-memory DB, no setup
+pytest -q                     # 455 tests; in-memory DB, no setup
 ```
 
 Seed a demo account so the dashboard is populated:
