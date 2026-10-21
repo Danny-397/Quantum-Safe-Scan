@@ -17,7 +17,7 @@ from sqlalchemy import func
 
 from auth import api_key_or_jwt, current_user, optional_user, send_email
 from extensions import db, limiter
-from models import Finding, Scan, User, generate_api_key
+from models import Scan, User, generate_api_key
 from quantumsafe.recommender import recommend
 from quantumsafe.reporter import build_report, to_badge_svg, to_cbom, to_html, to_sarif
 from quantumsafe.scanner import EXT_TO_LANG, scan_path

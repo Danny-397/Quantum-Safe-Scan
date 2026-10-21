@@ -23,7 +23,6 @@ from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer
 from extensions import db, limiter, mail
 from models import (
     User,
-    generate_api_key,
     hash_api_key,
     hash_password,
     verify_password,
@@ -46,7 +45,7 @@ def _serializer() -> URLSafeTimedSerializer:
 
 def _valid_email(email: str) -> bool:
     try:
-        from email_validator import EmailNotValidError, validate_email
+        from email_validator import validate_email
         validate_email(email, check_deliverability=False)
         return True
     except Exception:

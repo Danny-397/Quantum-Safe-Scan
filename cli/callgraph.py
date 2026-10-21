@@ -32,7 +32,7 @@ from __future__ import annotations
 
 import ast
 import os
-from collections import defaultdict, deque
+from collections import defaultdict
 from dataclasses import dataclass, field
 
 from .scanner import EXT_TO_LANG, Finding, _dotted_name

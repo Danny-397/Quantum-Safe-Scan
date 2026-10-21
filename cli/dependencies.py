@@ -21,9 +21,6 @@ import os
 import re
 
 from .scanner import (
-    RISK_HIGH,
-    RISK_LOW,
-    RISK_MEDIUM,
     _ALGO_INFO,
     _SKIP_DIRS,
     Finding,
