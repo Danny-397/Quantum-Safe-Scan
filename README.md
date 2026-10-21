@@ -11,7 +11,7 @@
   <img src="https://img.shields.io/github/last-commit/Danny-397/Quantum-Safe-Scan?style=flat-square&color=555" alt="Last commit">
   <img src="https://img.shields.io/github/license/Danny-397/Quantum-Safe-Scan?style=flat-square&color=3fb950" alt="License: MIT">
   <br>
-  <img src="https://img.shields.io/badge/tests-491%20passing-3fb950?style=flat-square&logo=pytest&logoColor=white" alt="491 tests passing">
+  <img src="https://img.shields.io/badge/tests-496%20passing-3fb950?style=flat-square&logo=pytest&logoColor=white" alt="496 tests passing">
   <img src="https://img.shields.io/badge/benchmark-100%25%20precision-3fb950?style=flat-square" alt="100% precision on benchmark">
   <img src="https://img.shields.io/badge/SARIF%202.1.0-schema--validated-3fb950?style=flat-square" alt="SARIF schema-validated">
   <img src="https://img.shields.io/badge/NIST-FIPS%20203%2F204%2F205-5b73e8?style=flat-square" alt="NIST FIPS 203/204/205">
@@ -583,12 +583,17 @@ quantumsafe version
 |------|-------------|
 | `--path` | Local directory or file to scan |
 | `--repo` | Public `https://github.com/<org>/<repo>` URL |
+| `--url` | Live HTTPS host — scans the TLS handshake and certificate chain |
 | `--output` | Write to `.json`, `.cbom.json` (CycloneDX CBOM), `.html`, `.sarif`, or `.svg` (risk badge); terminal summary still printed |
 | `--exclude` | Glob of paths to skip (repeatable) |
 | `--taint` | Also run interprocedural data-flow analysis (Python): flag quantum-vulnerable crypto reached through wrapper functions, **across files** (whole-program call graph with import resolution), not just direct calls |
 | `--no-deps` | Skip dependency scanning (on by default): parses manifests **and lockfiles** (`requirements.txt`, `pyproject.toml`, `package.json`, `go.mod`, `pom.xml`, `Gemfile`, `package-lock.json`, `poetry.lock`, `Pipfile.lock`, `Gemfile.lock`, `yarn.lock`, `go.sum`) and flags known quantum-vulnerable crypto libraries (with purl + direct/transitive scope) in the CBOM |
 | `--no-rank` | Skip reachability ranking (on by default): labels each source finding `reachable` / `test-example` / `unreferenced` so exploitable findings sort above dead or example code |
 | `--fail-on-high` | Exit non-zero on any HIGH finding (CI gate) |
+| `--baseline` | Compare against a saved JSON report: fixed / new / unchanged |
+| `--fail-on-new` | With `--baseline`, exit non-zero only on NEW findings (the ratchet) |
+| `--secrecy-years` | How long the data must stay confidential — enables the migration horizon |
+| `--crqc-years` | The quantum-threat year you want to reason about (no default: nobody knows it) |
 | `--no-sync` | Don't upload the result to your linked dashboard |
 
 After `quantumsafe auth --key <key> --api-url <your-api>`, every `quantumsafe scan`
@@ -623,6 +628,12 @@ jobs:
           path: .
           exclude: tests/*,vendor/*
           fail-on-high: "true"   # fail the build on any HIGH finding
+
+          # Or ratchet instead of gating on absolutes: tolerate the existing
+          # backlog and fail only when it grows. A missing baseline warns and
+          # skips the comparison, so the first run still works.
+          # baseline: quantumsafe-baseline.json
+          # fail-on-new: "true"
 
       - uses: github/codeql-action/upload-sarif@v3
         with:
@@ -764,7 +775,7 @@ docker compose up --build
 
 ```bash
 pip install -r requirements-dev.txt
-pytest -q                     # 491 tests; in-memory DB, no setup
+pytest -q                     # 496 tests; in-memory DB, no setup
 ```
 
 Seed a demo account so the dashboard is populated:

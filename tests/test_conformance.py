@@ -98,3 +98,79 @@ def test_cbom_metadata_is_well_formed(report):
     doc = json.loads(to_cbom(report))
     tools = doc["metadata"]["tools"]["components"]
     assert any(t["name"] == "QuantumSafe" for t in tools)
+
+
+# --------------------------------------------------------------------------- #
+# Endpoint findings in SARIF
+#
+# A live-endpoint finding is not a file and a line. Representing it as one
+# produces output a consumer acts on wrongly: GitHub code scanning would try to
+# annotate line 1 of a file literally named "github.com [leaf certificate]".
+# Schema-valid is not the same as correct, so these check the semantics as well
+# as the schema.
+# --------------------------------------------------------------------------- #
+def _endpoint_report():
+    """A report shaped like a URL scan, built without touching the network."""
+    from quantumsafe.certchain import analyse_chain
+    from quantumsafe.tlsscan import _finding
+    from quantumsafe.scanner import RISK_HIGH
+
+    kex = _finding("example.com", "X25519 key exchange", RISK_HIGH,
+                   "classical key exchange", "ecc")
+    # Reuse the chain builder from the certchain tests for a realistic chain.
+    from tests.test_certchain import ECDSA_SHA256, SHA256_RSA, ec_spki, make_cert, rsa_spki
+    chain = [make_cert(ECDSA_SHA256, ec_spki()),
+             make_cert(SHA256_RSA, rsa_spki(2048)),
+             make_cert(SHA256_RSA, rsa_spki(4096))]
+    chain_findings, parsed = analyse_chain("example.com", chain)
+    endpoint = {"host": "example.com", "port": 443, "addresses": ["1.1.1.1"],
+                "protocol": "TLSv1.3", "cipher": "TLS_AES_256_GCM_SHA384",
+                "symmetric_bits": 256, "key_exchange": "X25519",
+                "key_exchange_post_quantum": False,
+                "key_exchange_observed_via": "ServerHello",
+                "certificate": {}, "chain": parsed}
+    return build_report([kex] + chain_findings, "example.com", endpoint=endpoint)
+
+
+def test_endpoint_sarif_validates_against_official_schema():
+    import jsonschema
+    with open(os.path.join(_SCHEMA_DIR, "sarif-2.1.0.json"), encoding="utf-8") as fh:
+        schema = json.load(fh)
+    jsonschema.validate(json.loads(to_sarif(_endpoint_report())), schema)
+
+
+def test_endpoint_findings_use_a_real_uri():
+    """A bare host with a bracketed suffix is not a URI."""
+    sarif = json.loads(to_sarif(_endpoint_report()))
+    for result in sarif["runs"][0]["results"]:
+        uri = result["locations"][0]["physicalLocation"]["artifactLocation"]["uri"]
+        assert uri == "https://example.com", uri
+        assert "[" not in uri
+
+
+def test_endpoint_findings_do_not_invent_a_line_number():
+    """There is no line 1 of a TLS handshake."""
+    sarif = json.loads(to_sarif(_endpoint_report()))
+    for result in sarif["runs"][0]["results"]:
+        assert "region" not in result["locations"][0]["physicalLocation"]
+
+
+def test_certificate_position_survives_as_a_logical_location():
+    """Dropping the region must not lose which certificate was meant."""
+    sarif = json.loads(to_sarif(_endpoint_report()))
+    names = {
+        loc["name"]
+        for result in sarif["runs"][0]["results"]
+        for loc in result["locations"][0].get("logicalLocations", [])
+    }
+    assert "leaf certificate" in names
+    assert any("intermediate" in n for n in names)
+
+
+def test_code_findings_keep_their_file_and_line(report):
+    """The endpoint branch must not change the normal path."""
+    sarif = json.loads(to_sarif(report))
+    for result in sarif["runs"][0]["results"]:
+        phys = result["locations"][0]["physicalLocation"]
+        assert not phys["artifactLocation"]["uri"].startswith("https://")
+        assert phys["region"]["startLine"] >= 1

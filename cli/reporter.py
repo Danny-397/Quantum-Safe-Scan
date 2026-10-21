@@ -129,6 +129,41 @@ def print_terminal(report: dict) -> None:
     _print_horizon(console, report.get("horizon"))
 
 
+def _sarif_location(f: dict) -> dict:
+    """One SARIF location for a finding.
+
+    A code finding is a file and a line. A live-endpoint finding is neither,
+    and pretending otherwise produces output a SARIF consumer acts on wrongly:
+    GitHub code scanning would try to annotate line 1 of a file literally named
+    "github.com [leaf certificate]", which does not exist. The previous
+    `max(1, line_number)` also invented a line number for findings whose line
+    is genuinely 0.
+
+    So endpoint findings get the real https URI as the artifact -- which is a
+    valid URI, unlike a bare hostname with a bracketed suffix -- no region at
+    all, and the certificate position as a logicalLocation.
+    """
+    if f.get("origin") != "endpoint":
+        return {
+            "physicalLocation": {
+                "artifactLocation": {"uri": f["file_path"]},
+                "region": {"startLine": max(1, f["line_number"])},
+            }
+        }
+
+    raw = f.get("file_path") or ""
+    host, _, bracket = raw.partition(" [")
+    location = {
+        "physicalLocation": {"artifactLocation": {"uri": f"https://{host}"}},
+    }
+    if bracket:
+        location["logicalLocations"] = [{
+            "name": bracket.rstrip("]"),
+            "kind": "member",
+        }]
+    return location
+
+
 def print_diff(d: dict) -> None:
     """Render a diff between two scans (see :mod:`diff`)."""
     try:
@@ -488,12 +523,7 @@ def to_sarif(report: dict) -> str:
             "ruleId": f["family"],
             "level": level_map.get(f["risk_level"], "warning"),
             "message": {"text": f"{f['algorithm']}: {f['why']} Replace with {f['recommendation']}."},
-            "locations": [{
-                "physicalLocation": {
-                    "artifactLocation": {"uri": f["file_path"]},
-                    "region": {"startLine": max(1, f["line_number"])},
-                }
-            }],
+            "locations": [_sarif_location(f)],
         })
 
     sarif = {

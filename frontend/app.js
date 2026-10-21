@@ -121,7 +121,12 @@
     try { data = await res.json(); } catch (_) { /* non-JSON */ }
     if (!res.ok) {
       const msg = (data && data.error) || `Request failed (${res.status})`;
-      throw new Error(msg);
+      const err = new Error(msg);
+      // Carry the status so a caller can tell a deliberate refusal (400 --
+      // retrying changes nothing) from a cold backend (worth one retry).
+      // Existing callers read only .message and are unaffected.
+      err.status = res.status;
+      throw err;
     }
     return data;
   }
@@ -246,6 +251,7 @@
 
     initDemoScanner();
     initHomeScan();
+    initUrlScan();
     initScoreCycle();
   }
 
@@ -576,6 +582,128 @@
     } finally {
       setLoading(btn, false);
     }
+  }
+
+  // ---- Live TLS scan (scan a website) ----
+  //
+  // Posts to /api/v1/scan-url, which performs one TLS handshake and reports
+  // the key exchange, protocol, cipher and the whole certificate chain. The
+  // SSRF guard lives server-side; a refusal comes back as a 400 with the
+  // reason, which is shown verbatim rather than replaced with a generic error.
+  function paintTlsResult(report) {
+    const box = $("#url-scan-result");
+    if (!box) return;
+    const e = report.endpoint || {};
+    const pq = !!e.key_exchange_post_quantum;
+    const kexClass = pq ? "tls-kex-pq" : "tls-kex-classical";
+    const kexNote = pq ? "post-quantum hybrid" : "classical";
+
+    const rows = [
+      ["Key exchange", `<span class="${kexClass}">${esc(e.key_exchange || "?")}</span>
+         <span class="muted">(${kexNote})</span>`],
+      ["Protocol", esc(e.protocol || "unknown")],
+      ["Cipher", `${esc(e.cipher || "unknown")}
+         <span class="muted">(${esc(String(e.symmetric_bits || "?"))}-bit symmetric)</span>`],
+    ];
+    const cert = e.certificate || {};
+    if (cert.issuer) {
+      rows.push(["Certificate", `${esc(cert.subject || "(see SAN)")}
+        <span class="muted">issued by ${esc(cert.issuer)}, expires
+        ${esc(cert.not_after || "unknown")}</span>`]);
+    }
+
+    let html = rows.map(([k, v]) =>
+      `<div class="tls-row"><span class="k">${k}</span><span>${v}</span></div>`).join("");
+
+    const chain = e.chain || [];
+    if (chain.length) {
+      html += `<div class="tls-chain">
+        <div class="tls-verdict"><b>Certificate chain</b>
+          <span class="muted">— a chain is only as strong as its weakest signature</span></div>` +
+        chain.map((c) => {
+          if (c.error) {
+            return `<div class="tls-chain-row"><span class="role">${esc(c.role)}</span>
+              <span class="muted">unparseable</span></div>`;
+          }
+          let key = c.key_algorithm || "?";
+          if (c.key_curve) key += " " + c.key_curve;
+          else if (c.key_bits) key += "-" + c.key_bits;
+          const isRoot = (c.role || "").indexOf("root") === 0;
+          const note = isRoot
+            ? ' <span class="muted">(trust-store anchored)</span>' : "";
+          return `<div class="tls-chain-row${isRoot ? " is-root" : ""}">
+            <span class="role">${esc(c.role)}</span>
+            <span>sig=${esc(c.signature || "?")}</span>
+            <span>key=${esc(key)}</span>${note}</div>`;
+        }).join("") + `</div>`;
+    }
+
+    const s = report.summary || {};
+    html += `<div class="tls-verdict">
+      <b>Risk ${report.risk_score}/100 (${esc(report.risk_band || "")})</b>
+      <span class="muted">— ${s.high || 0} high, ${s.medium || 0} medium,
+      ${s.low || 0} low</span></div>`;
+
+    box.innerHTML = html;
+    box.hidden = false;
+  }
+
+  async function runUrlScan() {
+    const input = $("#url-scan-input");
+    const msg = $("#url-scan-msg");
+    const btn = $("#url-scan-run");
+    if (!input) return;
+    const target = input.value.trim();
+    if (!target) {
+      if (msg) msg.textContent = "Enter a website, e.g. example.com";
+      return;
+    }
+    setLoading(btn, true, "Scanning");
+    if (msg) msg.textContent = "Opening one TLS handshake…";
+    const call = () => api("/api/v1/scan-url", {
+      noAuth: true, noRedirect: true, json: { url: target },
+    });
+    try {
+      let d;
+      try {
+        d = await call();
+      } catch (err) {
+        // A 400 is the server refusing the target on purpose -- show that
+        // reason rather than retrying, which would not change the answer.
+        if (err && err.status === 400) throw err;
+        if (msg) msg.textContent = "Engine waking up — retrying…";
+        await new Promise((r) => setTimeout(r, 4000));
+        d = await call();
+      }
+      paintTlsResult(d.report);
+      if (msg) msg.textContent = "";
+    } catch (err) {
+      const box = $("#url-scan-result");
+      if (box) box.hidden = true;
+      if (msg) {
+        msg.textContent = (err && err.message)
+          ? err.message
+          : "Could not scan that host right now.";
+      }
+    } finally {
+      setLoading(btn, false);
+    }
+  }
+
+  function initUrlScan() {
+    const input = $("#url-scan-input");
+    if (!input) return;
+    const run = $("#url-scan-run");
+    if (run) run.addEventListener("click", runUrlScan);
+    input.addEventListener("keydown", (ev) => {
+      if (ev.key === "Enter") { ev.preventDefault(); runUrlScan(); }
+    });
+    $$(".url-chip").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        input.value = chip.dataset.host || "";
+        runUrlScan();
+      });
+    });
   }
 
   function initDemoScanner() {

@@ -302,14 +302,33 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
   display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
   margin-top: 12px; font-size: 13px;
 }
-.scan-chip {
+.scan-chip, .url-chip {
   background: rgba(91,115,232,.08); border: 1px solid var(--border-strong);
   color: var(--text); padding: 4px 12px; border-radius: 999px;
   font-family: var(--mono); font-size: 12.5px; cursor: pointer;
   transition: border-color .14s ease, background .14s ease;
 }
-.scan-chip:hover { border-color: var(--accent); background: rgba(91,115,232,.16); }
-.scan-chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.scan-chip:hover, .url-chip:hover { border-color: var(--accent); background: rgba(91,115,232,.16); }
+.scan-chip:focus-visible, .url-chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ---- live TLS scan result ---- */
+.tls-row {
+  display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: baseline;
+  padding: 8px 0; border-bottom: 1px solid var(--border);
+  font-family: var(--mono); font-size: 12.5px;
+}
+.tls-row:last-child { border-bottom: 0; }
+.tls-row .k { color: var(--muted); min-width: 108px; }
+.tls-kex-pq { color: #3fb950; font-weight: 600; }
+.tls-kex-classical { color: #f85149; font-weight: 600; }
+.tls-chain { margin-top: 12px; }
+.tls-chain-row {
+  display: flex; flex-wrap: wrap; gap: 6px 12px;
+  font-family: var(--mono); font-size: 12px; padding: 5px 0;
+}
+.tls-chain-row .role { min-width: 108px; color: var(--muted); }
+.tls-chain-row.is-root { opacity: .62; }
+.tls-verdict { margin: 12px 0 4px; font-size: 13px; }
 
 .scan-secondary { max-width: 940px; margin: 26px auto 0; }
 .scan-secondary-head {

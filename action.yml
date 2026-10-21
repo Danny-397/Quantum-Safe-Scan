@@ -22,6 +22,21 @@ inputs:
     description: "Fail the job if any HIGH-risk finding is present."
     required: false
     default: "false"
+  baseline:
+    description: >-
+      Path to a committed JSON report to compare this scan against. Prints
+      what was fixed, what is new and what is unchanged. If the file is
+      missing the job warns and skips the comparison rather than failing, so
+      a first run still works.
+    required: false
+    default: ""
+  fail-on-new:
+    description: >-
+      With `baseline`, fail the job only when the scan finds something NEW.
+      Lets an existing backlog be tolerated while stopping it from growing --
+      which `fail-on-high` cannot do without failing every build from day one.
+    required: false
+    default: "false"
   version:
     description: "Version of quantumsafe-scan to install (e.g. 0.2.0). Default: latest."
     required: false
@@ -61,10 +76,28 @@ runs:
         QS_OUTPUT: ${{ inputs.output }}
         QS_EXCLUDE: ${{ inputs.exclude }}
         QS_FAIL_ON_HIGH: ${{ inputs.fail-on-high }}
+        QS_BASELINE: ${{ inputs.baseline }}
+        QS_FAIL_ON_NEW: ${{ inputs.fail-on-new }}
       run: |
         args=(scan --path "$QS_PATH" --output "$QS_OUTPUT")
         if [ "$QS_FAIL_ON_HIGH" = "true" ]; then
           args+=(--fail-on-high)
+        fi
+        if [ -n "$QS_BASELINE" ]; then
+          if [ -f "$QS_BASELINE" ]; then
+            args+=(--baseline "$QS_BASELINE")
+            if [ "$QS_FAIL_ON_NEW" = "true" ]; then
+              args+=(--fail-on-new)
+            fi
+          else
+            # Warn loudly but carry on: on a first run the baseline has not
+            # been committed yet, and failing there would be unhelpful. The
+            # annotation makes the skipped comparison visible rather than
+            # silent.
+            echo "::warning::baseline '$QS_BASELINE' not found; skipping the comparison. Commit a baseline with: quantumsafe scan --path . --output $QS_BASELINE"
+          fi
+        elif [ "$QS_FAIL_ON_NEW" = "true" ]; then
+          echo "::warning::fail-on-new needs a baseline; ignoring it."
         fi
         if [ -n "$QS_EXCLUDE" ]; then
           IFS=',' read -ra globs <<< "$QS_EXCLUDE"

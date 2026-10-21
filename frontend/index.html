@@ -122,6 +122,33 @@
         <p class="muted mono home-scan-note">github.com HTTPS repos only · your results are held in your browser</p>
       </div>
 
+      <!-- SECONDARY: scan a live HTTPS endpoint's TLS -->
+      <div class="scan-primary card" id="scan-url">
+        <div class="scan-primary-head">
+          <h3>Scan a live website</h3>
+          <span class="scan-primary-tag">TLS handshake · post-quantum readiness</span>
+        </div>
+        <p class="muted" style="margin:0 0 12px;">A website's quantum exposure is in its TLS
+          handshake, not its source code. This reports the key exchange &mdash; including whether
+          a post-quantum hybrid was negotiated &mdash; the protocol, the cipher, and every
+          signature in the certificate chain.</p>
+        <div class="home-scan-row">
+          <input id="url-scan-input" type="text" placeholder="example.com"
+                 aria-label="Website to scan" />
+          <button class="btn btn-primary" id="url-scan-run">Scan TLS &rarr;</button>
+        </div>
+        <div class="scan-examples">
+          <span class="muted">Or try one live:</span>
+          <button type="button" class="url-chip" data-host="cloudflare.com">cloudflare.com</button>
+          <button type="button" class="url-chip" data-host="github.com">github.com</button>
+          <button type="button" class="url-chip" data-host="google.com">google.com</button>
+        </div>
+        <div id="url-scan-msg" class="msg"></div>
+        <div id="url-scan-result" hidden></div>
+        <p class="muted mono home-scan-note">One TLS handshake &mdash; exactly what your browser
+          does on every visit. Not a port or vulnerability scan. Public HTTPS hosts only.</p>
+      </div>
+
       <!-- SECONDARY: instant in-browser paste demo -->
       <div class="scan-secondary" id="scan-paste">
         <div class="scan-secondary-head">
