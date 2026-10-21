@@ -3,3 +3,14 @@
 pytest==9.0.3
 # Validates SARIF export against the official OASIS JSON Schema (test_conformance.py).
 jsonschema>=4.0
+
+# The "Attack" and "Fix" layers' own tests. These were missing, so
+# tests/test_quantum.py and tests/test_pqc.py hit their module-level
+# pytest.importorskip and were silently skipped in CI -- which meant the two
+# most distinctive claims in this project, Shor and Grover on a simulator and
+# the from-scratch LWE KEM, were never exercised there. They passed locally,
+# where these packages happen to be installed, which is exactly how that goes
+# unnoticed: the suite is green in both places and 8 tests only ever run in one.
+numpy>=1.24
+qiskit>=1.0
+qiskit-aer>=0.14

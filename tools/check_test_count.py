@@ -46,17 +46,32 @@ DOCUMENTED = {
 }
 
 
-def collect_count() -> int:
-    """The number of tests pytest collects, from pytest itself."""
+def collect_count() -> tuple[int, list[str]]:
+    """Tests pytest collects here, plus any module skipped during collection.
+
+    The second value is the one that matters most. A module-level
+    ``pytest.importorskip`` removes every test in that file from the run
+    *without failing anything*, so the suite is green in both places while
+    some tests only ever execute in one of them. That is how
+    tests/test_quantum.py and tests/test_pqc.py -- the Shor/Grover and LWE KEM
+    demonstrations, the project's two most distinctive claims -- ran locally
+    for months and never once ran in CI.
+    """
     proc = subprocess.run(
-        [sys.executable, "-m", "pytest", "-q", "--collect-only"],
+        [sys.executable, "-m", "pytest", "-q", "--collect-only", "-rs"],
         cwd=ROOT, capture_output=True, text=True,
     )
     match = re.search(r"(\d+) tests? collected", proc.stdout)
     if not match:
         sys.stderr.write(proc.stdout[-2000:] + proc.stderr[-2000:])
         raise SystemExit("could not read a collected-test count from pytest")
-    return int(match.group(1))
+
+    # "SKIPPED [1] tests/test_quantum.py:12: could not import 'qiskit'"
+    skipped = sorted({
+        m.group(1) for m in re.finditer(
+            r"SKIPPED \[\d+\] (\S+?):\d+: could not import", proc.stdout)
+    })
+    return int(match.group(1)), skipped
 
 
 def main() -> int:
@@ -65,10 +80,18 @@ def main() -> int:
                     help="rewrite the documented counts instead of failing")
     args = ap.parse_args()
 
-    actual = collect_count()
+    actual, import_skipped = collect_count()
     print(f"pytest collects {actual} tests")
 
     stale: list[str] = []
+    if import_skipped:
+        # Not a count problem -- a coverage problem. These files contribute no
+        # tests here, so whatever they verify is unverified in this
+        # environment, and the suite still reports success.
+        for mod in import_skipped:
+            stale.append(f"{mod}: skipped entirely -- a dependency it needs is "
+                         "not installed, so none of its tests ran. Add the "
+                         "package to requirements-dev.txt.")
     for rel, patterns in DOCUMENTED.items():
         path = ROOT / rel
         if not path.exists():
