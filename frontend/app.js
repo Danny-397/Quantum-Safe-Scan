@@ -727,9 +727,11 @@
     if (localStorage.getItem("qs_cookie_ack") === "1") return;
     const bar = document.createElement("div");
     bar.className = "cookie-banner";
+    // Text and link share one span: as separate flex items they were squeezed
+    // into narrow columns once the notice became a compact corner toast.
     bar.innerHTML =
-      'We use strictly-necessary local storage to keep you signed in. ' +
-      'See our <a href="privacy.html">Privacy Policy</a>. ' +
+      '<span>We use strictly-necessary local storage to keep you signed in. ' +
+      'See our <a href="privacy.html">Privacy Policy</a>.</span>' +
       '<button class="btn btn-sm btn-primary" id="cookie-ok">Got it</button>';
     document.body.appendChild(bar);
     const ok = bar.querySelector("#cookie-ok");
