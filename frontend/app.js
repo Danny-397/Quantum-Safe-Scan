@@ -199,7 +199,7 @@
         // Drop the stagger delay once revealed so it doesn't lag later hover
         // transitions (transition-delay applies to every transition on the node).
         const d = parseFloat(el.style.transitionDelay) || 0;
-        if (d) setTimeout(() => { el.style.transitionDelay = ""; }, 800 + d);
+        if (d) setTimeout(() => { el.style.transitionDelay = ""; }, 500 + d);
       });
     }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
 
@@ -210,13 +210,14 @@
       io.observe(el);
     };
 
-    // Staggered groups — children rise one after another.
-    document.querySelectorAll(".hero-copy, .steps, .detect, .pillars, .grid").forEach((group) => {
-      Array.from(group.children).forEach((child, i) => mark(child, Math.min(i, 6) * 70));
+    // Staggered groups — children rise one after another. The hero copy is
+    // deliberately not here: the first screen paints at once, not on a delay.
+    document.querySelectorAll(".steps, .detect, .pillars, .grid").forEach((group) => {
+      Array.from(group.children).forEach((child, i) => mark(child, Math.min(i, 4) * 50));
     });
 
     // Individual reveals across the marketing and app pages.
-    const singles = ".section-head, .hero-visual, .ci-block, .cta-band, .score-cycle," +
+    const singles = ".section-head, .ci-block, .cta-band, .score-cycle," +
       " .card, .auth-card, .mig-item, .save-banner," +
       " .legal h1, .legal h2, .legal p, .legal ul, .page-head";
     document.querySelectorAll(singles).forEach((el) => mark(el));
