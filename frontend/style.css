@@ -29,6 +29,9 @@
   --muted-2: #7d8794;   /* nudged lighter to clear AA contrast on the slate bg */
   --r: 10px;
   --r-sm: 6px;
+  /* motion: hovers and toggles, panels, data (gauge, meters), entrances */
+  --ease: cubic-bezier(.2, .7, .2, 1);
+  --fast: .16s; --med: .24s; --data: .35s; --enter: .45s;
   --mono: "JetBrains Mono", "SFMono-Regular", ui-monospace, Consolas, Menlo, monospace;
   --display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Segoe UI", sans-serif;
   --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -359,7 +362,7 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
 
 /* ---------- Dashboard shell ---------- */
 .app { display: grid; grid-template-columns: 224px 1fr; min-height: 100vh; }
-.sidebar { background: rgba(16,21,28,.75); border-right: 1px solid var(--border); padding: 20px 14px; position: sticky; top: 0; height: 100vh; backdrop-filter: blur(6px); }
+.sidebar { background: #10151c; border-right: 1px solid var(--border); padding: 20px 14px; position: sticky; top: 0; height: 100vh; }
 .sidebar .brand { margin: 0 8px 26px; }
 .sidebar nav { display: flex; flex-direction: column; gap: 1px; }
 .sidebar nav a { color: var(--muted); padding: 9px 12px; border-radius: var(--r-sm); font-size: 14px; font-weight: 500; }
@@ -411,7 +414,7 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
 .scale-track .s-high { background: var(--high); }
 .scale-track .s-crit { background: var(--danger); }
 .scale-marker { position: absolute; top: 0; width: 3px; height: 16px; background: #fff;
-  border-radius: 2px; box-shadow: 0 0 8px rgba(255,255,255,.75); transform: translateX(-1.5px); transition: left .4s ease; }
+  border-radius: 2px; box-shadow: 0 0 8px rgba(255,255,255,.75); transform: translateX(-1.5px); transition: left var(--data) var(--ease); }
 .scale-legend { display: flex; justify-content: space-between; margin-top: 10px;
   font-family: var(--sans); font-size: 11.5px; gap: 8px; flex-wrap: wrap; font-variant-numeric: tabular-nums; }
 .scale-legend span { white-space: nowrap; }
@@ -424,10 +427,10 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
 .tiers { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 14px; }
 .tier { border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--panel-2);
   padding: 9px 6px; text-align: center; opacity: .5;
-  transition: opacity .4s ease, border-color .4s ease, background .4s ease, transform .4s ease; }
+  transition: opacity var(--data) var(--ease), border-color var(--data) var(--ease), background var(--data) var(--ease), transform var(--data) var(--ease); }
 .tier-range { display: block; font-family: var(--sans); font-size: 11px; color: var(--muted-2); font-variant-numeric: tabular-nums; }
 .tier-name { display: block; font-family: var(--sans); font-size: 12.5px; font-weight: 700;
-  letter-spacing: .03em; margin-top: 3px; color: var(--muted); transition: color .4s ease; font-variant-numeric: tabular-nums; }
+  letter-spacing: .03em; margin-top: 3px; color: var(--muted); transition: color var(--data) var(--ease); font-variant-numeric: tabular-nums; }
 .tier.on { opacity: 1; transform: translateY(-2px); }
 .tier.t-low.on  { border-color: var(--safe);    background: rgba(63,185,80,.12); }
 .tier.t-med.on  { border-color: var(--warning); background: rgba(210,153,34,.14); }
@@ -442,7 +445,7 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
 
 /* ---------- Animated score demo (landing) ---------- */
 /* Smoothly cross-fade the big number's colour as the demo cycles bands. */
-.score-big { transition: color .4s ease; }
+.score-big { transition: color var(--data) var(--ease); }
 
 /* Cycling "code in → score out" demo: an editor panel beside a live score card. */
 .score-cycle { display: grid; grid-template-columns: 1.05fr .95fr; gap: 18px; align-items: stretch; }
@@ -451,10 +454,10 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
   border-radius: var(--r); overflow: hidden; display: flex; flex-direction: column; }
 .score-cycle-pre { margin: 0; padding: 12px 0; overflow-x: auto; flex: 1;
   font-family: var(--sans); font-size: 12px; line-height: 1.75; color: #c6d0e4;
-  transition: opacity .28s ease; font-variant-numeric: tabular-nums; }
+  transition: opacity var(--med) var(--ease); font-variant-numeric: tabular-nums; }
 #cyc-code { display: block; }
 .cl { display: flex; align-items: center; padding: 1px 12px; border-left: 2px solid transparent;
-  transition: background .35s ease, border-color .35s ease; }
+  transition: background var(--data) var(--ease), border-color var(--data) var(--ease); }
 .cl-ln { width: 18px; flex: none; margin-right: 8px; text-align: right;
   color: var(--muted-2); opacity: .55; user-select: none; }
 .cl-gut { width: 12px; flex: none; margin-right: 10px; text-align: center;
@@ -471,7 +474,7 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
   border: 1px solid var(--border); border-radius: var(--r); padding: 22px; }
 .score-cycle-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0;
   height: 1px; background: var(--grad); opacity: .6; }
-.cyc-counts { justify-content: flex-start; margin-top: 16px; transition: opacity .28s ease; }
+.cyc-counts { justify-content: flex-start; margin-top: 16px; transition: opacity var(--med) var(--ease); }
 .score-cycle.is-swapping .score-cycle-pre,
 .score-cycle.is-swapping .cyc-counts { opacity: 0; }
 
@@ -580,7 +583,7 @@ table.tbl td .skel { vertical-align: middle; }
 .demo-score { font-size: 60px; font-weight: 700; line-height: 1; font-family: var(--sans); transition: color .25s; font-variant-numeric: tabular-nums; }
 .demo-band { font-weight: 600; margin-top: 4px; transition: color .25s; }
 .demo-bar { height: 6px; background: #05060d; overflow: hidden; margin-top: 14px; border: 1px solid var(--border); border-radius: var(--r-sm); }
-.demo-bar-fill { height: 100%; width: 0; transition: width .4s ease, background .25s; }
+.demo-bar-fill { height: 100%; width: 0; transition: width var(--data) var(--ease), background var(--med) var(--ease); }
 .demo-findings { margin-top: 14px; background: var(--panel); border: 1px solid var(--border); border-radius: var(--r); max-height: 260px; overflow-y: auto; }
 .demo-finding { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 13.5px; }
 .demo-finding:last-child { border-bottom: none; }
@@ -597,7 +600,7 @@ table.tbl td .skel { vertical-align: middle; }
 .cookie-banner {
   position: fixed; bottom: 16px; left: 16px; right: auto; margin: 0;
   max-width: min(420px, calc(100vw - 32px));
-  background: rgba(28,35,44,.94); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  background: #1c232c;
   border: 1px solid var(--border-strong); border-radius: 12px;
   box-shadow: 0 12px 32px rgba(0,0,0,.45);
   padding: 12px 14px 12px 16px; display: flex; align-items: center; gap: 12px;
@@ -621,8 +624,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
    always visible as a fallback and never animates for motion-sensitive users.
    Uses only opacity/transform, so there is no layout shift. */
 html.qs-anim .reveal {
-  opacity: 0; transform: translateY(22px);
-  transition: opacity .7s cubic-bezier(.16, 1, .3, 1), transform .7s cubic-bezier(.16, 1, .3, 1);
+  opacity: 0; transform: translateY(12px);
+  transition: opacity var(--enter) var(--ease), transform var(--enter) var(--ease);
 }
 html.qs-anim .reveal.in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
