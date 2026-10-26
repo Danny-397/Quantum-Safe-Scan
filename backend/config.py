@@ -32,10 +32,17 @@ def _merge_origins(configured: list, defaults: list) -> list:
     ]
 
 
+DEV_SECRET = "dev-secret-change-me"
+
+
 class Config:
-    SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-change-me")
+    SECRET_KEY = os.environ.get("SECRET_KEY", DEV_SECRET)
     JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY", SECRET_KEY)
     JWT_ACCESS_TOKEN_EXPIRES = 60 * 60 * 24 * 7  # 7 days (seconds)
+
+    # Flask otherwise accepts an upload of any size and writes it to disk before
+    # scanner_service checks its 25 MB limit; refuse it at the door instead.
+    MAX_CONTENT_LENGTH = 26 * 1024 * 1024
 
     SQLALCHEMY_DATABASE_URI = _normalize_db_url(
         os.environ.get("DATABASE_URL", "sqlite:///quantumsafe.db")

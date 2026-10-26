@@ -21,7 +21,9 @@ from extensions import db
 from models import Finding, Scan
 
 _ALLOWED_UPLOAD_EXT = {".zip"}
-_MAX_UPLOAD_BYTES = 25 * 1024 * 1024  # 25 MB
+_MAX_UPLOAD_BYTES = 25 * 1024 * 1024  # 25 MB, compressed
+_MAX_EXTRACTED_BYTES = 250 * 1024 * 1024  # 250 MB, uncompressed
+_MAX_ARCHIVE_FILES = 20_000
 
 
 def scan_repo_url(url: str) -> dict:
@@ -59,9 +61,21 @@ def scan_upload(file_storage) -> dict:
 
 
 def _safe_extract(zip_path: str, dest: str) -> None:
-    """Extract a zip, refusing any entry that would escape the destination."""
+    """Extract a zip, refusing any entry that would escape the destination, and
+    any archive that would expand past the size or file-count caps.
+
+    The 25 MB limit is on the compressed upload; a zip bomb under it can expand
+    to many gigabytes and fill the instance's disk. The declared sizes in the
+    central directory are checked before anything is written.
+    """
     dest_abs = os.path.abspath(dest)
     with zipfile.ZipFile(zip_path) as zf:
+        infos = zf.infolist()
+        if len(infos) > _MAX_ARCHIVE_FILES:
+            raise ValueError(f"Archive has more than {_MAX_ARCHIVE_FILES:,} files.")
+        if sum(i.file_size for i in infos) > _MAX_EXTRACTED_BYTES:
+            raise ValueError("Archive expands past the "
+                             f"{_MAX_EXTRACTED_BYTES // (1024 * 1024)} MB limit.")
         for member in zf.namelist():
             target = os.path.abspath(os.path.join(dest, member))
             if not target.startswith(dest_abs + os.sep) and target != dest_abs:

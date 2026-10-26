@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import datetime as dt
 import functools
+import hashlib
 import secrets
 
 from flask import Blueprint, current_app, g, jsonify, request, url_for
@@ -41,6 +42,16 @@ RESET_MAX_AGE = 60 * 60  # 1 hour
 
 def _serializer() -> URLSafeTimedSerializer:
     return URLSafeTimedSerializer(current_app.config["SECRET_KEY"])
+
+
+def _password_stamp(user: User) -> str:
+    """A short fingerprint of the user's current password hash.
+
+    Reset links carry it, so a link is single-use: resetting the password
+    changes the hash, and every link issued before that stops verifying. The
+    hash itself never leaves the server.
+    """
+    return hashlib.sha256(user.password_hash.encode()).hexdigest()[:16]
 
 
 def _valid_email(email: str) -> bool:
@@ -211,7 +222,8 @@ def forgot_password():
     user = User.query.filter_by(email=email).first()
     # Always return 200 to avoid leaking which emails are registered.
     if user is not None:
-        token = _serializer().dumps(user.id, salt=RESET_SALT)
+        token = _serializer().dumps({"id": user.id, "pw": _password_stamp(user)},
+                                    salt=RESET_SALT)
         reset_url = f"{current_app.config['DASHBOARD_URL']}/login.html?reset={token}"
         send_email(
             "Reset your QuantumSafe password",
@@ -230,14 +242,16 @@ def reset_password():
     if len(password) < 8:
         return jsonify({"error": "Password must be at least 8 characters."}), 400
     try:
-        user_id = _serializer().loads(token, salt=RESET_SALT, max_age=RESET_MAX_AGE)
+        claims = _serializer().loads(token, salt=RESET_SALT, max_age=RESET_MAX_AGE)
     except SignatureExpired:
         return jsonify({"error": "Reset link has expired."}), 400
     except BadSignature:
         return jsonify({"error": "Invalid reset link."}), 400
 
-    user = db.session.get(User, int(user_id))
-    if user is None:
+    user = db.session.get(User, int(claims["id"])) if isinstance(claims, dict) else None
+    # The link is bound to the password it was issued against, so it stops
+    # working once used (or once the password changes any other way).
+    if user is None or claims.get("pw") != _password_stamp(user):
         return jsonify({"error": "Invalid reset link."}), 400
     user.password_hash = hash_password(password)
     db.session.commit()

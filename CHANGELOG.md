@@ -5,6 +5,26 @@ All notable changes to QuantumSafe are documented here. This project follows
 
 ## [Unreleased]
 
+### Security
+- **Rate limits are per visitor.** The limiter keyed on the socket address, and
+  behind Render's proxy that is the same for everyone, so every limit was
+  site-wide: 20 logins and 5 password resets per hour for all users together, and
+  one person retrying could lock everyone out. Keyed on `CF-Connecting-IP`
+  (Render serves through Cloudflare, which overwrites it), falling back to the
+  socket address locally.
+- **Password-reset links are single-use.** A link carried only the user id and
+  stayed valid for its whole hour, including after it had been used. It now
+  carries a fingerprint of the password hash it was issued against, so it stops
+  verifying once the password changes.
+- **Zip bombs are refused before extraction.** The 25 MB limit was on the
+  compressed upload; an archive declaring more than 250 MB uncompressed or more
+  than 20,000 files is now rejected before anything is written.
+- **Oversized uploads are refused at the door** (`MAX_CONTENT_LENGTH`, JSON 413)
+  instead of being written to disk before the size check.
+- **The API refuses to start on Render with the public default secret**, which
+  would let anyone forge sign-in and reset tokens. (Production was checked and
+  is not affected; this guards future deploys.)
+
 ## [0.3.0] — 2026-10-26
 
 ### Added

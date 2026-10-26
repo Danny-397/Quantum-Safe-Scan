@@ -12,13 +12,21 @@ import os
 from flask import Flask, jsonify
 from flask_cors import CORS
 
-from config import Config
+from config import DEV_SECRET, Config
 from extensions import db, jwt, limiter, mail
 
 
 def create_app(config_object: type = Config) -> Flask:
     app = Flask(__name__)
     app.config.from_object(config_object)
+
+    # The default secret is public (it is in this file's repository), so tokens
+    # signed with it can be forged by anyone. render.yaml generates real ones,
+    # but a service created by hand would silently fall back -- refuse to start
+    # on Render instead. (RENDER is set on every Render instance.)
+    if os.environ.get("RENDER") and DEV_SECRET in (app.config["SECRET_KEY"],
+                                                    app.config["JWT_SECRET_KEY"]):
+        raise RuntimeError("SECRET_KEY / JWT_SECRET_KEY must be set in production.")
 
     # Extensions
     db.init_app(app)
@@ -63,6 +71,10 @@ def create_app(config_object: type = Config) -> Flask:
     @app.errorhandler(404)
     def not_found(_e):
         return jsonify({"error": "Not found."}), 404
+
+    @app.errorhandler(413)
+    def too_large(_e):
+        return jsonify({"error": "Upload exceeds the 25 MB limit."}), 413
 
     @app.errorhandler(429)
     def ratelimited(_e):
