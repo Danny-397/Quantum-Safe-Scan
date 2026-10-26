@@ -38,7 +38,7 @@ inputs:
     required: false
     default: "false"
   version:
-    description: "Version of quantumsafe-scan to install (e.g. 0.2.0). Default: latest."
+    description: "Version of quantumsafe-scan to install (e.g. 0.3.0). Default: latest."
     required: false
     default: ""
 
