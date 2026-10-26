@@ -5,6 +5,8 @@ All notable changes to QuantumSafe are documented here. This project follows
 
 ## [Unreleased]
 
+## [0.3.0] — 2026-10-26
+
 ### Added
 - **Migration horizon — Mosca's inequality (`horizon.py`).** The risk score says
   *how much* vulnerable cryptography exists; it cannot say whether the migration
@@ -171,5 +173,7 @@ All notable changes to QuantumSafe are documented here. This project follows
   security disclosure policy (SECURITY.md + security.txt).
 - **Quality:** 45-test pytest suite, GitHub Actions CI, demo seed script.
 
+[Unreleased]: https://github.com/Danny-397/Quantum-Safe-Scan/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/Danny-397/Quantum-Safe-Scan/releases/tag/v0.3.0
 [0.2.0]: https://github.com/Danny-397/Quantum-Safe-Scan/releases/tag/v0.2.0
 [0.1.0]: https://github.com/Danny-397/Quantum-Safe-Scan/releases/tag/v0.1.0
