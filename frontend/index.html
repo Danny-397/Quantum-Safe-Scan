@@ -36,7 +36,7 @@
       <a href="#how">How it works</a>
       <a href="research.html">Research</a>
       <a href="login.html">Sign in</a>
-      <a href="#scan" class="btn btn-sm btn-primary">Scan free ↓</a>
+      <a href="#scan" class="btn btn-sm btn-primary">Scan free</a>
     </nav>
   </header>
 
@@ -44,18 +44,14 @@
     <section class="hero wrap">
       <div class="hero-copy">
         <div class="eyebrow">Post-quantum readiness scanner</div>
-        <h1>Find the encryption quantum computers will <span class="grn">break</span> — before someone else does.</h1>
-        <p class="sub">Tomorrow's quantum computers will crack today's encryption — and data stolen
-          now can be decrypted later. QuantumSafe scans your code for the at-risk cryptography
-          (<strong>RSA</strong>, <strong>ECC</strong>, and legacy algorithms), scores your exposure
-          <strong>0–100</strong>, and gives you the NIST-approved replacement for each
-          (<strong>FIPS&nbsp;203/204</strong>).</p>
+        <h1>Find the encryption quantum computers will <span class="grn">break</span>.</h1>
+        <p class="sub">QuantumSafe scans your code for RSA, ECC and other at-risk cryptography,
+          scores your exposure 0–100, and gives you the NIST-approved replacement for every finding.</p>
         <div class="hero-cta">
-          <a href="#scan" class="btn btn-primary" id="hero-scan">Scan your code — free ↓</a>
-          <a href="https://github.com/Danny-397/Quantum-Safe-Scan" class="btn btn-ghost">View on GitHub ↗</a>
+          <a href="#scan" class="btn btn-primary" id="hero-scan">Scan your code</a>
+          <a href="https://github.com/Danny-397/Quantum-Safe-Scan" class="btn-link">View the source ›</a>
         </div>
-        <p class="hero-note">No install, no account — paste code, drop in a GitHub link, or upload a .zip · <strong>AST&nbsp;+&nbsp;regex across 11 languages</strong> · SARIF &amp; CBOM export</p>
-        <p class="hero-note hero-note-cli">Prefer the terminal or CI/CD? <code id="copy-install">pip install quantumsafe-scan</code></p>
+        <p class="hero-note">Free. No account, no install.</p>
       </div>
 
       <div class="hero-visual">
@@ -76,30 +72,29 @@
   <span class="c">→</span> replace RSA/ECC with ML-KEM (Kyber) · FIPS 203
 </div>
         </div>
-        <p class="term-caption mono">illustrative output — run the real scanner below ↓</p>
+        <p class="term-caption">Illustrative output</p>
       </div>
     </section>
 
     <!-- Unified scanner: scan a whole repo/zip (primary) OR paste a snippet (instant demo) -->
     <section class="section wrap" id="scan">
       <div class="section-head">
-        <div class="eyebrow">Scan — free, no account</div>
-        <h2>Scan your code for quantum-vulnerable cryptography.</h2>
-        <p class="lead">Point at a GitHub repo, upload a .zip, or paste a snippet. You get a 0–100
-          risk score, every finding pinned to file &amp; line, and the NIST-approved fix —
-          exportable as SARIF or CBOM. Nothing is saved unless you create a free account.</p>
+        <div class="eyebrow">Scan</div>
+        <h2>Scan a codebase, site, or snippet.</h2>
+        <p class="lead">Every finding is pinned to its file and line, with the fix. Nothing is saved
+          unless you sign in.</p>
       </div>
 
       <!-- PRIMARY: scan a whole codebase from GitHub or a .zip -->
       <div class="scan-primary card" id="scan-repo">
         <div class="scan-primary-head">
           <h3>Scan a whole codebase</h3>
-          <span class="scan-primary-tag">Most popular · no account, no install</span>
+          <span class="scan-primary-tag">No account needed</span>
         </div>
         <div class="home-scan-row">
           <input id="home-scan-repo" type="text" placeholder="https://github.com/owner/repo"
                  aria-label="GitHub repository URL" />
-          <button class="btn btn-primary" id="home-scan-run">Scan GitHub repo →</button>
+          <button class="btn btn-primary" id="home-scan-run">Scan repo</button>
         </div>
         <div class="scan-examples">
           <span class="muted">Or try one live:</span>
@@ -113,29 +108,23 @@
           <input id="home-scan-file" type="file" accept=".zip" aria-label="Upload a .zip of your codebase" />
         </label>
         <div id="home-scan-msg" class="msg"></div>
-        <div class="home-scan-save">
-          <span>Scans every file across <strong>11 languages</strong> — results open instantly,
-            <strong>no account needed.</strong></span>
-          <span class="muted"><a href="login.html">Sign in</a> or
-            <a href="login.html?mode=register">create a free account</a> to save this scan to your history.</span>
-        </div>
-        <p class="muted mono home-scan-note">github.com HTTPS repos only · your results are held in your browser</p>
+        <p class="muted home-scan-note">Public github.com repos. Results stay in your browser;
+          <a href="login.html">sign in</a> to keep a history.</p>
       </div>
 
       <!-- SECONDARY: scan a live HTTPS endpoint's TLS -->
       <div class="scan-primary card" id="scan-url">
         <div class="scan-primary-head">
           <h3>Scan a live website</h3>
-          <span class="scan-primary-tag">TLS handshake · post-quantum readiness</span>
+          <span class="scan-primary-tag">TLS check</span>
         </div>
-        <p class="muted" style="margin:0 0 12px;">A website's quantum exposure is in its TLS
-          handshake, not its source code. This reports the key exchange &mdash; including whether
-          a post-quantum hybrid was negotiated &mdash; the protocol, the cipher, and every
-          signature in the certificate chain.</p>
+        <p class="muted" style="margin:0 0 12px;">A site's quantum exposure lives in its TLS
+          handshake. See the key exchange, whether a post-quantum hybrid was used, and the
+          certificate chain.</p>
         <div class="home-scan-row">
           <input id="url-scan-input" type="text" placeholder="example.com"
                  aria-label="Website to scan" />
-          <button class="btn btn-primary" id="url-scan-run">Scan TLS &rarr;</button>
+          <button class="btn btn-primary" id="url-scan-run">Scan site</button>
         </div>
         <div class="scan-examples">
           <span class="muted">Or try one live:</span>
@@ -145,15 +134,15 @@
         </div>
         <div id="url-scan-msg" class="msg"></div>
         <div id="url-scan-result" hidden></div>
-        <p class="muted mono home-scan-note">One TLS handshake &mdash; exactly what your browser
-          does on every visit. Not a port or vulnerability scan. Public HTTPS hosts only.</p>
+        <p class="muted home-scan-note">One ordinary TLS handshake, the same as a browser visit.
+          Public HTTPS hosts only.</p>
       </div>
 
       <!-- SECONDARY: instant in-browser paste demo -->
       <div class="scan-secondary" id="scan-paste">
         <div class="scan-secondary-head">
-          <h3>Or try it instantly — paste a snippet</h3>
-          <span class="muted">Runs live in your browser · nothing uploaded</span>
+          <h3>Or paste a snippet</h3>
+          <span class="muted">Runs in your browser. Nothing is uploaded.</span>
         </div>
       <div class="demo-grid">
         <div class="demo-left">
@@ -187,11 +176,8 @@
           <!-- tabindex/role: the list scrolls, so keyboard users need to be able
                to focus it and scroll with the arrow keys. -->
           <div class="demo-findings" id="demo-findings" tabindex="0" role="region" aria-label="Scan findings"></div>
-          <p class="muted demo-upsell">
-            This scans one snippet in your browser. Use <b><a href="#scan-repo">Scan a whole codebase</a></b> above to
-            check an entire repo or .zip — still no account. A <a href="login.html?mode=register">free account</a>
-            only adds saved scan history, email alerts, and a CLI key.
-          </p>
+          <p class="muted demo-upsell">For a whole repo or .zip, use
+            <a href="#scan-repo">Scan a codebase</a> above.</p>
         </div>
       </div>
       </div><!-- /#scan-paste -->
@@ -234,9 +220,7 @@
       <div class="section-head">
         <div class="eyebrow">See it in action</div>
         <h2>Real code in, a Quantum Risk Score out.</h2>
-        <p class="lead">The same engine that powers the scanner, cycling through sample files in
-          <em>JavaScript, Go, Java and Ruby</em> — each scored 0–100 from its actual findings,
-          with every vulnerable line flagged. It reads 11 languages in all.</p>
+        <p class="lead">The real engine, cycling through sample files in four of its 11 languages.</p>
       </div>
       <div class="score-cycle" id="score-cycle">
         <div class="score-cycle-code">
@@ -270,7 +254,7 @@
         <div class="step">
           <div class="n">01</div>
           <h3>Point it at your code</h3>
-          <p>Paste a snippet, drop in a GitHub link, or upload a .zip — all in the browser. <span class="muted">(A CLI is there too, for terminals and CI/CD.)</span></p>
+          <p>Paste a snippet, drop in a GitHub link, or upload a .zip.</p>
         </div>
         <div class="step">
           <div class="n">02</div>
@@ -287,9 +271,8 @@
       <div class="ci-block">
         <div>
           <h3>Or run it in CI</h3>
-          <p class="muted">The reusable GitHub Action scans every push and uploads SARIF to your
-            repo's Security tab. Detection is <strong>AST-aware for Python</strong> plus regex for the
-            other 10 languages — not a blind grep.</p>
+          <p class="muted">The GitHub Action scans every push and uploads results to your repo's
+            Security tab. Or install the CLI: <code id="copy-install">pip install quantumsafe-scan</code></p>
         </div>
         <pre class="ci-yaml mono"><code># .github/workflows/quantumsafe.yml
 - uses: Danny-397/Quantum-Safe-Scan@main
@@ -303,12 +286,10 @@
       <div class="cta-band">
         <div>
           <h2>Free, open source, ready to scan.</h2>
-          <p>Every feature works without an account. Sign up only to save your scan history
-            and get email alerts on HIGH-risk findings.</p>
-          <div class="mono-note">Based on NIST PQC standards · FIPS 203 / 204 / 205</div>
+          <p>Every feature works without an account. Built on NIST FIPS 203, 204 and 205.</p>
         </div>
         <div style="display:flex;gap:12px;flex-wrap:wrap;">
-          <a href="#scan" class="btn btn-primary">Scan now — no account</a>
+          <a href="#scan" class="btn btn-primary">Scan now</a>
           <a href="https://github.com/Danny-397/Quantum-Safe-Scan" class="btn">View source</a>
         </div>
       </div>
