@@ -59,6 +59,12 @@
             computer could break.</p>
         </div>
       </div>
+      <!-- The three most urgent things to change, grouped by algorithm (renderFixFirst) -->
+      <div class="card fix-first" id="fix-first" hidden>
+        <h3>Fix these first</h3>
+        <ol class="fix-list" id="fix-list"></ol>
+      </div>
+
       <div class="grid grid-3" style="margin-top:14px;">
         <div class="card"><h3>Target</h3><div class="mono" id="sd-target" style="word-break:break-all;font-size:13px;"></div></div>
         <div class="card"><h3>Date</h3><div class="mono" id="sd-date" style="font-size:14px;"></div></div>
@@ -121,13 +127,14 @@
         </details>
       </div>
 
-      <div class="card" style="margin-top:16px;">
+      <div class="card" id="sd-findings" style="margin-top:16px;">
         <div class="toolbar">
           <label class="muted" for="sd-filter" style="font-size:13px;">Filter risk</label>
           <select id="sd-filter">
             <option value="all">All</option><option value="HIGH">High</option>
             <option value="MEDIUM">Medium</option><option value="LOW">Low</option>
           </select>
+          <span class="algo-filter" id="sd-algo-filter" hidden></span>
           <div class="spacer"></div>
           <a class="btn btn-sm" id="sd-migration-link">View Migration Plan →</a>
         </div>

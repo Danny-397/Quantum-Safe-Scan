@@ -1363,14 +1363,70 @@
     $("#sd-med").textContent = scan.summary.medium;
     $("#sd-low").textContent = scan.summary.low;
     sdCache = scan.findings || [];
+    sdAlgo = null;
     initHorizon(sdCache);
+    renderFixFirst(sdCache);
     renderSd();
     $("#sd-filter").onchange = renderSd;
   }
 
+  // "Fix these first": the findings table lists every call site, but the
+  // work is per algorithm. Group by algorithm, rank by risk then by how many
+  // places use it, and show the top three with their replacement. Clicking
+  // one narrows the table to that algorithm.
+  const RISK_RANK = { HIGH: 0, MEDIUM: 1, LOW: 2 };
+  let sdAlgo = null;
+
+  function renderFixFirst(findings) {
+    const card = $("#fix-first"), list = $("#fix-list");
+    if (!card || !list) return;
+    const groups = new Map();
+    for (const f of findings) {
+      if (f.risk_level === "LOW") continue;
+      const g = groups.get(f.algorithm) ||
+        { algo: f.algorithm, risk: f.risk_level, rec: f.recommendation, ref: f.nist_reference, n: 0, files: new Set() };
+      if (RISK_RANK[f.risk_level] < RISK_RANK[g.risk]) g.risk = f.risk_level;
+      g.n += 1;
+      g.files.add(f.file_path);
+      groups.set(f.algorithm, g);
+    }
+    const top = [...groups.values()]
+      .sort((a, b) => RISK_RANK[a.risk] - RISK_RANK[b.risk] || b.n - a.n || a.algo.localeCompare(b.algo))
+      .slice(0, 3);
+    card.hidden = false;
+    if (!top.length) {
+      list.innerHTML = `<li class="fix-none">Nothing urgent: no high- or medium-risk cryptography was found.</li>`;
+      return;
+    }
+    const places = (g) => `${g.n} place${g.n === 1 ? "" : "s"} in ${g.files.size} file${g.files.size === 1 ? "" : "s"}`;
+    list.innerHTML = top.map((g) => `
+      <li><button type="button" class="fix-item" data-algo="${esc(g.algo)}">
+        <span class="badge ${riskClass(g.risk)}">${esc(g.risk)}</span>
+        <span class="fix-main">
+          <span class="fix-title">Replace ${esc(g.algo)}</span>
+          <span class="fix-rec">${esc(g.rec)}${g.ref ? ` <span class="fix-ref">${esc(g.ref)}</span>` : ""}</span>
+        </span>
+        <span class="fix-count">${places(g)}</span>
+      </button></li>`).join("");
+    list.querySelectorAll(".fix-item").forEach((b) => b.addEventListener("click", () => {
+      sdAlgo = b.dataset.algo;
+      $("#sd-filter").value = "all";
+      renderSd();
+      $("#sd-findings").scrollIntoView({ behavior: "smooth", block: "start" });
+    }));
+  }
+
   function renderSd() {
     const lvl = $("#sd-filter").value;
-    const rows = sdCache.filter((f) => lvl === "all" || f.risk_level === lvl);
+    const rows = sdCache.filter((f) => (lvl === "all" || f.risk_level === lvl) &&
+                                       (!sdAlgo || f.algorithm === sdAlgo));
+    const chip = $("#sd-algo-filter");
+    if (chip) {
+      chip.hidden = !sdAlgo;
+      chip.innerHTML = sdAlgo ? `Showing ${esc(sdAlgo)} <button type="button" aria-label="Show all algorithms">&times;</button>` : "";
+      const x = chip.querySelector("button");
+      if (x) x.addEventListener("click", () => { sdAlgo = null; renderSd(); });
+    }
     const tb = $("#sd-body");
     tb.innerHTML = rows.length
       ? rows.map(findingRow).join("")

@@ -735,3 +735,35 @@ html.qs-anim .reveal.in { opacity: 1; transform: none; }
 
 /* Risk badges: tinted fills carry the level; the extra outline was noise. */
 .badge { border-color: transparent !important; font-weight: 600; }
+
+/* ---------- Scan detail: "Fix these first" ---------- */
+.fix-first { margin-top: 14px; }
+.fix-first h3 { margin-bottom: 10px; }
+.fix-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.fix-item {
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 14px;
+  width: 100%; padding: 12px 14px; text-align: left; cursor: pointer;
+  background: var(--panel-2); border: 1px solid var(--border); border-radius: var(--r-sm);
+  color: var(--text); font: inherit;
+  transition: border-color var(--fast) var(--ease), background var(--fast) var(--ease);
+}
+.fix-item:hover { border-color: var(--accent); }
+.fix-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.fix-title { font-weight: 600; font-size: 15px; }
+.fix-rec { color: var(--muted); font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fix-ref { color: var(--muted-2); }
+.fix-count { color: var(--muted); font-size: 13px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.fix-none { color: var(--muted); font-size: 14px; }
+.algo-filter {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 3px 4px 3px 10px; border-radius: 999px;
+  background: rgba(91,115,232,.12); color: var(--text); font-size: 12.5px;
+}
+.algo-filter[hidden] { display: none; }
+.algo-filter button { border: 0; background: none; color: var(--muted); cursor: pointer; font-size: 16px; line-height: 1; padding: 0 4px; }
+.algo-filter button:hover { color: var(--text); }
+@media (max-width: 640px) {
+  .fix-item { grid-template-columns: auto 1fr; align-items: start; }
+  .fix-count { grid-column: 2; }
+  .fix-rec { white-space: normal; }
+}
