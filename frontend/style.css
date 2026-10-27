@@ -141,19 +141,21 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
 /* Vertical padding only — the horizontal gutter comes from .wrap. Using the
    `padding` shorthand here would reset .wrap's left/right padding to 0 (equal
    specificity, later in source), leaving content flush to the screen on mobile. */
-.hero { position: relative; display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; padding-top: 80px; padding-bottom: 70px; }
+.hero { position: relative; display: grid; grid-template-columns: 1.25fr 1fr; gap: 48px; align-items: center; padding-top: 80px; padding-bottom: 70px; }
 /* Let grid children shrink below their content's intrinsic width so the
    terminal mock (white-space:pre) scrolls internally instead of widening
    the whole page on narrow screens. */
 .hero > * { min-width: 0; }
-.hero h1 { font-size: 48px; line-height: 1.05; margin-bottom: 20px; font-weight: 700; }
+.hero h1 { font-size: 52px; line-height: 1.04; letter-spacing: -.035em; margin-bottom: 22px; font-weight: 700; }
 .hero h1 .grn { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.hero .sub { color: var(--muted); font-size: 17px; line-height: 1.65; max-width: 540px; margin-bottom: 28px; }
+.hero .sub { color: var(--muted); font-size: 19px; line-height: 1.55; max-width: 500px; margin-bottom: 32px; }
 .hero .sub strong { color: var(--text); font-weight: 600; }
-.hero-cta { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
-.hero-note { color: var(--muted-2); font-size: 13px; margin-top: 18px; }
-.hero-note code { font-family: var(--mono); color: var(--accent); background: rgba(91,115,232,.06); padding: 2px 7px; border-radius: var(--r-sm); border: 1px solid rgba(91,115,232,.18); }
-.hero-note-cli { margin-top: 8px; font-size: 12px; opacity: .8; }
+.hero-cta { display: flex; gap: 22px; align-items: center; flex-wrap: wrap; }
+.hero-cta .btn { padding: 13px 22px; font-size: 15px; border-radius: 10px; }
+.btn-link { color: var(--accent); font-size: 15px; font-weight: 500; }
+.btn-link:hover { color: #8ea0f2; }
+.hero-note { color: var(--muted-2); font-size: 14px; margin-top: 22px; }
+.ci-block code { font-family: var(--mono); font-size: 12.5px; color: var(--accent); background: rgba(91,115,232,.06); padding: 2px 7px; border-radius: var(--r-sm); border: 1px solid rgba(91,115,232,.18); white-space: nowrap; }
 
 /* terminal mock */
 .terminal {
@@ -174,13 +176,13 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
 .term-body .lo { color: var(--safe); }
 .term-body .score { color: var(--danger); font-weight: 700; }
 .hero-visual { display: flex; flex-direction: column; }
-.term-caption { margin-top: 10px; text-align: right; font-size: 12px; color: var(--muted-2); letter-spacing: .02em; }
+.term-caption { margin-top: 10px; text-align: right; font-size: 12px; color: var(--muted-2); }
 
 /* ---------- Sections ---------- */
-.section { padding-top: 66px; padding-bottom: 66px; border-top: 1px solid var(--border); }
+.section { padding-top: 96px; padding-bottom: 96px; border-top: 1px solid var(--border); }
 .section-head { max-width: 660px; margin-bottom: 38px; }
-.section-head h2 { font-size: 30px; margin-bottom: 10px; }
-.section-head .lead { color: var(--muted); font-size: 16px; }
+.section-head h2 { font-size: 36px; line-height: 1.1; letter-spacing: -.03em; margin-bottom: 12px; }
+.section-head .lead { color: var(--muted); font-size: 17px; }
 .section-head .lead em { color: var(--accent); font-style: normal; }
 
 /* ---------- Steps ---------- */
@@ -214,7 +216,6 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
 .cta-band::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--grad); }
 .cta-band h2 { font-size: 25px; margin-bottom: 6px; }
 .cta-band p { color: var(--muted); font-size: 15px; }
-.cta-band .mono-note { font-family: var(--mono); font-size: 12px; color: var(--muted-2); margin-top: 12px; letter-spacing: .04em; }
 
 /* legacy landing classes */
 .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
@@ -343,13 +344,6 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
 .ci-yaml { background: #05060d; border: 1px solid var(--border); border-radius: var(--r-sm);
   padding: 16px; font-size: 12.5px; line-height: 1.7; color: #c7cfdb; overflow-x: auto; margin: 0; }
 @media (max-width: 880px) { .ci-block { grid-template-columns: 1fr; } }
-.home-scan-save {
-  display: flex; flex-direction: column; gap: 3px; margin-top: 16px; padding: 12px 14px;
-  background: rgba(91,115,232,.08); border: 1px solid rgba(91,115,232,.35);
-  border-radius: var(--r-sm); font-size: 13.5px;
-}
-.home-scan-save strong { color: var(--text); }
-.home-scan-save a { font-weight: 600; }
 
 /* ---------- Save-this-scan banner (anonymous scan detail) ---------- */
 .save-banner {
@@ -685,7 +679,7 @@ html.qs-anim .reveal.in { opacity: 1; transform: none; }
 @media (max-width: 640px) {
   .wrap { padding-left: 24px; padding-right: 24px; }
   .hero { padding-top: 36px; padding-bottom: 30px; }
-  .hero h1 { font-size: 30px; }
+  .hero h1 { font-size: 34px; }
   .hero .sub { font-size: 16px; }
   .section { padding-top: 44px; padding-bottom: 44px; }
   .section-head { margin-bottom: 26px; }
