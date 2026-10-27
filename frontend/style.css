@@ -280,6 +280,23 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
 /* ---------- Scanner: primary (repo/.zip) + secondary (paste demo) ---------- */
 /* The whole-codebase scanner is the headline action; the paste demo sits below
    it as a lighter "try it instantly" panel so neither path is ever hidden. */
+.scan-tabs {
+  display: flex; gap: 2px; width: fit-content; max-width: 100%;
+  margin: 0 auto 20px; padding: 3px;
+  background: var(--panel); border: 1px solid var(--border); border-radius: 999px;
+}
+.scan-tab {
+  appearance: none; border: 0; cursor: pointer;
+  padding: 8px 20px; border-radius: 999px;
+  background: transparent; color: var(--muted);
+  font: inherit; font-size: 14px; font-weight: 600;
+  transition: background var(--fast) var(--ease), color var(--fast) var(--ease);
+}
+.scan-tab:hover { color: var(--text); }
+.scan-tab[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); }
+.scan-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.scan-primary[hidden], .scan-secondary[hidden] { display: none; }
+
 .scan-primary {
   max-width: 720px; margin: 0 auto 12px;
   border: 1px solid rgba(91,115,232,.45);
@@ -327,7 +344,7 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
 .tls-chain-row.is-root { opacity: .62; }
 .tls-verdict { margin: 12px 0 4px; font-size: 13px; }
 
-.scan-secondary { max-width: 940px; margin: 26px auto 0; }
+.scan-secondary { max-width: 940px; margin: 0 auto; }
 .scan-secondary-head {
   display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
   justify-content: center; text-align: center; margin-bottom: 16px;

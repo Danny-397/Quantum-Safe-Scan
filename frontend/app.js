@@ -251,6 +251,7 @@
     }
 
     initDemoScanner();
+    initScanTabs();
     initHomeScan();
     initUrlScan();
     initScoreCycle();
@@ -716,11 +717,53 @@
     if (sample) sample.addEventListener("click", () => { input.value = DEMO_SAMPLE; renderDemo(); });
     const run = $("#demo-run");
     if (run) run.addEventListener("click", runRealDemo);
-    // Value-first: any "Scan free" / hero CTA drops the cursor into the editor
-    // once the anchor has scrolled the demo into view.
-    $$('a[href="#scan"]').forEach((a) =>
-      a.addEventListener("click", () => setTimeout(() => input.focus({ preventScroll: true }), 350)));
     renderDemo();
+  }
+
+  // ---- Scanner tabs: Codebase / Website / Snippet ----
+  // ARIA tabs pattern: arrows move between tabs, one tab stop. A link to a
+  // panel id (#scan-repo, #scan-url, #scan-paste) opens that tab, and any
+  // "Scan free" CTA drops the cursor into the open tab's input.
+  function initScanTabs() {
+    const tabs = $$(".scan-tab");
+    if (!tabs.length) return;
+    const FOCUS = { "scan-repo": "#home-scan-repo", "scan-url": "#url-scan-input", "scan-paste": "#demo-input" };
+
+    function select(tab, focusTab) {
+      tabs.forEach((t) => {
+        const on = t === tab;
+        t.setAttribute("aria-selected", String(on));
+        t.tabIndex = on ? 0 : -1;
+        $("#" + t.getAttribute("aria-controls")).hidden = !on;
+      });
+      if (focusTab) tab.focus();
+    }
+    const tabFor = (panelId) => tabs.find((t) => t.getAttribute("aria-controls") === panelId);
+
+    tabs.forEach((t, i) => {
+      t.addEventListener("click", () => select(t));
+      t.addEventListener("keydown", (e) => {
+        const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+        if (step) { e.preventDefault(); select(tabs[(i + step + tabs.length) % tabs.length], true); }
+        else if (e.key === "Home") { e.preventDefault(); select(tabs[0], true); }
+        else if (e.key === "End") { e.preventDefault(); select(tabs[tabs.length - 1], true); }
+      });
+    });
+
+    function openFromHash() {
+      const tab = tabFor((location.hash || "").slice(1));
+      if (tab) select(tab);
+    }
+    window.addEventListener("hashchange", openFromHash);
+    openFromHash();
+
+    $$('a[href^="#scan"]').forEach((a) => a.addEventListener("click", () => {
+      const tab = tabFor(a.getAttribute("href").slice(1));
+      if (tab) select(tab);
+      const open = tabs.find((t) => t.getAttribute("aria-selected") === "true");
+      const field = open && $(FOCUS[open.getAttribute("aria-controls")]);
+      if (field) setTimeout(() => field.focus({ preventScroll: true }), 350);
+    }));
   }
 
   // ---- Cookie / storage notice (all pages) ----
