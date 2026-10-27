@@ -85,8 +85,16 @@
           unless you sign in.</p>
       </div>
 
+      <!-- One scanner at a time. The panels keep their ids, so #scan-repo,
+           #scan-url and #scan-paste still work as links (initScanTabs). -->
+      <div class="scan-tabs" role="tablist" aria-label="What to scan">
+        <button type="button" class="scan-tab" role="tab" id="scan-tab-repo" aria-controls="scan-repo" aria-selected="true">Codebase</button>
+        <button type="button" class="scan-tab" role="tab" id="scan-tab-url" aria-controls="scan-url" aria-selected="false" tabindex="-1">Website</button>
+        <button type="button" class="scan-tab" role="tab" id="scan-tab-paste" aria-controls="scan-paste" aria-selected="false" tabindex="-1">Snippet</button>
+      </div>
+
       <!-- PRIMARY: scan a whole codebase from GitHub or a .zip -->
-      <div class="scan-primary card" id="scan-repo">
+      <div class="scan-primary card" id="scan-repo" role="tabpanel" aria-labelledby="scan-tab-repo">
         <div class="scan-primary-head">
           <h3>Scan a whole codebase</h3>
           <span class="scan-primary-tag">No account needed</span>
@@ -113,7 +121,7 @@
       </div>
 
       <!-- SECONDARY: scan a live HTTPS endpoint's TLS -->
-      <div class="scan-primary card" id="scan-url">
+      <div class="scan-primary card" id="scan-url" role="tabpanel" aria-labelledby="scan-tab-url" hidden>
         <div class="scan-primary-head">
           <h3>Scan a live website</h3>
           <span class="scan-primary-tag">TLS check</span>
@@ -139,9 +147,9 @@
       </div>
 
       <!-- SECONDARY: instant in-browser paste demo -->
-      <div class="scan-secondary" id="scan-paste">
+      <div class="scan-secondary" id="scan-paste" role="tabpanel" aria-labelledby="scan-tab-paste" hidden>
         <div class="scan-secondary-head">
-          <h3>Or paste a snippet</h3>
+          <h3>Paste a snippet</h3>
           <span class="muted">Runs in your browser. Nothing is uploaded.</span>
         </div>
       <div class="demo-grid">
@@ -177,7 +185,7 @@
                to focus it and scroll with the arrow keys. -->
           <div class="demo-findings" id="demo-findings" tabindex="0" role="region" aria-label="Scan findings"></div>
           <p class="muted demo-upsell">For a whole repo or .zip, use
-            <a href="#scan-repo">Scan a codebase</a> above.</p>
+            <a href="#scan-repo">the Codebase tab</a>.</p>
         </div>
       </div>
       </div><!-- /#scan-paste -->

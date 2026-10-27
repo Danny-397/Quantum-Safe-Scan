@@ -251,6 +251,7 @@
     }
 
     initDemoScanner();
+    initScanTabs();
     initHomeScan();
     initUrlScan();
     initScoreCycle();
@@ -716,27 +717,53 @@
     if (sample) sample.addEventListener("click", () => { input.value = DEMO_SAMPLE; renderDemo(); });
     const run = $("#demo-run");
     if (run) run.addEventListener("click", runRealDemo);
-    // Value-first: any "Scan free" / hero CTA drops the cursor into the editor
-    // once the anchor has scrolled the demo into view.
-    $$('a[href="#scan"]').forEach((a) =>
-      a.addEventListener("click", () => setTimeout(() => input.focus({ preventScroll: true }), 350)));
     renderDemo();
   }
 
-  // ---- Cookie / storage notice (all pages) ----
-  function ensureCookieNotice() {
-    if (localStorage.getItem("qs_cookie_ack") === "1") return;
-    const bar = document.createElement("div");
-    bar.className = "cookie-banner";
-    // Text and link share one span: as separate flex items they were squeezed
-    // into narrow columns once the notice became a compact corner toast.
-    bar.innerHTML =
-      '<span>We use strictly-necessary local storage to keep you signed in. ' +
-      'See our <a href="privacy.html">Privacy Policy</a>.</span>' +
-      '<button class="btn btn-sm btn-primary" id="cookie-ok">Got it</button>';
-    document.body.appendChild(bar);
-    const ok = bar.querySelector("#cookie-ok");
-    ok.addEventListener("click", () => { localStorage.setItem("qs_cookie_ack", "1"); bar.remove(); });
+  // ---- Scanner tabs: Codebase / Website / Snippet ----
+  // ARIA tabs pattern: arrows move between tabs, one tab stop. A link to a
+  // panel id (#scan-repo, #scan-url, #scan-paste) opens that tab, and any
+  // "Scan free" CTA drops the cursor into the open tab's input.
+  function initScanTabs() {
+    const tabs = $$(".scan-tab");
+    if (!tabs.length) return;
+    const FOCUS = { "scan-repo": "#home-scan-repo", "scan-url": "#url-scan-input", "scan-paste": "#demo-input" };
+
+    function select(tab, focusTab) {
+      tabs.forEach((t) => {
+        const on = t === tab;
+        t.setAttribute("aria-selected", String(on));
+        t.tabIndex = on ? 0 : -1;
+        $("#" + t.getAttribute("aria-controls")).hidden = !on;
+      });
+      if (focusTab) tab.focus();
+    }
+    const tabFor = (panelId) => tabs.find((t) => t.getAttribute("aria-controls") === panelId);
+
+    tabs.forEach((t, i) => {
+      t.addEventListener("click", () => select(t));
+      t.addEventListener("keydown", (e) => {
+        const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+        if (step) { e.preventDefault(); select(tabs[(i + step + tabs.length) % tabs.length], true); }
+        else if (e.key === "Home") { e.preventDefault(); select(tabs[0], true); }
+        else if (e.key === "End") { e.preventDefault(); select(tabs[tabs.length - 1], true); }
+      });
+    });
+
+    function openFromHash() {
+      const tab = tabFor((location.hash || "").slice(1));
+      if (tab) select(tab);
+    }
+    window.addEventListener("hashchange", openFromHash);
+    openFromHash();
+
+    $$('a[href^="#scan"]').forEach((a) => a.addEventListener("click", () => {
+      const tab = tabFor(a.getAttribute("href").slice(1));
+      if (tab) select(tab);
+      const open = tabs.find((t) => t.getAttribute("aria-selected") === "true");
+      const field = open && $(FOCUS[open.getAttribute("aria-controls")]);
+      if (field) setTimeout(() => field.focus({ preventScroll: true }), 350);
+    }));
   }
 
   // =========================================================================
@@ -1336,14 +1363,70 @@
     $("#sd-med").textContent = scan.summary.medium;
     $("#sd-low").textContent = scan.summary.low;
     sdCache = scan.findings || [];
+    sdAlgo = null;
     initHorizon(sdCache);
+    renderFixFirst(sdCache);
     renderSd();
     $("#sd-filter").onchange = renderSd;
   }
 
+  // "Fix these first": the findings table lists every call site, but the
+  // work is per algorithm. Group by algorithm, rank by risk then by how many
+  // places use it, and show the top three with their replacement. Clicking
+  // one narrows the table to that algorithm.
+  const RISK_RANK = { HIGH: 0, MEDIUM: 1, LOW: 2 };
+  let sdAlgo = null;
+
+  function renderFixFirst(findings) {
+    const card = $("#fix-first"), list = $("#fix-list");
+    if (!card || !list) return;
+    const groups = new Map();
+    for (const f of findings) {
+      if (f.risk_level === "LOW") continue;
+      const g = groups.get(f.algorithm) ||
+        { algo: f.algorithm, risk: f.risk_level, rec: f.recommendation, ref: f.nist_reference, n: 0, files: new Set() };
+      if (RISK_RANK[f.risk_level] < RISK_RANK[g.risk]) g.risk = f.risk_level;
+      g.n += 1;
+      g.files.add(f.file_path);
+      groups.set(f.algorithm, g);
+    }
+    const top = [...groups.values()]
+      .sort((a, b) => RISK_RANK[a.risk] - RISK_RANK[b.risk] || b.n - a.n || a.algo.localeCompare(b.algo))
+      .slice(0, 3);
+    card.hidden = false;
+    if (!top.length) {
+      list.innerHTML = `<li class="fix-none">Nothing urgent: no high- or medium-risk cryptography was found.</li>`;
+      return;
+    }
+    const places = (g) => `${g.n} place${g.n === 1 ? "" : "s"} in ${g.files.size} file${g.files.size === 1 ? "" : "s"}`;
+    list.innerHTML = top.map((g) => `
+      <li><button type="button" class="fix-item" data-algo="${esc(g.algo)}">
+        <span class="badge ${riskClass(g.risk)}">${esc(g.risk)}</span>
+        <span class="fix-main">
+          <span class="fix-title">Replace ${esc(g.algo)}</span>
+          <span class="fix-rec">${esc(g.rec)}${g.ref ? ` <span class="fix-ref">${esc(g.ref)}</span>` : ""}</span>
+        </span>
+        <span class="fix-count">${places(g)}</span>
+      </button></li>`).join("");
+    list.querySelectorAll(".fix-item").forEach((b) => b.addEventListener("click", () => {
+      sdAlgo = b.dataset.algo;
+      $("#sd-filter").value = "all";
+      renderSd();
+      $("#sd-findings").scrollIntoView({ behavior: "smooth", block: "start" });
+    }));
+  }
+
   function renderSd() {
     const lvl = $("#sd-filter").value;
-    const rows = sdCache.filter((f) => lvl === "all" || f.risk_level === lvl);
+    const rows = sdCache.filter((f) => (lvl === "all" || f.risk_level === lvl) &&
+                                       (!sdAlgo || f.algorithm === sdAlgo));
+    const chip = $("#sd-algo-filter");
+    if (chip) {
+      chip.hidden = !sdAlgo;
+      chip.innerHTML = sdAlgo ? `Showing ${esc(sdAlgo)} <button type="button" aria-label="Show all algorithms">&times;</button>` : "";
+      const x = chip.querySelector("button");
+      if (x) x.addEventListener("click", () => { sdAlgo = null; renderSd(); });
+    }
     const tb = $("#sd-body");
     tb.innerHTML = rows.length
       ? rows.map(findingRow).join("")
@@ -1480,7 +1563,8 @@
     else if (page === "dashboard.html") initDashboard();
     else if (page === "scan.html") initScanDetail();
     else if (page === "migration.html") initMigration();
-    // privacy.html / terms.html need no page init.
-    ensureCookieNotice();
+    // privacy.html / terms.html need no page init. There is no storage banner:
+    // the only storage is strictly necessary (sign-in token, current scan), so
+    // it is disclosed on the sign-in forms and in the privacy policy instead.
   });
 })();
