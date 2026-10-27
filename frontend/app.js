@@ -766,22 +766,6 @@
     }));
   }
 
-  // ---- Cookie / storage notice (all pages) ----
-  function ensureCookieNotice() {
-    if (localStorage.getItem("qs_cookie_ack") === "1") return;
-    const bar = document.createElement("div");
-    bar.className = "cookie-banner";
-    // Text and link share one span: as separate flex items they were squeezed
-    // into narrow columns once the notice became a compact corner toast.
-    bar.innerHTML =
-      '<span>We use strictly-necessary local storage to keep you signed in. ' +
-      'See our <a href="privacy.html">Privacy Policy</a>.</span>' +
-      '<button class="btn btn-sm btn-primary" id="cookie-ok">Got it</button>';
-    document.body.appendChild(bar);
-    const ok = bar.querySelector("#cookie-ok");
-    ok.addEventListener("click", () => { localStorage.setItem("qs_cookie_ack", "1"); bar.remove(); });
-  }
-
   // =========================================================================
   //  AUTH (login / register / forgot / reset)
   // =========================================================================
@@ -1523,7 +1507,8 @@
     else if (page === "dashboard.html") initDashboard();
     else if (page === "scan.html") initScanDetail();
     else if (page === "migration.html") initMigration();
-    // privacy.html / terms.html need no page init.
-    ensureCookieNotice();
+    // privacy.html / terms.html need no page init. There is no storage banner:
+    // the only storage is strictly necessary (sign-in token, current scan), so
+    // it is disclosed on the sign-in forms and in the privacy policy instead.
   });
 })();
