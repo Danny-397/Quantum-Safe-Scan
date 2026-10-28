@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-19 03:34 UTC",
+  "generated_at": "2026-10-28 00:29 UTC",
   "ground_truth": 26,
   "results": {
     "QuantumSafe": {
@@ -43,6 +43,20 @@
         ".py"
       ]
     },
-    "Semgrep": null
+    "Semgrep": {
+      "caught": 4,
+      "total": 26,
+      "recall": 0.15384615384615385,
+      "families": [
+        "3des",
+        "md5",
+        "sha1"
+      ],
+      "file_types": [
+        ".java",
+        ".py",
+        ".rb"
+      ]
+    }
   }
 }

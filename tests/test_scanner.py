@@ -282,3 +282,30 @@ def test_repo_url_validation_rejects_bad_urls(bad_url):
 
 def test_repo_url_validation_accepts_good_url():
     assert _validate_repo_url("https://github.com/org/app") == "https://github.com/org/app"
+
+
+# ---- TLS: disable flags are the mitigation, not exposure -------------------
+# Every tls_old finding in a random sample of real-world findings was one of
+# these (benchmark/RESULTS-precision.md): OP_NO_* flags that turn the old
+# protocol off. They must stay silent, and real selections must still fire.
+
+@pytest.mark.parametrize("line", [
+    "ctx.options |= ssl.OP_NO_SSLv3 | ssl.OP_NO_TLSv1 | ssl.OP_NO_TLSv1_1\n",
+    'OP_NO_SSLv3 = getattr(_ssl, "OP_NO_SSLv3", 0)\n',
+    "    ssl.TLSVersion.TLSv1_2: _OP_NO_SSLv2_OR_SSLv3 | _OP_NO_TLSv1_3,\n",
+])
+def test_tls_disable_flags_are_not_findings(tmp_path, line):
+    _write(tmp_path, "tls.py", "import ssl\n" + line)
+    assert not [f for f in scan_path(str(tmp_path)) if f.family == "tls_old"]
+
+
+@pytest.mark.parametrize("line, label", [
+    ("ctx = ssl.SSLContext(ssl.PROTOCOL_TLSv1)\n", "TLS 1.0"),
+    ("ctx = SSL.Context(SSL.SSLv3_METHOD)\n", "TLS 1.0"),
+    ("ctx.minimum_version = ssl.TLSVersion.TLSv1\n", "TLS 1.0"),
+    ("ctx.minimum_version = ssl.TLSVersion.TLSv1_1\n", "TLS 1.1"),
+])
+def test_tls_old_selections_are_still_found(tmp_path, line, label):
+    _write(tmp_path, "tls.py", "import ssl\n" + line)
+    algos = {f.algorithm for f in scan_path(str(tmp_path)) if f.family == "tls_old"}
+    assert label in algos

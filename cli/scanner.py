@@ -160,12 +160,18 @@ RULES: list[Rule] = [
        r"\bSHA[\s\-_]?1\b|hashlib\.sha1|sha1\(|sha1_file|crypto\.createHash\(\s*['\"]sha1['\"]|MessageDigest\.getInstance\(\s*['\"]SHA-?1['\"]|Digest::SHA1"),
 
     # ---- MEDIUM ----
+    # The bare protocol names must start their own token: inside an identifier
+    # they are almost always a flag that turns the protocol OFF (OP_NO_SSLv3,
+    # OP_NO_TLSv1, _OP_NO_SSLv2_OR_SSLv3), which is the mitigation, not exposure.
+    # A random sample of real-world findings showed every such hit was a false
+    # positive (benchmark/RESULTS-precision.md). Selectors keep explicit forms.
     _r("tls_old", "TLS 1.0", RISK_MEDIUM,
        "TLS 1.0 is deprecated and uses quantum-vulnerable key exchange.",
-       r"TLSv1(?:\.0)?\b|PROTOCOL_TLSv1\b|TLS1_0|SSLv3|TLSv1_method"),
+       r"(?<!\w)(?:TLSv1(?:\.0)?|SSLv3)\b|PROTOCOL_(?:TLSv1|SSLv3)\b|(?<!NO_)TLS1_0\b"
+       r"|(?:TLSv1|SSLv3)_method\b"),
     _r("tls_old", "TLS 1.1", RISK_MEDIUM,
        "TLS 1.1 is deprecated and uses quantum-vulnerable key exchange.",
-       r"TLSv1\.1\b|PROTOCOL_TLSv1_1\b|TLS1_1|TLSv1_1_method"),
+       r"(?<!\w)TLSv1(?:\.1|_1)\b|PROTOCOL_TLSv1_1\b|(?<!NO_)TLS1_1\b|TLSv1_1_method\b"),
     _r("3des", "3DES / Triple DES", RISK_MEDIUM,
        "3DES is deprecated; Grover's algorithm halves its effective strength.",
        r"\b3DES\b|Triple[\s_\-]?DES\b|DESede|DES3|TripleDES|des_ede3"),
