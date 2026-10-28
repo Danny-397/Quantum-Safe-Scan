@@ -43,6 +43,31 @@ argument — e.g. Java's `getInstance("SHA-1")`, Node's
 `createCipheriv("aes-128-gcm", …)` — are preserved by the string-argument
 recovery pass, the cross-language analogue of the Python AST engine.
 
+## Precision on real code (`precision_sample.py`)
+
+The labeled corpus above was written for this project, so it is also the corpus
+the scanner was tuned on. `precision_sample.py` measures precision where nobody
+chose the code: it scans the same 37 PyPI packages as `realworld.py` (versions
+pinned), draws **100 findings at random** (seed 2026) from all 5,679, and every
+one is labeled by reading its source, with the reason recorded in
+[`precision_labels.json`](precision_labels.json).
+
+| Sample | TP | FP | Precision | 95% CI |
+|--:|--:|--:|--:|--:|
+| 100 | 93 | 7 | **93%** | 86% to 97% |
+
+Four of the seven false positives were the same defect: the TLS 1.0 rule matched
+`SSLv3` / `TLSv1` inside **disable** flags (`OP_NO_SSLv3`, `OP_NO_TLSv1`), which
+are the mitigation, not exposure. The rule now requires the protocol name to start
+its own token; regression tests cover both directions. The measurement above is
+the scanner **before** that fix, reported as measured. Full table and every false
+positive: [RESULTS-precision.md](RESULTS-precision.md).
+
+```bash
+python benchmark/precision_sample.py           # rescan, redraw (same seed, pinned versions)
+python benchmark/precision_sample.py --score   # score the committed labels
+```
+
 ## Real-world benchmark (`realworld.py`)
 
 `evaluate.py` measures **precision/recall** on a small labeled corpus.

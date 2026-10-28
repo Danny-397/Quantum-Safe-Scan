@@ -18,7 +18,7 @@ running the tool ([`comparison.py`](comparison.py)) — nothing is hand-entered.
 many quantum-relevant findings each catches:
 
 ```bash
-pip install bandit          # optional competitor
+pip install bandit semgrep  # optional competitors
 python benchmark/comparison.py
 ```
 
@@ -26,7 +26,7 @@ python benchmark/comparison.py
 |---|--:|--:|---|---|
 | **QuantumSafe** | **26** | **100%** | rsa, ecc, dsa, dh, md5, sha1, sha256, 3des, rc4, aes128, tls_old | 9 languages |
 | Bandit 1.8 | 2 | 8% | md5, sha1 | Python-only; flags weak hashes, **not** RSA/ECC/DSA/DH |
-| Semgrep | _run it_ | — | — | multi-language, pattern-based; not quantum-specific by default |
+| Semgrep 1.182 (`p/r2c-security-audit`) | 4 | 15% | md5, sha1, 3des | multi-language; its default security pack targets classical weaknesses, not RSA/ECC/DSA/DH |
 
 **Reading the Bandit result fairly:** this is *not* a knock on Bandit — Bandit is
 an excellent classical Python security linter and is doing exactly its job. It

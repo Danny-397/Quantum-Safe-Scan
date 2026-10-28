@@ -1,0 +1,402 @@
+{
+ "urllib3:urllib3-2.8.0/src/urllib3/contrib/pyopenssl.py:127:tls_old": {
+  "label": "fp",
+  "reason": "Reports TLS 1.0, but the line maps TLSv1_2 to its option flags; no TLS 1.0 on the line."
+ },
+ "django:django-6.1.2/tests/db_functions/text/test_sha1.py:26:sha1": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "paramiko:paramiko-5.1.0/paramiko/kex_group14.py:46:sha256": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "paramiko:paramiko-5.1.0/paramiko/pkey.py:41:rsa": {
+  "label": "tp",
+  "reason": "Imports the algorithm's implementation."
+ },
+ "pyjwt:pyjwt-2.15.1/tests/test_algorithms.py:966:sha256": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pyopenssl:pyopenssl-26.4.0/tests/test_ssl.py:1642:tls12": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/docs/development/custom-vectors/rsa-oaep-sha2/VerifyRSAOAEPSHA2.java:330:sha256": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/src/cryptography/hazmat/primitives/asymmetric/dsa.py:163:dsa": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/src/cryptography/hazmat/primitives/asymmetric/ec.py:67:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/src/cryptography/hazmat/primitives/asymmetric/types.py:25:dh": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/src/cryptography/hazmat/primitives/serialization/pkcs12.py:56:rsa": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/src/cryptography/hazmat/primitives/serialization/ssh.py:987:ecc": {
+  "label": "tp",
+  "reason": "Type check on a key of this algorithm; code acting on it."
+ },
+ "cryptography:cryptography-50.0.2/src/cryptography/x509/certificate_transparency.py:32:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/src/rust/cryptography-crypto/src/pkcs12.rs:123:sha256": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/src/rust/cryptography-key-parsing/src/ec.rs:93:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/src/rust/cryptography-key-parsing/src/rsa.rs:33:rsa": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/src/rust/src/backend/dh.rs:143:dh": {
+  "label": "tp",
+  "reason": "Signature/definition typed on or implementing this algorithm's keys."
+ },
+ "cryptography:cryptography-50.0.2/src/rust/src/backend/dh.rs:183:dh": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_dsa.py:709:dsa": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_ec.py:555:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_ec.py:632:ecc": {
+  "label": "tp",
+  "reason": "Type check on a key of this algorithm; code acting on it."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_ec.py:720:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_ec.py:1605:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_hpke.py:322:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_hpke.py:344:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_pbkdf2hmac.py:43:sha1": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_rsa.py:1287:sha256": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_rsa.py:1296:rsa": {
+  "label": "tp",
+  "reason": "Signature/definition typed on or implementing this algorithm's keys."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_rsa.py:1693:sha256": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_serialization.py:596:ecc": {
+  "label": "tp",
+  "reason": "Type check on a key of this algorithm; code acting on it."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_serialization.py:810:ecc": {
+  "label": "tp",
+  "reason": "Type check on a key of this algorithm; code acting on it."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_ssh.py:1075:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_x963kdf.py:19:sha256": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/x509/test_ocsp.py:1112:sha1": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/x509/test_x509.py:1796:rsa": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/x509/test_x509.py:3306:rsa": {
+  "label": "tp",
+  "reason": "Signature/definition typed on or implementing this algorithm's keys."
+ },
+ "cryptography:cryptography-50.0.2/tests/x509/test_x509.py:4992:sha256": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/x509/test_x509.py:5571:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/x509/test_x509_crlbuilder.py:181:rsa": {
+  "label": "tp",
+  "reason": "Signature/definition typed on or implementing this algorithm's keys."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/PublicKey/Hybrid.py:80:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/Cipher/test_ARC4.py:429:rc4": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/Cipher/test_ARC4.py:449:rc4": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/Cipher/test_CTR.py:41:3des": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/IO/test_PKCS8.py:619:rsa": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/Protocol/test_HPKE.py:14:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/Protocol/test_HPKE.py:346:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/Protocol/test_KDF.py:153:sha1": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/Protocol/test_KDF.py:1094:sha256": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_ECC_Curve25519.py:10:ecc": {
+  "label": "tp",
+  "reason": "Imports the algorithm's implementation."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_ECC_Ed448.py:9:ecc": {
+  "label": "tp",
+  "reason": "Imports the algorithm's implementation."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_ECC_NIST.py:1253:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_ECC_NIST.py:1269:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_ECC_NIST.py:1374:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_Curve25519.py:151:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_Curve25519.py:210:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_DSA.py:441:dsa": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_DSA.py:592:dsa": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_ECC.py:230:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_ECC.py:572:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_ECC.py:596:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_ECC.py:599:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_ECC.py:1013:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_ECC.py:1526:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_ECC.py:1584:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_ECC.py:2165:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_ECC.py:2630:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_ECC.py:2678:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_ECC.py:2745:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_RSA.py:280:rsa": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_RSA.py:634:rsa": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_passphrase.py:15:ecc": {
+  "label": "tp",
+  "reason": "Imports the algorithm's implementation."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/Signature/test_dss.py:1315:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/Signature/test_pss.py:53:sha256": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/Signature/DSS.py:281:sha256": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/Signature/eddsa.py:10:ecc": {
+  "label": "tp",
+  "reason": "Imports the algorithm's implementation."
+ },
+ "rsa:rsa-4.9.1/rsa/cli.py:27:rsa": {
+  "label": "tp",
+  "reason": "Imports the algorithm's implementation."
+ },
+ "rsa:rsa-4.9.1/rsa/cli.py:295:rsa": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "rsa:rsa-4.9.1/rsa/key.py:40:rsa": {
+  "label": "tp",
+  "reason": "Imports the algorithm's implementation."
+ },
+ "rsa:rsa-4.9.1/rsa/key.py:723:rsa": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "ecdsa:ecdsa-0.19.2/src/ecdsa/curves.py:64:ecc": {
+  "label": "tp",
+  "reason": "Type check on a key of this algorithm; code acting on it."
+ },
+ "ecdsa:ecdsa-0.19.2/src/ecdsa/ecdsa.py:416:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "ecdsa:ecdsa-0.19.2/src/ecdsa/ecdsa.py:724:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "ecdsa:ecdsa-0.19.2/src/ecdsa/ecdsa.py:1037:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "ecdsa:ecdsa-0.19.2/src/ecdsa/test_ecdsa.py:11:ecc": {
+  "label": "tp",
+  "reason": "Imports the algorithm's implementation."
+ },
+ "ecdsa:ecdsa-0.19.2/src/ecdsa/test_ecdsa.py:112:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "passlib:passlib-1.7.4/passlib/handlers/django.py:89:sha1": {
+  "label": "tp",
+  "reason": "Signature/definition typed on or implementing this algorithm's keys."
+ },
+ "passlib:passlib-1.7.4/passlib/handlers/ldap_digests.py:8:sha1": {
+  "label": "tp",
+  "reason": "Imports the algorithm's implementation."
+ },
+ "botocore:botocore-1.43.120/tests/unit/test_compat.py:96:md5": {
+  "label": "fp",
+  "reason": "'hashlib.md5' is only a mock.patch target in a test; no MD5 is computed."
+ },
+ "pymongo:pymongo-4.19.0/pymongo/ssl_context.py:24:tls_old": {
+  "label": "fp",
+  "reason": "Reports TLS 1.0 on OP_NO_SSLv3, a flag that disables SSLv3; wrong protocol and a mitigation."
+ },
+ "pymongo:pymongo-4.19.0/test/asynchronous/test_auth.py:414:sha1": {
+  "label": "fp",
+  "reason": "The flagged line is a test function's name (test_scram_sha1); the line itself selects nothing."
+ },
+ "pymongo:pymongo-4.19.0/test/test_pyopenssl_context.py:158:tls_old": {
+  "label": "fp",
+  "reason": "Reports TLS 1.0 on an import of OP_NO_SSLv3 (an SSLv3-disable flag); wrong protocol."
+ },
+ "scrapy:scrapy-2.19.0/tests/test_downloader_handler_twisted_ftp.py:181:dh": {
+  "label": "fp",
+  "reason": "'dh' is a download-handler variable (dh.download_request), not Diffie-Hellman."
+ },
+ "twisted:twisted-26.4.0/src/twisted/conch/client/knownhosts.py:18:sha1": {
+  "label": "tp",
+  "reason": "Imports the algorithm's implementation."
+ },
+ "twisted:twisted-26.4.0/src/twisted/conch/ssh/_kex.py:129:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "twisted:twisted-26.4.0/src/twisted/conch/ssh/_kex.py:159:sha1": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "twisted:twisted-26.4.0/src/twisted/internet/test/test_unix.py:11:md5": {
+  "label": "tp",
+  "reason": "Imports the algorithm's implementation."
+ },
+ "twisted:twisted-26.4.0/src/twisted/mail/maildir.py:15:md5": {
+  "label": "tp",
+  "reason": "Imports the algorithm's implementation."
+ },
+ "twisted:twisted-26.4.0/src/twisted/spread/pb.py:1263:md5": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "twisted:twisted-26.4.0/src/twisted/test/test_sslverify.py:1503:tls_old": {
+  "label": "fp",
+  "reason": "SSL.OP_NO_TLSv1 turns TLS 1.0 off; flags the mitigation, not a use."
+ },
+ "twisted:twisted-26.4.0/src/twisted/trial/test/test_loader.py:13:md5": {
+  "label": "tp",
+  "reason": "Imports the algorithm's implementation."
+ }
+}
