@@ -178,13 +178,13 @@ methodology and a capability matrix vs. Semgrep/SonarQube/CBOM tools in
 latest sdist of **37 of the most-downloaded PyPI packages** straight from the PyPI JSON
 API and scans them (nothing is built or executed):
 
-- **32 of 37 (86%)** contained ≥1 finding; **10,938** Python files analyzed;
-- **5,512** total findings, **4,083 HIGH-risk**;
+- **32 of 37 (86%)** contained ≥1 finding; **11,275** Python files analyzed;
+- **5,609** total findings, **4,236 HIGH-risk** (run of 2026-10-28, scanner 0.3.1);
 - every finding is a concrete `file:line` an auditor can open — e.g. Diffie–Hellman in
   `twisted/conch/ssh/transport.py`, MD5 in `requests/auth.py` (HTTP Digest).
 
-The paramiko case shows why usage-awareness matters at scale: a naive line-regex reports
-**451 raw matches**, most of them the same algorithms repeated in docstrings and SSH
+The paramiko case shows why usage-awareness matters at scale: on paramiko 5.0.0 (July 2026
+run) a naive line-regex reports **451 raw matches**, most of them the same algorithms repeated in docstrings and SSH
 protocol-name strings; focusing on real code brings it to **110** findings — a ~4× noise
 reduction. *(Honest caveat: some of the 37 packages are cryptography libraries that
 implement RSA/ECC on purpose, so their large counts are expected; the telling signal is

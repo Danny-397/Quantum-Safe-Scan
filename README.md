@@ -459,7 +459,7 @@ badge from an actual scan — in [docs/EXAMPLES.md](docs/EXAMPLES.md).
 
 ### Real-world scan: paramiko (the SSH library)
 
-Run against a shallow clone of [`paramiko/paramiko`](https://github.com/paramiko/paramiko)
+Run in July 2026 against a shallow clone of [`paramiko/paramiko`](https://github.com/paramiko/paramiko)
 — the SSH implementation behind Ansible, Fabric, and much of the Python ecosystem.
 SSH key exchange leans on RSA, ECDSA, and Diffie-Hellman, all broken by Shor's
 algorithm, which makes it a textbook "harvest now, decrypt later" target:
@@ -497,9 +497,10 @@ python benchmark/realworld.py
 |---|---|
 | Packages scanned | **37** |
 | Packages with ≥1 finding | **32 (86%)** |
-| Python files analyzed | **10,938** |
-| Total findings | **5,512** — **4,083 HIGH-risk** |
-| Most common families | `ecc` ×1,709, `sha256` ×956, `rsa` ×770, `sha1` ×576, `dsa` ×355, `md5` ×351 |
+| Python files analyzed | **11,275** |
+| Total findings | **5,609** — **4,236 HIGH-risk** |
+| Most common families | `ecc` ×1,831, `sha256` ×1,013, `rsa` ×796, `sha1` ×577, `md5` ×359, `dsa` ×353 |
+| Run | 2026-10-28, scanner 0.3.1 (latest release of each package) |
 
 Every finding is a concrete `file:line` an auditor can open — e.g. Diffie-Hellman
 in `twisted/conch/ssh/transport.py`, MD5 in `requests/auth.py` (HTTP Digest), and
