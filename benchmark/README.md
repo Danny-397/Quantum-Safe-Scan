@@ -82,8 +82,8 @@ python benchmark/realworld.py --limit 10 # first N only
 python benchmark/realworld.py flask paramiko  # explicit packages
 ```
 
-Latest run: **32 of 37** packages had findings across **10,938** Python files —
-**5,512** findings (**4,083** HIGH-risk). Full results, per-package table, and
+Latest run (2026-10-28, scanner 0.3.1): **32 of 37** packages had findings across
+**11,275** Python files — **5,609** findings (**4,236** HIGH-risk). Full results, per-package table, and
 `file:line` examples in [RESULTS-realworld.md](RESULTS-realworld.md). Because these
 are *unlabeled* real packages, results are reported as *discoveries* (each with
 provenance), not scored against ground truth.

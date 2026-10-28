@@ -1,24 +1,24 @@
 {
-  "generated_at": "2026-07-09 12:31 UTC",
+  "generated_at": "2026-10-28 18:28 UTC",
   "summary": {
     "packages_scanned": 37,
     "packages_with_findings": 32,
-    "total_py_files": 10938,
-    "total_findings": 5512,
-    "total_high": 4083,
+    "total_py_files": 11275,
+    "total_findings": 5609,
+    "total_high": 4236,
     "family_totals": {
-      "ecc": 1709,
-      "sha256": 956,
-      "rsa": 770,
-      "sha1": 576,
-      "dsa": 355,
-      "md5": 351,
-      "dh": 334,
-      "3des": 242,
-      "tls_old": 121,
-      "rc4": 40,
+      "ecc": 1831,
+      "sha256": 1013,
+      "rsa": 796,
+      "sha1": 577,
+      "md5": 359,
+      "dsa": 353,
+      "dh": 331,
+      "3des": 203,
+      "tls_old": 48,
+      "rc4": 45,
       "tls12": 32,
-      "aes128": 26
+      "aes128": 21
     }
   },
   "packages": [
@@ -65,15 +65,15 @@
     },
     {
       "package": "urllib3",
-      "version": "2.7.0",
+      "version": "2.8.0",
       "py_files": 81,
       "risk_score": 100,
-      "total": 47,
+      "total": 23,
       "high": 7,
-      "medium": 38,
+      "medium": 14,
       "low": 2,
       "families": {
-        "tls_old": 38,
+        "tls_old": 14,
         "md5": 6,
         "tls12": 2,
         "sha1": 1
@@ -82,32 +82,32 @@
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "urllib3-2.7.0/test/with_dummyserver/test_https.py",
+          "file": "urllib3-2.8.0/test/with_dummyserver/test_https.py",
           "line": 466
         },
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "urllib3-2.7.0/test/with_dummyserver/test_proxy_poolmanager.py",
-          "line": 779
+          "file": "urllib3-2.8.0/test/with_dummyserver/test_proxy_poolmanager.py",
+          "line": 939
         },
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "urllib3-2.7.0/test/with_dummyserver/test_proxy_poolmanager.py",
-          "line": 782
+          "file": "urllib3-2.8.0/test/with_dummyserver/test_proxy_poolmanager.py",
+          "line": 942
         },
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "urllib3-2.7.0/test/with_dummyserver/test_proxy_poolmanager.py",
-          "line": 799
+          "file": "urllib3-2.8.0/test/with_dummyserver/test_proxy_poolmanager.py",
+          "line": 959
         },
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "urllib3-2.7.0/test/with_dummyserver/test_proxy_poolmanager.py",
-          "line": 807
+          "file": "urllib3-2.8.0/test/with_dummyserver/test_proxy_poolmanager.py",
+          "line": 968
         }
       ]
     },
@@ -140,7 +140,7 @@
     },
     {
       "package": "werkzeug",
-      "version": "3.1.8",
+      "version": "3.1.9",
       "py_files": 138,
       "risk_score": 100,
       "total": 8,
@@ -156,39 +156,39 @@
         {
           "algorithm": "RSA",
           "risk": "HIGH",
-          "file": "werkzeug-3.1.8/src/werkzeug/serving.py",
+          "file": "werkzeug-3.1.9/src/werkzeug/serving.py",
           "line": 91
         },
         {
           "algorithm": "RSA",
           "risk": "HIGH",
-          "file": "werkzeug-3.1.8/src/werkzeug/serving.py",
-          "line": 512
+          "file": "werkzeug-3.1.9/src/werkzeug/serving.py",
+          "line": 515
         },
         {
           "algorithm": "RSA",
           "risk": "HIGH",
-          "file": "werkzeug-3.1.8/src/werkzeug/serving.py",
-          "line": 520
+          "file": "werkzeug-3.1.9/src/werkzeug/serving.py",
+          "line": 523
         },
         {
           "algorithm": "SHA-1",
           "risk": "HIGH",
-          "file": "werkzeug-3.1.8/src/werkzeug/debug/__init__.py",
+          "file": "werkzeug-3.1.9/src/werkzeug/debug/__init__.py",
           "line": 45
         },
         {
           "algorithm": "SHA-1",
           "risk": "HIGH",
-          "file": "werkzeug-3.1.8/src/werkzeug/debug/__init__.py",
+          "file": "werkzeug-3.1.9/src/werkzeug/debug/__init__.py",
           "line": 196
         }
       ]
     },
     {
       "package": "django",
-      "version": "6.0.7",
-      "py_files": 2871,
+      "version": "6.1.2",
+      "py_files": 2908,
       "risk_score": 100,
       "total": 57,
       "high": 45,
@@ -203,96 +203,95 @@
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "django-6.0.7/django/contrib/auth/hashers.py",
+          "file": "django-6.1.2/django/contrib/auth/hashers.py",
           "line": 665
         },
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "django-6.0.7/django/contrib/staticfiles/storage.py",
+          "file": "django-6.1.2/django/contrib/staticfiles/storage.py",
           "line": 5
         },
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "django-6.0.7/django/contrib/staticfiles/storage.py",
-          "line": 131
+          "file": "django-6.1.2/django/contrib/staticfiles/storage.py",
+          "line": 161
         },
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "django-6.0.7/django/core/cache/backends/filebased.py",
+          "file": "django-6.1.2/django/core/cache/backends/filebased.py",
           "line": 10
         },
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "django-6.0.7/django/core/cache/backends/filebased.py",
+          "file": "django-6.1.2/django/core/cache/backends/filebased.py",
           "line": 134
         }
       ]
     },
     {
       "package": "aiohttp",
-      "version": "3.14.1",
-      "py_files": 168,
+      "version": "3.14.5",
+      "py_files": 170,
       "risk_score": 100,
       "total": 62,
-      "high": 37,
-      "medium": 1,
+      "high": 38,
+      "medium": 0,
       "low": 24,
       "families": {
         "sha256": 24,
-        "sha1": 20,
-        "md5": 17,
-        "tls_old": 1
+        "sha1": 21,
+        "md5": 17
       },
       "examples": [
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "aiohttp-3.14.1/aiohttp/client_middleware_digest_auth.py",
+          "file": "aiohttp-3.14.5/aiohttp/client_middleware_digest_auth.py",
           "line": 38
         },
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "aiohttp-3.14.1/aiohttp/client_middleware_digest_auth.py",
+          "file": "aiohttp-3.14.5/aiohttp/client_middleware_digest_auth.py",
           "line": 39
         },
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "aiohttp-3.14.1/aiohttp/client_reqrep.py",
-          "line": 11
+          "file": "aiohttp-3.14.5/aiohttp/client_reqrep.py",
+          "line": 13
         },
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "aiohttp-3.14.1/aiohttp/client_reqrep.py",
-          "line": 140
+          "file": "aiohttp-3.14.5/aiohttp/client_reqrep.py",
+          "line": 144
         },
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "aiohttp-3.14.1/aiohttp/client_reqrep.py",
-          "line": 150
+          "file": "aiohttp-3.14.5/aiohttp/client_reqrep.py",
+          "line": 154
         }
       ]
     },
     {
       "package": "paramiko",
-      "version": "5.0.0",
-      "py_files": 65,
+      "version": "5.1.0",
+      "py_files": 66,
       "risk_score": 100,
-      "total": 110,
+      "total": 111,
       "high": 89,
       "medium": 6,
-      "low": 15,
+      "low": 16,
       "families": {
         "ecc": 46,
         "sha1": 18,
-        "sha256": 15,
+        "sha256": 16,
         "rsa": 15,
         "md5": 10,
         "3des": 6
@@ -301,46 +300,46 @@
         {
           "algorithm": "ECC",
           "risk": "HIGH",
-          "file": "paramiko-5.0.0/paramiko/ecdsakey.py",
+          "file": "paramiko-5.1.0/paramiko/ecdsakey.py",
           "line": 105
         },
         {
           "algorithm": "ECC",
           "risk": "HIGH",
-          "file": "paramiko-5.0.0/paramiko/ecdsakey.py",
+          "file": "paramiko-5.1.0/paramiko/ecdsakey.py",
           "line": 167
         },
         {
           "algorithm": "ECDSA",
           "risk": "HIGH",
-          "file": "paramiko-5.0.0/paramiko/ecdsakey.py",
+          "file": "paramiko-5.1.0/paramiko/ecdsakey.py",
           "line": 224
         },
         {
           "algorithm": "ECDSA",
           "risk": "HIGH",
-          "file": "paramiko-5.0.0/paramiko/ecdsakey.py",
+          "file": "paramiko-5.1.0/paramiko/ecdsakey.py",
           "line": 225
         },
         {
           "algorithm": "ECDSA",
           "risk": "HIGH",
-          "file": "paramiko-5.0.0/paramiko/ecdsakey.py",
+          "file": "paramiko-5.1.0/paramiko/ecdsakey.py",
           "line": 242
         }
       ]
     },
     {
       "package": "pyjwt",
-      "version": "2.13.0",
+      "version": "2.15.1",
       "py_files": 26,
       "risk_score": 100,
-      "total": 171,
+      "total": 189,
       "high": 80,
       "medium": 4,
-      "low": 87,
+      "low": 105,
       "families": {
-        "sha256": 87,
+        "sha256": 105,
         "ecc": 73,
         "rsa": 11
       },
@@ -348,38 +347,38 @@
         {
           "algorithm": "ECDSA",
           "risk": "HIGH",
-          "file": "pyjwt-2.13.0/jwt/algorithms.py",
-          "line": 41
-        },
-        {
-          "algorithm": "ECC",
-          "risk": "HIGH",
-          "file": "pyjwt-2.13.0/jwt/algorithms.py",
+          "file": "pyjwt-2.15.1/jwt/algorithms.py",
           "line": 42
         },
         {
           "algorithm": "ECC",
           "risk": "HIGH",
-          "file": "pyjwt-2.13.0/jwt/algorithms.py",
+          "file": "pyjwt-2.15.1/jwt/algorithms.py",
           "line": 43
         },
         {
           "algorithm": "ECC",
           "risk": "HIGH",
-          "file": "pyjwt-2.13.0/jwt/algorithms.py",
-          "line": 46
+          "file": "pyjwt-2.15.1/jwt/algorithms.py",
+          "line": 44
         },
         {
           "algorithm": "ECC",
           "risk": "HIGH",
-          "file": "pyjwt-2.13.0/jwt/algorithms.py",
+          "file": "pyjwt-2.15.1/jwt/algorithms.py",
           "line": 47
+        },
+        {
+          "algorithm": "ECC",
+          "risk": "HIGH",
+          "file": "pyjwt-2.15.1/jwt/algorithms.py",
+          "line": 48
         }
       ]
     },
     {
       "package": "oauthlib",
-      "version": "3.3.1",
+      "version": "4.0.0",
       "py_files": 153,
       "risk_score": 100,
       "total": 19,
@@ -394,31 +393,31 @@
         {
           "algorithm": "SHA-1",
           "risk": "HIGH",
-          "file": "oauthlib-3.3.1/oauthlib/oauth1/rfc5849/__init__.py",
+          "file": "oauthlib-4.0.0/oauthlib/oauth1/rfc5849/__init__.py",
           "line": 223
         },
         {
           "algorithm": "SHA-1",
           "risk": "HIGH",
-          "file": "oauthlib-3.3.1/oauthlib/oauth1/rfc5849/endpoints/base.py",
+          "file": "oauthlib-4.0.0/oauthlib/oauth1/rfc5849/endpoints/base.py",
           "line": 190
         },
         {
           "algorithm": "SHA-1",
           "risk": "HIGH",
-          "file": "oauthlib-3.3.1/oauthlib/oauth1/rfc5849/endpoints/base.py",
+          "file": "oauthlib-4.0.0/oauthlib/oauth1/rfc5849/endpoints/base.py",
           "line": 225
         },
         {
           "algorithm": "SHA-1",
           "risk": "HIGH",
-          "file": "oauthlib-3.3.1/oauthlib/oauth1/rfc5849/signature.py",
+          "file": "oauthlib-4.0.0/oauthlib/oauth1/rfc5849/signature.py",
           "line": 410
         },
         {
           "algorithm": "SHA-1",
           "risk": "HIGH",
-          "file": "oauthlib-3.3.1/oauthlib/oauth1/rfc5849/signature.py",
+          "file": "oauthlib-4.0.0/oauthlib/oauth1/rfc5849/signature.py",
           "line": 469
         }
       ]
@@ -437,19 +436,19 @@
     },
     {
       "package": "pyopenssl",
-      "version": "26.3.0",
+      "version": "26.4.0",
       "py_files": 18,
       "risk_score": 100,
-      "total": 147,
+      "total": 140,
       "high": 106,
-      "medium": 18,
+      "medium": 11,
       "low": 23,
       "families": {
         "ecc": 51,
         "rsa": 37,
         "dsa": 19,
         "tls12": 18,
-        "tls_old": 14,
+        "tls_old": 7,
         "sha256": 5,
         "dh": 3
       },
@@ -457,140 +456,139 @@
         {
           "algorithm": "Diffie-Hellman",
           "risk": "HIGH",
-          "file": "pyopenssl-26.3.0/src/OpenSSL/SSL.py",
+          "file": "pyopenssl-26.4.0/src/OpenSSL/SSL.py",
           "line": 1454
         },
         {
           "algorithm": "Diffie-Hellman",
           "risk": "HIGH",
-          "file": "pyopenssl-26.3.0/src/OpenSSL/SSL.py",
+          "file": "pyopenssl-26.4.0/src/OpenSSL/SSL.py",
           "line": 1455
         },
         {
           "algorithm": "Diffie-Hellman",
           "risk": "HIGH",
-          "file": "pyopenssl-26.3.0/src/OpenSSL/SSL.py",
+          "file": "pyopenssl-26.4.0/src/OpenSSL/SSL.py",
           "line": 1456
         },
         {
           "algorithm": "DSA",
           "risk": "HIGH",
-          "file": "pyopenssl-26.3.0/src/OpenSSL/crypto.py",
+          "file": "pyopenssl-26.4.0/src/OpenSSL/crypto.py",
           "line": 24
         },
         {
           "algorithm": "DSA",
           "risk": "HIGH",
-          "file": "pyopenssl-26.3.0/src/OpenSSL/crypto.py",
+          "file": "pyopenssl-26.4.0/src/OpenSSL/crypto.py",
           "line": 77
         }
       ]
     },
     {
       "package": "cryptography",
-      "version": "49.0.0",
-      "py_files": 234,
+      "version": "50.0.2",
+      "py_files": 237,
       "risk_score": 100,
-      "total": 2595,
-      "high": 1889,
-      "medium": 106,
-      "low": 600,
+      "total": 2521,
+      "high": 1817,
+      "medium": 101,
+      "low": 603,
       "families": {
-        "ecc": 619,
-        "sha256": 575,
-        "rsa": 489,
-        "dsa": 261,
-        "sha1": 257,
-        "dh": 212,
-        "3des": 75,
-        "md5": 54,
-        "rc4": 28,
-        "aes128": 25
+        "ecc": 602,
+        "sha256": 582,
+        "rsa": 479,
+        "sha1": 253,
+        "dsa": 236,
+        "dh": 194,
+        "3des": 73,
+        "md5": 56,
+        "rc4": 25,
+        "aes128": 21
       },
       "examples": [
         {
           "algorithm": "Diffie-Hellman",
           "risk": "HIGH",
-          "file": "cryptography-49.0.0/src/cryptography/hazmat/primitives/asymmetric/dh.py",
-          "line": 12
+          "file": "cryptography-50.0.2/src/cryptography/hazmat/primitives/asymmetric/dh.py",
+          "line": 19
         },
         {
           "algorithm": "Diffie-Hellman",
           "risk": "HIGH",
-          "file": "cryptography-49.0.0/src/cryptography/hazmat/primitives/asymmetric/dh.py",
-          "line": 15
+          "file": "cryptography-50.0.2/src/cryptography/hazmat/primitives/asymmetric/dh.py",
+          "line": 22
         },
         {
           "algorithm": "Diffie-Hellman",
           "risk": "HIGH",
-          "file": "cryptography-49.0.0/src/cryptography/hazmat/primitives/asymmetric/dh.py",
-          "line": 16
+          "file": "cryptography-50.0.2/src/cryptography/hazmat/primitives/asymmetric/dh.py",
+          "line": 23
         },
         {
           "algorithm": "Diffie-Hellman",
           "risk": "HIGH",
-          "file": "cryptography-49.0.0/src/cryptography/hazmat/primitives/asymmetric/dh.py",
-          "line": 17
+          "file": "cryptography-50.0.2/src/cryptography/hazmat/primitives/asymmetric/dh.py",
+          "line": 24
         },
         {
           "algorithm": "Diffie-Hellman",
           "risk": "HIGH",
-          "file": "cryptography-49.0.0/src/cryptography/hazmat/primitives/asymmetric/dh.py",
-          "line": 45
+          "file": "cryptography-50.0.2/src/cryptography/hazmat/primitives/asymmetric/dh.py",
+          "line": 52
         }
       ]
     },
     {
       "package": "pycryptodome",
-      "version": "3.23.0",
-      "py_files": 224,
+      "version": "4.2.0",
+      "py_files": 239,
       "risk_score": 100,
-      "total": 1169,
-      "high": 893,
-      "medium": 165,
-      "low": 111,
+      "total": 1376,
+      "high": 1100,
+      "medium": 135,
+      "low": 141,
       "families": {
-        "ecc": 554,
-        "3des": 152,
-        "rsa": 118,
-        "sha256": 110,
-        "sha1": 96,
-        "dsa": 54,
-        "dh": 40,
-        "md5": 32,
-        "rc4": 12,
-        "aes128": 1
+        "ecc": 690,
+        "rsa": 153,
+        "sha256": 141,
+        "3des": 115,
+        "sha1": 99,
+        "dsa": 76,
+        "dh": 44,
+        "md5": 38,
+        "rc4": 20
       },
       "examples": [
         {
           "algorithm": "Diffie-Hellman",
           "risk": "HIGH",
-          "file": "pycryptodome-3.23.0/lib/Crypto/Protocol/HPKE.py",
-          "line": 8
+          "file": "pycryptodome-4.2.0/lib/Crypto/Protocol/HPKE.py",
+          "line": 16
         },
         {
           "algorithm": "Diffie-Hellman",
           "risk": "HIGH",
-          "file": "pycryptodome-3.23.0/lib/Crypto/Protocol/HPKE.py",
-          "line": 67
+          "file": "pycryptodome-4.2.0/lib/Crypto/Protocol/HPKE.py",
+          "line": 106
         },
         {
           "algorithm": "Diffie-Hellman",
           "risk": "HIGH",
-          "file": "pycryptodome-3.23.0/lib/Crypto/Protocol/HPKE.py",
-          "line": 75
+          "file": "pycryptodome-4.2.0/lib/Crypto/Protocol/HPKE.py",
+          "line": 109
         },
         {
           "algorithm": "Diffie-Hellman",
           "risk": "HIGH",
-          "file": "pycryptodome-3.23.0/lib/Crypto/Protocol/HPKE.py",
-          "line": 172
+          "file": "pycryptodome-4.2.0/lib/Crypto/Protocol/HPKE.py",
+          "line": 196
         },
         {
           "algorithm": "Diffie-Hellman",
           "risk": "HIGH",
-          "file": "pycryptodome-3.23.0/lib/Crypto/Protocol/HPKE.py",
-          "line": 176
+          "file": "pycryptodome-4.2.0/lib/Crypto/Protocol/HPKE.py",
+          "line": 201
         }
       ]
     },
@@ -797,7 +795,7 @@
     },
     {
       "package": "boto3",
-      "version": "1.43.44",
+      "version": "1.43.120",
       "py_files": 40,
       "risk_score": 0,
       "total": 0,
@@ -809,56 +807,55 @@
     },
     {
       "package": "botocore",
-      "version": "1.43.44",
+      "version": "1.43.120",
       "py_files": 291,
       "risk_score": 100,
-      "total": 71,
+      "total": 69,
       "high": 50,
-      "medium": 2,
+      "medium": 0,
       "low": 19,
       "families": {
         "md5": 42,
         "sha256": 19,
-        "sha1": 8,
-        "tls_old": 2
+        "sha1": 8
       },
       "examples": [
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "botocore-1.43.44/botocore/compat.py",
+          "file": "botocore-1.43.120/botocore/compat.py",
           "line": 146
         },
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "botocore-1.43.44/botocore/compat.py",
+          "file": "botocore-1.43.120/botocore/compat.py",
           "line": 152
         },
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "botocore-1.43.44/botocore/compat.py",
+          "file": "botocore-1.43.120/botocore/compat.py",
           "line": 162
         },
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "botocore-1.43.44/botocore/handlers.py",
-          "line": 330
+          "file": "botocore-1.43.120/botocore/handlers.py",
+          "line": 329
         },
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "botocore-1.43.44/botocore/handlers.py",
-          "line": 337
+          "file": "botocore-1.43.120/botocore/handlers.py",
+          "line": 336
         }
       ]
     },
     {
       "package": "sqlalchemy",
-      "version": "2.0.51",
-      "py_files": 707,
+      "version": "2.1.6",
+      "py_files": 676,
       "risk_score": 60,
       "total": 4,
       "high": 4,
@@ -871,33 +868,33 @@
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "sqlalchemy-2.0.51/examples/dogpile_caching/environment.py",
+          "file": "sqlalchemy-2.1.6/examples/dogpile_caching/environment.py",
           "line": 6
         },
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "sqlalchemy-2.0.51/examples/dogpile_caching/environment.py",
+          "file": "sqlalchemy-2.1.6/examples/dogpile_caching/environment.py",
           "line": 49
         },
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "sqlalchemy-2.0.51/lib/sqlalchemy/util/compat.py",
-          "line": 216
+          "file": "sqlalchemy-2.1.6/lib/sqlalchemy/testing/plugin/pytestplugin.py",
+          "line": 561
         },
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "sqlalchemy-2.0.51/lib/sqlalchemy/util/compat.py",
-          "line": 221
+          "file": "sqlalchemy-2.1.6/lib/sqlalchemy/util/compat.py",
+          "line": 138
         }
       ]
     },
     {
       "package": "redis",
-      "version": "8.0.1",
-      "py_files": 251,
+      "version": "8.1.0",
+      "py_files": 267,
       "risk_score": 100,
       "total": 13,
       "high": 12,
@@ -914,90 +911,89 @@
         {
           "algorithm": "DSA",
           "risk": "HIGH",
-          "file": "redis-8.0.1/redis/ocsp.py",
+          "file": "redis-8.1.0/redis/ocsp.py",
           "line": 11
         },
         {
           "algorithm": "ECDSA",
           "risk": "HIGH",
-          "file": "redis-8.0.1/redis/ocsp.py",
+          "file": "redis-8.1.0/redis/ocsp.py",
           "line": 12
         },
         {
           "algorithm": "ECC",
           "risk": "HIGH",
-          "file": "redis-8.0.1/redis/ocsp.py",
+          "file": "redis-8.1.0/redis/ocsp.py",
           "line": 38
         },
         {
           "algorithm": "ECDSA",
           "risk": "HIGH",
-          "file": "redis-8.0.1/redis/ocsp.py",
+          "file": "redis-8.1.0/redis/ocsp.py",
           "line": 42
         },
         {
           "algorithm": "ECC",
           "risk": "HIGH",
-          "file": "redis-8.0.1/redis/ocsp.py",
+          "file": "redis-8.1.0/redis/ocsp.py",
           "line": 132
         }
       ]
     },
     {
       "package": "pymongo",
-      "version": "4.17.0",
-      "py_files": 405,
+      "version": "4.19.0",
+      "py_files": 444,
       "risk_score": 100,
-      "total": 62,
-      "high": 57,
-      "medium": 3,
+      "total": 63,
+      "high": 61,
+      "medium": 0,
       "low": 2,
       "families": {
-        "md5": 36,
+        "md5": 35,
         "sha1": 9,
-        "ecc": 6,
-        "dsa": 3,
-        "rsa": 3,
-        "tls_old": 3,
+        "ecc": 9,
+        "dsa": 4,
+        "rsa": 4,
         "sha256": 2
       },
       "examples": [
         {
           "algorithm": "DSA",
           "risk": "HIGH",
-          "file": "pymongo-4.17.0/pymongo/ocsp_support.py",
-          "line": 26
+          "file": "pymongo-4.19.0/pymongo/ocsp_support.py",
+          "line": 28
         },
         {
           "algorithm": "DSA",
           "risk": "HIGH",
-          "file": "pymongo-4.17.0/pymongo/ocsp_support.py",
-          "line": 64
+          "file": "pymongo-4.19.0/pymongo/ocsp_support.py",
+          "line": 72
         },
         {
           "algorithm": "DSA",
           "risk": "HIGH",
-          "file": "pymongo-4.17.0/pymongo/ocsp_support.py",
-          "line": 83
+          "file": "pymongo-4.19.0/pymongo/ocsp_support.py",
+          "line": 96
+        },
+        {
+          "algorithm": "DSA",
+          "risk": "HIGH",
+          "file": "pymongo-4.19.0/test/test_ocsp_support.py",
+          "line": 80
         },
         {
           "algorithm": "ECDSA",
           "risk": "HIGH",
-          "file": "pymongo-4.17.0/pymongo/ocsp_support.py",
-          "line": 27
-        },
-        {
-          "algorithm": "ECC",
-          "risk": "HIGH",
-          "file": "pymongo-4.17.0/pymongo/ocsp_support.py",
+          "file": "pymongo-4.19.0/pymongo/ocsp_support.py",
           "line": 29
         }
       ]
     },
     {
       "package": "elasticsearch",
-      "version": "9.4.1",
-      "py_files": 164,
+      "version": "9.5.1",
+      "py_files": 166,
       "risk_score": 31,
       "total": 3,
       "high": 2,
@@ -1012,19 +1008,19 @@
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "elasticsearch-9.4.1/elasticsearch/esql/functions.py",
+          "file": "elasticsearch-9.5.1/elasticsearch/esql/functions.py",
           "line": 1008
         },
         {
           "algorithm": "SHA-1",
           "risk": "HIGH",
-          "file": "elasticsearch-9.4.1/elasticsearch/esql/functions.py",
+          "file": "elasticsearch-9.5.1/elasticsearch/esql/functions.py",
           "line": 1597
         },
         {
           "algorithm": "SHA-256",
           "risk": "LOW",
-          "file": "elasticsearch-9.4.1/elasticsearch/esql/functions.py",
+          "file": "elasticsearch-9.5.1/elasticsearch/esql/functions.py",
           "line": 1605
         }
       ]
@@ -1080,8 +1076,8 @@
     },
     {
       "package": "tornado",
-      "version": "6.5.7",
-      "py_files": 75,
+      "version": "6.6",
+      "py_files": 78,
       "risk_score": 100,
       "total": 16,
       "high": 14,
@@ -1096,50 +1092,50 @@
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "tornado-6.5.7/tornado/test/curl_httpclient_test.py",
-          "line": 1
+          "file": "tornado-6.6/tornado/test/curl_httpclient_test.py",
+          "line": 13
         },
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "tornado-6.5.7/tornado/test/curl_httpclient_test.py",
-          "line": 56
+          "file": "tornado-6.6/tornado/test/curl_httpclient_test.py",
+          "line": 167
         },
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "tornado-6.5.7/tornado/test/curl_httpclient_test.py",
-          "line": 57
+          "file": "tornado-6.6/tornado/test/curl_httpclient_test.py",
+          "line": 168
         },
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "tornado-6.5.7/tornado/test/curl_httpclient_test.py",
-          "line": 58
+          "file": "tornado-6.6/tornado/test/curl_httpclient_test.py",
+          "line": 169
         },
         {
           "algorithm": "SHA-1",
           "risk": "HIGH",
-          "file": "tornado-6.5.7/tornado/auth.py",
-          "line": 1182
+          "file": "tornado-6.6/tornado/auth.py",
+          "line": 1190
         }
       ]
     },
     {
       "package": "scrapy",
-      "version": "2.17.0",
-      "py_files": 446,
+      "version": "2.19.0",
+      "py_files": 489,
       "risk_score": 100,
-      "total": 94,
-      "high": 85,
-      "medium": 3,
+      "total": 107,
+      "high": 96,
+      "medium": 5,
       "low": 6,
       "families": {
-        "dh": 72,
-        "sha1": 7,
+        "dh": 83,
+        "sha1": 8,
+        "tls_old": 5,
         "tls12": 4,
-        "md5": 4,
-        "tls_old": 3,
+        "md5": 3,
         "rsa": 2,
         "sha256": 2
       },
@@ -1147,32 +1143,32 @@
         {
           "algorithm": "Diffie-Hellman",
           "risk": "HIGH",
-          "file": "scrapy-2.17.0/scrapy/core/downloader/handlers/__init__.py",
-          "line": 103
+          "file": "scrapy-2.19.0/scrapy/core/downloader/handlers/__init__.py",
+          "line": 115
         },
         {
           "algorithm": "Diffie-Hellman",
           "risk": "HIGH",
-          "file": "scrapy-2.17.0/scrapy/core/downloader/handlers/__init__.py",
-          "line": 119
+          "file": "scrapy-2.19.0/scrapy/core/downloader/handlers/__init__.py",
+          "line": 131
         },
         {
           "algorithm": "Diffie-Hellman",
           "risk": "HIGH",
-          "file": "scrapy-2.17.0/scrapy/core/downloader/handlers/__init__.py",
-          "line": 120
+          "file": "scrapy-2.19.0/scrapy/core/downloader/handlers/__init__.py",
+          "line": 132
         },
         {
           "algorithm": "Diffie-Hellman",
           "risk": "HIGH",
-          "file": "scrapy-2.17.0/scrapy/core/downloader/handlers/__init__.py",
-          "line": 122
+          "file": "scrapy-2.19.0/scrapy/core/downloader/handlers/__init__.py",
+          "line": 134
         },
         {
           "algorithm": "Diffie-Hellman",
           "risk": "HIGH",
-          "file": "scrapy-2.17.0/scrapy/core/downloader/handlers/__init__.py",
-          "line": 129
+          "file": "scrapy-2.19.0/scrapy/core/downloader/handlers/__init__.py",
+          "line": 141
         }
       ]
     },
@@ -1181,18 +1177,18 @@
       "version": "26.4.0",
       "py_files": 1101,
       "risk_score": 100,
-      "total": 346,
+      "total": 323,
       "high": 267,
-      "medium": 43,
+      "medium": 20,
       "low": 36,
       "families": {
         "ecc": 111,
         "md5": 77,
-        "tls_old": 39,
         "sha1": 37,
         "sha256": 29,
         "rsa": 19,
         "dsa": 16,
+        "tls_old": 16,
         "dh": 7,
         "tls12": 7,
         "3des": 4
@@ -1232,15 +1228,15 @@
     },
     {
       "package": "pip",
-      "version": "26.1.2",
-      "py_files": 398,
-      "risk_score": 100,
-      "total": 27,
+      "version": "26.2.2",
+      "py_files": 409,
+      "risk_score": 78,
+      "total": 12,
       "high": 3,
-      "medium": 21,
+      "medium": 6,
       "low": 3,
       "families": {
-        "tls_old": 21,
+        "tls_old": 6,
         "sha256": 2,
         "sha1": 2,
         "md5": 1,
@@ -1250,39 +1246,39 @@
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "pip-26.1.2/src/pip/_vendor/requests/auth.py",
-          "line": 148
+          "file": "pip-26.2.2/src/pip/_vendor/requests/auth.py",
+          "line": 179
         },
         {
           "algorithm": "SHA-1",
           "risk": "HIGH",
-          "file": "pip-26.1.2/src/pip/_vendor/requests/auth.py",
-          "line": 156
+          "file": "pip-26.2.2/src/pip/_vendor/requests/auth.py",
+          "line": 187
         },
         {
           "algorithm": "SHA-1",
           "risk": "HIGH",
-          "file": "pip-26.1.2/src/pip/_vendor/requests/auth.py",
-          "line": 205
+          "file": "pip-26.2.2/src/pip/_vendor/requests/auth.py",
+          "line": 237
         },
         {
           "algorithm": "SHA-256",
           "risk": "LOW",
-          "file": "pip-26.1.2/src/pip/_internal/utils/misc.py",
-          "line": 618
+          "file": "pip-26.2.2/src/pip/_internal/utils/misc.py",
+          "line": 652
         },
         {
           "algorithm": "SHA-256",
           "risk": "LOW",
-          "file": "pip-26.1.2/src/pip/_vendor/requests/auth.py",
-          "line": 164
+          "file": "pip-26.2.2/src/pip/_vendor/requests/auth.py",
+          "line": 195
         }
       ]
     },
     {
       "package": "setuptools",
-      "version": "83.0.0",
-      "py_files": 327,
+      "version": "84.2.1",
+      "py_files": 338,
       "risk_score": 31,
       "total": 3,
       "high": 2,
@@ -1296,26 +1292,26 @@
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "setuptools-83.0.0/setuptools/tests/integration/test_pip_install_sdist.py",
+          "file": "setuptools-84.2.1/setuptools/tests/integration/test_pip_install_sdist.py",
           "line": 22
         },
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "setuptools-83.0.0/setuptools/tests/integration/test_pip_install_sdist.py",
+          "file": "setuptools-84.2.1/setuptools/tests/integration/test_pip_install_sdist.py",
           "line": 190
         },
         {
           "algorithm": "SHA-256",
           "risk": "LOW",
-          "file": "setuptools-83.0.0/setuptools/_vendor/wheel/wheelfile.py",
+          "file": "setuptools-84.2.1/setuptools/_vendor/wheel/wheelfile.py",
           "line": 63
         }
       ]
     },
     {
       "package": "docker",
-      "version": "7.1.0",
+      "version": "7.2.0",
       "py_files": 67,
       "risk_score": 1,
       "total": 1,
@@ -1329,34 +1325,46 @@
         {
           "algorithm": "SHA-256",
           "risk": "LOW",
-          "file": "docker-7.1.0/docker/context/config.py",
+          "file": "docker-7.2.0/docker/context/config.py",
           "line": 50
         }
       ]
     },
     {
       "package": "kubernetes",
-      "version": "36.0.2",
-      "py_files": 1738,
-      "risk_score": 30,
-      "total": 2,
-      "high": 2,
+      "version": "37.0.1",
+      "py_files": 1935,
+      "risk_score": 60,
+      "total": 4,
+      "high": 4,
       "medium": 0,
       "low": 0,
       "families": {
-        "md5": 2
+        "md5": 4
       },
       "examples": [
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "kubernetes-36.0.2/kubernetes/dynamic/discovery.py",
+          "file": "kubernetes-37.0.1/kubernetes/aio/dynamic/discovery.py",
+          "line": 54
+        },
+        {
+          "algorithm": "MD5",
+          "risk": "HIGH",
+          "file": "kubernetes-37.0.1/kubernetes/aio/dynamic/discovery.py",
+          "line": 57
+        },
+        {
+          "algorithm": "MD5",
+          "risk": "HIGH",
+          "file": "kubernetes-37.0.1/kubernetes/dynamic/discovery.py",
           "line": 47
         },
         {
           "algorithm": "MD5",
           "risk": "HIGH",
-          "file": "kubernetes-36.0.2/kubernetes/dynamic/discovery.py",
+          "file": "kubernetes-37.0.1/kubernetes/dynamic/discovery.py",
           "line": 50
         }
       ]
@@ -1408,8 +1416,8 @@
     },
     {
       "package": "certifi",
-      "version": "2026.6.17",
-      "py_files": 4,
+      "version": "2026.10.23",
+      "py_files": 6,
       "risk_score": 0,
       "total": 0,
       "high": 0,
@@ -1467,8 +1475,8 @@
     },
     {
       "package": "websockets",
-      "version": "16.0",
-      "py_files": 67,
+      "version": "17.3",
+      "py_files": 53,
       "risk_score": 30,
       "total": 2,
       "high": 2,
@@ -1481,14 +1489,14 @@
         {
           "algorithm": "SHA-1",
           "risk": "HIGH",
-          "file": "websockets-16.0/src/websockets/utils.py",
-          "line": 34
+          "file": "websockets-17.3/src/websockets/utils.py",
+          "line": 35
         },
         {
           "algorithm": "SHA-1",
           "risk": "HIGH",
-          "file": "websockets-16.0/src/websockets/utils.py",
-          "line": 35
+          "file": "websockets-17.3/src/websockets/utils.py",
+          "line": 36
         }
       ]
     },
