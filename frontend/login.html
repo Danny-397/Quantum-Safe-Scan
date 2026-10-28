@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="auth-shell">
+  <main class="auth-shell">
     <div class="auth-card">
       <div class="brand" style="margin-bottom:20px;"><svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true"><defs><linearGradient id="qsg" x1="2" y1="2" x2="30" y2="30" gradientUnits="userSpaceOnUse"><stop stop-color="#5b73e8"/><stop offset="1" stop-color="#7c8df0"/></linearGradient></defs><g stroke="url(#qsg)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity=".8"><path d="M3 9V3h6"/><path d="M23 3h6v6"/><path d="M29 23v6h-6"/><path d="M9 29H3v-6"/></g><circle cx="15.5" cy="15" r="7" stroke="url(#qsg)" stroke-width="2.2"/><path d="M19 18.6 23 22.6" stroke="url(#qsg)" stroke-width="2.4" stroke-linecap="round"/></svg> QuantumSafe</div>
 
@@ -21,8 +21,8 @@
       <form id="form-login" class="auth-form">
         <h1>Sign in</h1>
         <p class="sub">Access your quantum risk dashboard.</p>
-        <div class="field"><label>Email</label><input type="email" name="email" autocomplete="email" required /></div>
-        <div class="field"><label>Password</label><input type="password" name="password" autocomplete="current-password" required /></div>
+        <div class="field"><label for="login-email">Email</label><input id="login-email" type="email" name="email" autocomplete="email" required /></div>
+        <div class="field"><label for="login-password">Password</label><input id="login-password" type="password" name="password" autocomplete="current-password" required /></div>
         <button class="btn btn-primary btn-block" type="submit">Sign In</button>
         <div class="auth-switch"><a href="#" data-go="forgot">Forgot password?</a></div>
         <div class="auth-switch">No account? <a href="#" data-go="register">Create one</a></div>
@@ -33,8 +33,8 @@
       <form id="form-register" class="auth-form hidden">
         <h1>Create account</h1>
         <p class="sub">Free, unlimited, no credit card. Scan in your browser.</p>
-        <div class="field"><label>Email</label><input type="email" name="email" autocomplete="email" required /></div>
-        <div class="field"><label>Password (min 8 chars)</label><input type="password" name="password" autocomplete="new-password" minlength="8" required /></div>
+        <div class="field"><label for="register-email">Email</label><input id="register-email" type="email" name="email" autocomplete="email" required /></div>
+        <div class="field"><label for="register-password">Password (min 8 chars)</label><input id="register-password" type="password" name="password" autocomplete="new-password" minlength="8" required /></div>
         <label class="consent"><input type="checkbox" id="reg-consent" />
           I agree to the <a href="terms.html" target="_blank">Terms</a> and
           <a href="privacy.html" target="_blank">Privacy Policy</a>.</label>
@@ -47,7 +47,7 @@
       <form id="form-forgot" class="auth-form hidden">
         <h1>Reset password</h1>
         <p class="sub">We'll email you a reset link.</p>
-        <div class="field"><label>Email</label><input type="email" name="email" autocomplete="email" required /></div>
+        <div class="field"><label for="forgot-email">Email</label><input id="forgot-email" type="email" name="email" autocomplete="email" required /></div>
         <button class="btn btn-primary btn-block" type="submit">Send Reset Link</button>
         <div class="auth-switch"><a href="#" data-go="login">Back to sign in</a></div>
       </form>
@@ -56,12 +56,12 @@
       <form id="form-reset" class="auth-form hidden">
         <h1>Set a new password</h1>
         <p class="sub">Choose a new password for your account.</p>
-        <div class="field"><label>New password (min 8 chars)</label><input type="password" name="password" minlength="8" required /></div>
+        <div class="field"><label for="reset-password">New password (min 8 chars)</label><input id="reset-password" type="password" name="password" minlength="8" required /></div>
         <button class="btn btn-primary btn-block" type="submit">Update Password</button>
         <div class="auth-switch"><a href="#" data-go="login">Back to sign in</a></div>
       </form>
     </div>
-  </div>
+  </main>
   <script src="config.js"></script>
   <script src="app.js"></script>
   <script type="module" src="analytics.js"></script>
