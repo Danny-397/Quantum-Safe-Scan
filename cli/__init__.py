@@ -5,4 +5,4 @@ pyproject.toml) so both the standalone CLI and the Flask backend share one copy
 of the detection logic.
 """
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"

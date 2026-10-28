@@ -5,6 +5,22 @@ All notable changes to QuantumSafe are documented here. This project follows
 
 ## [Unreleased]
 
+## [0.3.1] — 2026-10-28
+
+### Fixed
+- **TLS 1.0/1.1 no longer flags the flags that turn them off.** The rule matched
+  `SSLv3` / `TLSv1` inside disable flags (`OP_NO_SSLv3`, `OP_NO_TLSv1`,
+  `_OP_NO_SSLv2_OR_SSLv3`), which are the mitigation, not exposure; in a random
+  sample of real-world findings every TLS 1.0 hit was one of these. The protocol
+  name must now start its own token. Explicit selectors (`PROTOCOL_TLSv1`,
+  `SSLv3_METHOD`, `TLSVersion.TLSv1`) still fire, and `TLSVersion.TLSv1_1`, which
+  was missed before, is now caught.
+
+### Added
+- **Precision on real code** (`benchmark/precision_sample.py`): 100 findings drawn
+  at random from 37 pinned PyPI packages and labeled by hand — 93% (95% CI
+  86–97%), measured before the TLS fix. A measured Semgrep row in the comparison.
+
 ### Security
 - **Rate limits are per visitor.** The limiter keyed on the socket address, and
   behind Render's proxy that is the same for everyone, so every limit was
@@ -193,7 +209,8 @@ All notable changes to QuantumSafe are documented here. This project follows
   security disclosure policy (SECURITY.md + security.txt).
 - **Quality:** 45-test pytest suite, GitHub Actions CI, demo seed script.
 
-[Unreleased]: https://github.com/Danny-397/Quantum-Safe-Scan/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/Danny-397/Quantum-Safe-Scan/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/Danny-397/Quantum-Safe-Scan/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/Danny-397/Quantum-Safe-Scan/releases/tag/v0.3.0
 [0.2.0]: https://github.com/Danny-397/Quantum-Safe-Scan/releases/tag/v0.2.0
 [0.1.0]: https://github.com/Danny-397/Quantum-Safe-Scan/releases/tag/v0.1.0

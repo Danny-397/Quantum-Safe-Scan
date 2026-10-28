@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "quantumsafe-scan"
-version = "0.3.0"
+version = "0.3.1"
 description = "Scan codebases and dependencies for quantum-vulnerable cryptography and generate a NIST-aligned migration plan (SARIF + CycloneDX CBOM)."
 readme = "README.md"
 requires-python = ">=3.9"
