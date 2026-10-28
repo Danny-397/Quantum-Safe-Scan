@@ -250,6 +250,10 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
 }
 .field input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(91,115,232,.12); }
 .auth-switch { text-align: center; margin-top: 18px; font-size: 14px; color: var(--muted); }
+/* On the card's panel colour --accent is 4.2:1; this lighter tint is 7:1. Links
+   inside sentences are underlined so they don't rely on colour alone. */
+.auth-card a { color: #8ea0f2; }
+.auth-switch a, .storage-note a, .consent a { text-decoration: underline; text-underline-offset: 2px; }
 .msg { padding: 11px 13px; border-radius: var(--r-sm); font-size: 13.5px; margin-bottom: 16px; display: none; }
 .msg.error { display: block; background: rgba(255,77,109,.1); border: 1px solid var(--danger); color: #ffb3c0; }
 .msg.success { display: block; background: rgba(47,230,168,.08); border: 1px solid var(--safe); color: var(--safe); }
@@ -293,7 +297,8 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
   transition: background var(--fast) var(--ease), color var(--fast) var(--ease);
 }
 .scan-tab:hover { color: var(--text); }
-.scan-tab[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); }
+/* #4b63e0, not --accent: white on --accent is 4.1:1, under the 4.5:1 minimum. */
+.scan-tab[aria-selected="true"] { background: #4b63e0; color: var(--accent-ink); }
 .scan-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .scan-primary[hidden], .scan-secondary[hidden] { display: none; }
 
@@ -397,7 +402,7 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
 .card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--r); padding: 20px; transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease; }
 .card:hover { border-color: var(--border-strong); box-shadow: 0 10px 30px -24px rgba(0,0,0,.55); transform: translateY(-1px); }
 @media (prefers-reduced-motion: reduce) { .card:hover { transform: none; } }
-.card h3 { font-size: 12px; color: var(--muted); margin-bottom: 10px; font-weight: 600; }
+.card h3, .card .card-heading { font-size: 12px; color: var(--muted); margin-bottom: 10px; font-weight: 600; }
 .stat { font-family: var(--sans); font-size: 32px; font-variant-numeric: tabular-nums; }
 .stat.sm { font-size: 24px; }
 
@@ -555,6 +560,7 @@ table.tbl tr:hover td { background: var(--panel-2); }
 }
 .spacer { flex: 1; }
 .empty { text-align: center; color: var(--muted); padding: 50px 20px; }
+.empty a { color: #8ea0f2; }   /* --accent is under 4.5:1 on the table panel */
 
 /* ---------- Skeleton loaders ---------- */
 .skel { display: inline-block; height: 12px; width: 100%; border-radius: var(--r-sm);
