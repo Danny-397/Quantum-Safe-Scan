@@ -7,7 +7,7 @@
   <img src="https://img.shields.io/pypi/pyversions/quantumsafe-scan?style=flat-square&logo=python&logoColor=white" alt="Python versions">
   <a href="https://github.com/Danny-397/Quantum-Safe-Scan/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Danny-397/Quantum-Safe-Scan/ci.yml?branch=main&style=flat-square&logo=githubactions&logoColor=white&label=CI" alt="CI status"></a>
   <a href="https://github.com/Danny-397/Quantum-Safe-Scan/tags"><img src="https://img.shields.io/github/v/tag/Danny-397/Quantum-Safe-Scan?style=flat-square&logo=github&label=version&color=5b73e8" alt="Latest version"></a>
-  <a href="https://github.com/Danny-397/Quantum-Safe-Scan/stargazers"><img src="https://img.shields.io/github/stars/Danny-397/Quantum-Safe-Scan?style=flat-square&logo=github" alt="Stars"></a>
+  <a href="https://github.com/Danny-397/Quantum-Safe-Scan"><img src="https://img.shields.io/github/stars/Danny-397/Quantum-Safe-Scan?style=flat-square&logo=github" alt="Stars"></a>
   <img src="https://img.shields.io/github/last-commit/Danny-397/Quantum-Safe-Scan?style=flat-square&color=555" alt="Last commit">
   <img src="https://img.shields.io/github/license/Danny-397/Quantum-Safe-Scan?style=flat-square&color=3fb950" alt="License: MIT">
   <br>
