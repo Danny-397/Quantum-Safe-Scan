@@ -1,6 +1,6 @@
 # Pinned to exact versions (2026-10-30) so every deploy installs the same
-# packages CI tested. Dependabot security updates open a PR when one of
-# these has a known vulnerability; bump deliberately otherwise.
+# packages CI tested. Bump deliberately; with Dependabot security updates
+# on (Settings > Code security), a known vulnerability in a pin opens a PR.
 # QuantumSafe backend
 Flask==3.1.3
 Flask-SQLAlchemy==3.1.1
