@@ -228,12 +228,26 @@
   //  LANDING
   // =========================================================================
   function initLanding() {
-    // Pre-warm the API to hide cold starts on hosted backends. Bounded, because
-    // an unreachable host otherwise leaves this request pending for the life of
-    // the page — which stalls load indicators and headless renderers.
-    try {
-      fetch(API_BASE + "/health", { signal: AbortSignal.timeout(8000) }).catch(() => {});
-    } catch (_) { /* AbortSignal.timeout is unsupported on older browsers */ }
+    // Pre-warm the API to hide cold starts on hosted backends, once the visitor
+    // reaches for a server-side scan (the Codebase or Website tab, or their
+    // inputs). Not on page load: Render's 750 free instance-hours are shared by
+    // every backend on the account, each wake costs at least 15 minutes, and the
+    // Snippet scanner runs in the browser. Bounded, because an unreachable host
+    // otherwise leaves this request pending for the life of the page — which
+    // stalls load indicators and headless renderers.
+    let woke = false;
+    const wake = (e) => {
+      if (woke || !e.target.closest("#scan-repo, #scan-url, #scan-tab-repo, #scan-tab-url")) return;
+      woke = true;
+      try {
+        fetch(API_BASE + "/health", { signal: AbortSignal.timeout(8000) }).catch(() => {});
+      } catch (_) { /* AbortSignal.timeout is unsupported on older browsers */ }
+    };
+    const scanArea = $("#scan");
+    if (scanArea && !navigator.webdriver) {
+      ["pointerover", "focusin", "touchstart"].forEach((t) =>
+        scanArea.addEventListener(t, wake, { passive: true }));
+    }
 
     // Click the install command to copy it.
     const copyBtn = $("#copy-install");
