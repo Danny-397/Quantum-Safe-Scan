@@ -57,6 +57,9 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
 .num { font-family: var(--sans); font-variant-numeric: tabular-nums; }
 .muted { color: var(--muted); }
 .hidden { display: none !important; }
+/* Set in <head> on scan/migration pages so the right sidebar paints first time. */
+.anon .acct-only { display: none !important; }
+.anon .anon-only { display: block !important; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
 .eyebrow {
@@ -88,6 +91,7 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
 .btn-sm { padding: 7px 13px; font-size: 13px; }
 .btn-block { display: flex; width: 100%; }
 .btn:disabled { opacity: .7; cursor: progress; }
+.btn:disabled[title] { opacity: .45; cursor: not-allowed; }
 
 /* animated loading dots */
 .dots { display: inline-flex; align-items: center; gap: 5px; line-height: 0; }
@@ -300,6 +304,8 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
 /* #4b63e0, not --accent: white on --accent is 4.1:1, under the 4.5:1 minimum. */
 .scan-tab[aria-selected="true"] { background: #4b63e0; color: var(--accent-ink); }
 .scan-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* Three tabs at 20px padding are ~8px wider than a 320px phone. */
+@media (max-width: 360px) { .scan-tab { padding: 8px 13px; } }
 .scan-primary[hidden], .scan-secondary[hidden] { display: none; }
 
 .scan-primary {

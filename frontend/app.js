@@ -1323,6 +1323,16 @@
   //  SCAN DETAIL
   // =========================================================================
   let sdCache = [];
+  // With no scan loaded, the export buttons and migration link have nothing
+  // to act on; leaving them live made them look broken rather than empty.
+  function disableScanActions() {
+    $$("[data-export]").forEach((btn) => {
+      btn.disabled = true;
+      btn.title = "Run or open a scan first";
+    });
+    const link = $("#sd-migration-link");
+    if (link) { link.removeAttribute("href"); link.hidden = true; }
+  }
   async function initScanDetail() {
     const id = new URLSearchParams(location.search).get("id");
     const authed = !!getToken();
@@ -1344,6 +1354,7 @@
         showMsg($("#global-msg"), err.message);
         const b = $("#sd-body");
         if (b) b.innerHTML = `<tr><td colspan="5" class="empty">Couldn't load this scan.</td></tr>`;
+        disableScanActions();
       }
       return;
     }
@@ -1354,6 +1365,7 @@
     if (!held || !held.report) {
       const b = $("#sd-body");
       if (b) b.innerHTML = `<tr><td colspan="5" class="empty">No scan to show — <a href="index.html#scan">run one from the home page</a>.</td></tr>`;
+      disableScanActions();
       return;
     }
     const report = held.report;
