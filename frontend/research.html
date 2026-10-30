@@ -6,9 +6,9 @@
 <title>QuantumSafe — Research: the quantum threat & post-quantum defense</title>
 <meta name="description" content="How Shor's and Grover's algorithms break classical cryptography, why lattice-based schemes (LWE / ML-KEM) resist them, and the NIST post-quantum standards — with references." />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%235b73e8'/><circle cx='7.3' cy='7.1' r='3.4' fill='none' stroke='white' stroke-width='1.4'/><path d='M8.7 8.5 11 10.8' stroke='white' stroke-width='1.5' stroke-linecap='round'/></svg>" />
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<!-- Fonts are self-hosted: the Google Fonts stylesheet blocked first paint for ~0.9 s on a mobile connection (Lighthouse, 2026-10-30). -->
+<link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>@font-face{font-family:'Inter';font-style:normal;font-weight:400 700;font-display:swap;src:url(/fonts/inter-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}@font-face{font-family:'Inter';font-style:normal;font-weight:400 700;font-display:swap;src:url(/fonts/inter-greek.woff2) format('woff2');unicode-range:U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF}@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400 500;font-display:swap;src:url(/fonts/jetbrains-mono-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}</style>
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -107,8 +107,8 @@
     QuantumSafe is a security-awareness tool — not a substitute for a professional cryptographic audit.
   </footer>
 
-  <script src="config.js"></script>
-  <script src="app.js"></script>
+  <script src="config.js" defer></script>
+  <script src="app.js" defer></script>
   <script type="module" src="analytics.js"></script>
 <script src="scroll-focus.js" defer></script>
 </body>
