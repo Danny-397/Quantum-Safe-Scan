@@ -1,0 +1,325 @@
+{
+  "seed": 2026,
+  "pool_size": 833,
+  "versions": {
+    "requests": "2.34.2",
+    "urllib3": "2.8.0",
+    "flask": "3.1.3",
+    "werkzeug": "3.1.9",
+    "django": "6.1.2",
+    "aiohttp": "3.14.5",
+    "paramiko": "5.1.0",
+    "pyjwt": "2.15.1",
+    "oauthlib": "4.0.0",
+    "requests-oauthlib": "2.0.0",
+    "pyopenssl": "26.4.0",
+    "cryptography": "50.0.2",
+    "pycryptodome": "4.2.0",
+    "rsa": "4.9.1",
+    "ecdsa": "0.19.2",
+    "passlib": "1.7.4",
+    "bcrypt": "5.0.0",
+    "itsdangerous": "2.2.0",
+    "boto3": "1.43.120",
+    "botocore": "1.43.120",
+    "sqlalchemy": "2.1.6",
+    "redis": "8.1.0",
+    "pymongo": "4.19.0",
+    "elasticsearch": "9.5.1",
+    "celery": "5.6.3",
+    "tornado": "6.6",
+    "scrapy": "2.19.0",
+    "twisted": "26.4.0",
+    "pip": "26.2.2",
+    "setuptools": "84.2.1",
+    "docker": "7.2.0",
+    "kubernetes": "37.0.1",
+    "jinja2": "3.1.6",
+    "certifi": "2026.10.23",
+    "httpx": "0.28.1",
+    "websockets": "17.3",
+    "pyyaml": "6.0.3"
+  },
+  "sample": [
+    {
+      "package": "aiohttp",
+      "version": "3.14.5",
+      "path": "aiohttp-3.14.5/aiohttp/client_middleware_digest_auth.py",
+      "lines": 508,
+      "id": "R01"
+    },
+    {
+      "package": "aiohttp",
+      "version": "3.14.5",
+      "path": "aiohttp-3.14.5/aiohttp/worker.py",
+      "lines": 279,
+      "id": "R02"
+    },
+    {
+      "package": "cryptography",
+      "version": "50.0.2",
+      "path": "cryptography-50.0.2/src/cryptography/hazmat/primitives/asymmetric/dsa.py",
+      "lines": 180,
+      "id": "R03"
+    },
+    {
+      "package": "cryptography",
+      "version": "50.0.2",
+      "path": "cryptography-50.0.2/src/cryptography/hazmat/primitives/kdf/argon2.py",
+      "lines": 18,
+      "id": "R04"
+    },
+    {
+      "package": "cryptography",
+      "version": "50.0.2",
+      "path": "cryptography-50.0.2/src/cryptography/hazmat/primitives/kdf/scrypt.py",
+      "lines": 20,
+      "id": "R05"
+    },
+    {
+      "package": "cryptography",
+      "version": "50.0.2",
+      "path": "cryptography-50.0.2/src/cryptography/hazmat/primitives/twofactor/totp.py",
+      "lines": 57,
+      "id": "R06"
+    },
+    {
+      "package": "cryptography",
+      "version": "50.0.2",
+      "path": "cryptography-50.0.2/src/cryptography/x509/oid.py",
+      "lines": 38,
+      "id": "R07"
+    },
+    {
+      "package": "cryptography",
+      "version": "50.0.2",
+      "path": "cryptography-50.0.2/tests/wycheproof/test_x25519.py",
+      "lines": 43,
+      "id": "R08"
+    },
+    {
+      "package": "django",
+      "version": "6.1.2",
+      "path": "django-6.1.2/django/core/cache/backends/filebased.py",
+      "lines": 170,
+      "id": "R09"
+    },
+    {
+      "package": "ecdsa",
+      "version": "0.19.2",
+      "path": "ecdsa-0.19.2/src/ecdsa/ecdsa.py",
+      "lines": 1095,
+      "id": "R10"
+    },
+    {
+      "package": "httpx",
+      "version": "0.28.1",
+      "path": "httpx-0.28.1/httpx/_api.py",
+      "lines": 439,
+      "id": "R11"
+    },
+    {
+      "package": "paramiko",
+      "version": "5.1.0",
+      "path": "paramiko-5.1.0/paramiko/client.py",
+      "lines": 855,
+      "id": "R12"
+    },
+    {
+      "package": "paramiko",
+      "version": "5.1.0",
+      "path": "paramiko-5.1.0/paramiko/util.py",
+      "lines": 337,
+      "id": "R13"
+    },
+    {
+      "package": "paramiko",
+      "version": "5.1.0",
+      "path": "paramiko-5.1.0/tests/auth.py",
+      "lines": 471,
+      "id": "R14"
+    },
+    {
+      "package": "passlib",
+      "version": "1.7.4",
+      "path": "passlib-1.7.4/passlib/handlers/mysql.py",
+      "lines": 129,
+      "id": "R15"
+    },
+    {
+      "package": "passlib",
+      "version": "1.7.4",
+      "path": "passlib-1.7.4/passlib/tests/test_crypto_scrypt.py",
+      "lines": 635,
+      "id": "R16"
+    },
+    {
+      "package": "pycryptodome",
+      "version": "4.2.0",
+      "path": "pycryptodome-4.2.0/lib/Crypto/Cipher/CAST.py",
+      "lines": 190,
+      "id": "R17"
+    },
+    {
+      "package": "pycryptodome",
+      "version": "4.2.0",
+      "path": "pycryptodome-4.2.0/lib/Crypto/Cipher/oaep.py",
+      "lines": 245,
+      "id": "R18"
+    },
+    {
+      "package": "pycryptodome",
+      "version": "4.2.0",
+      "path": "pycryptodome-4.2.0/lib/Crypto/Hash/SHA3_384.py",
+      "lines": 189,
+      "id": "R19"
+    },
+    {
+      "package": "pycryptodome",
+      "version": "4.2.0",
+      "path": "pycryptodome-4.2.0/lib/Crypto/Hash/cSHAKE256.py",
+      "lines": 62,
+      "id": "R20"
+    },
+    {
+      "package": "pycryptodome",
+      "version": "4.2.0",
+      "path": "pycryptodome-4.2.0/lib/Crypto/SelfTest/Cipher/test_DES.py",
+      "lines": 242,
+      "id": "R21"
+    },
+    {
+      "package": "pycryptodome",
+      "version": "4.2.0",
+      "path": "pycryptodome-4.2.0/lib/Crypto/SelfTest/Cipher/test_pkcs1_oaep.py",
+      "lines": 514,
+      "id": "R22"
+    },
+    {
+      "package": "pycryptodome",
+      "version": "4.2.0",
+      "path": "pycryptodome-4.2.0/lib/Crypto/SelfTest/Hash/test_MD5.py",
+      "lines": 74,
+      "id": "R23"
+    },
+    {
+      "package": "pycryptodome",
+      "version": "4.2.0",
+      "path": "pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_Hybrid.py",
+      "lines": 277,
+      "id": "R24"
+    },
+    {
+      "package": "pycryptodome",
+      "version": "4.2.0",
+      "path": "pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_MLKEM.py",
+      "lines": 610,
+      "id": "R25"
+    },
+    {
+      "package": "pycryptodome",
+      "version": "4.2.0",
+      "path": "pycryptodome-4.2.0/lib/Crypto/SelfTest/Util/test_threads.py",
+      "lines": 80,
+      "id": "R26"
+    },
+    {
+      "package": "pycryptodome",
+      "version": "4.2.0",
+      "path": "pycryptodome-4.2.0/src/test/make_tests_ladder_step.py",
+      "lines": 186,
+      "id": "R27"
+    },
+    {
+      "package": "pyjwt",
+      "version": "2.15.1",
+      "path": "pyjwt-2.15.1/tests/test_jwks_client.py",
+      "lines": 812,
+      "id": "R28"
+    },
+    {
+      "package": "pymongo",
+      "version": "4.19.0",
+      "path": "pymongo-4.19.0/pymongo/ssl_context.py",
+      "lines": 44,
+      "id": "R29"
+    },
+    {
+      "package": "pymongo",
+      "version": "4.19.0",
+      "path": "pymongo-4.19.0/test/test_kms_connect.py",
+      "lines": 1236,
+      "id": "R30"
+    },
+    {
+      "package": "redis",
+      "version": "8.1.0",
+      "path": "redis-8.1.0/redis/asyncio/client.py",
+      "lines": 2305,
+      "id": "R31"
+    },
+    {
+      "package": "scrapy",
+      "version": "2.19.0",
+      "path": "scrapy-2.19.0/scrapy/pipelines/files.py",
+      "lines": 783,
+      "id": "R32"
+    },
+    {
+      "package": "scrapy",
+      "version": "2.19.0",
+      "path": "scrapy-2.19.0/scrapy/pqueues.py",
+      "lines": 452,
+      "id": "R33"
+    },
+    {
+      "package": "twisted",
+      "version": "26.4.0",
+      "path": "twisted-26.4.0/src/twisted/conch/ssh/userauth.py",
+      "lines": 825,
+      "id": "R34"
+    },
+    {
+      "package": "twisted",
+      "version": "26.4.0",
+      "path": "twisted-26.4.0/src/twisted/mail/pop3.py",
+      "lines": 1714,
+      "id": "R35"
+    },
+    {
+      "package": "twisted",
+      "version": "26.4.0",
+      "path": "twisted-26.4.0/src/twisted/words/protocols/jabber/sasl_mechanisms.py",
+      "lines": 308,
+      "id": "R36"
+    },
+    {
+      "package": "urllib3",
+      "version": "2.8.0",
+      "path": "urllib3-2.8.0/dummyserver/socketserver.py",
+      "lines": 191,
+      "id": "R37"
+    },
+    {
+      "package": "urllib3",
+      "version": "2.8.0",
+      "path": "urllib3-2.8.0/src/urllib3/connection.py",
+      "lines": 1205,
+      "id": "R38"
+    },
+    {
+      "package": "urllib3",
+      "version": "2.8.0",
+      "path": "urllib3-2.8.0/test/conftest.py",
+      "lines": 399,
+      "id": "R39"
+    },
+    {
+      "package": "websockets",
+      "version": "17.3",
+      "path": "websockets-17.3/src/websockets/trio/client.py",
+      "lines": 801,
+      "id": "R40"
+    }
+  ]
+}
