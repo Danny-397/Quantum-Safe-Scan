@@ -5,7 +5,9 @@ Each test pins one fix:
   * a zip that would expand past the caps is refused before anything is written;
   * oversized uploads are rejected at the door with a JSON 413;
   * rate limits are per visitor (behind Render's proxy they were site-wide);
-  * the app refuses to start on Render with the public default secret.
+  * the app refuses to start on Render with the public default secret;
+  * passwords past bcrypt's 72-byte limit still register and log in (bcrypt 5
+    raises on them where bcrypt 4 truncated).
 """
 
 import io
@@ -113,3 +115,10 @@ def test_refuses_to_start_on_render_with_the_default_secret(monkeypatch):
     monkeypatch.setenv("RENDER", "true")
     with pytest.raises(RuntimeError, match="must be set in production"):
         create_app(Default)
+
+
+def test_password_longer_than_72_bytes_registers_and_logs_in(client):
+    password = "é" * 50  # 100 bytes of UTF-8
+    email = _register(client, password=password)
+    login = client.post("/api/v1/auth/login", json={"email": email, "password": password})
+    assert login.status_code == 200
