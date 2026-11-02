@@ -25,13 +25,24 @@ def _utcnow() -> dt.datetime:
 # --------------------------------------------------------------------------- #
 
 
+# bcrypt only reads the first 72 bytes. bcrypt < 5 dropped the rest silently;
+# bcrypt 5 raises instead, which would turn a long password into a 500 at
+# sign-up and lock out anyone who registered one. Truncate the same way the
+# old version did, so every existing hash still verifies.
+_BCRYPT_MAX_BYTES = 72
+
+
+def _bcrypt_input(password: str) -> bytes:
+    return password.encode("utf-8")[:_BCRYPT_MAX_BYTES]
+
+
 def hash_password(password: str) -> str:
-    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+    return bcrypt.hashpw(_bcrypt_input(password), bcrypt.gensalt()).decode("utf-8")
 
 
 def verify_password(password: str, password_hash: str) -> bool:
     try:
-        return bcrypt.checkpw(password.encode("utf-8"), password_hash.encode("utf-8"))
+        return bcrypt.checkpw(_bcrypt_input(password), password_hash.encode("utf-8"))
     except (ValueError, TypeError):
         return False
 
