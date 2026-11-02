@@ -8,8 +8,8 @@
 # cited differently, change it in all five files together -- they disagreed once
 # already (this one said "Dan" while RL-Trader said "Daniel").
 #
-# Still optional: add your ORCID (uncomment `orcid:`), and after minting a Zenodo
-# DOI put it in `doi:` so the two agree.
+# Still optional: add your ORCID (uncomment `orcid:`). `doi:` is the Zenodo
+# concept DOI, which always resolves to the newest archived release.
 cff-version: 1.2.0
 title: "QuantumSafe — a scanner for quantum-vulnerable cryptography"
 message: "If you use this software or its findings, please cite it as below."
@@ -38,5 +38,6 @@ keywords:
   - harvest-now-decrypt-later
   - lattice cryptography
 license: MIT
-version: 0.3.0
-date-released: "2026-10-26"
+doi: 10.5281/zenodo.23843488
+version: 0.3.1
+date-released: "2026-10-27"
