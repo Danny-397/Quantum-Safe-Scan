@@ -10,6 +10,7 @@
   <a href="https://github.com/Danny-397/Quantum-Safe-Scan"><img src="https://img.shields.io/github/stars/Danny-397/Quantum-Safe-Scan?style=flat-square&logo=github" alt="Stars"></a>
   <img src="https://img.shields.io/github/last-commit/Danny-397/Quantum-Safe-Scan?style=flat-square&color=555" alt="Last commit">
   <img src="https://img.shields.io/github/license/Danny-397/Quantum-Safe-Scan?style=flat-square&color=3fb950" alt="License: MIT">
+  <a href="https://doi.org/10.5281/zenodo.23843488"><img src="https://img.shields.io/badge/DOI-10.5281%2Fzenodo.23843488-5b73e8?style=flat-square" alt="DOI 10.5281/zenodo.23843488"></a>
   <br>
   <img src="https://img.shields.io/badge/tests-559%20passing-3fb950?style=flat-square&logo=pytest&logoColor=white" alt="559 tests passing">
   <img src="https://img.shields.io/badge/benchmark-100%25%20precision-3fb950?style=flat-square" alt="100% precision on benchmark">
@@ -926,6 +927,15 @@ exports); a paid tier would be the things that only make sense for an
 organization — scheduled re-scans with drift alerts, multi-repo/org dashboards,
 SSO, and audit-ready CBOM history for compliance. Those are operational features,
 not gates on the core detection, which is the part that should always be open.
+
+## Citing
+
+Every release is archived on Zenodo. To cite QuantumSafe, use
+[10.5281/zenodo.23843488](https://doi.org/10.5281/zenodo.23843488), which always
+resolves to the newest version; v0.3.1 on its own is
+[10.5281/zenodo.23843498](https://doi.org/10.5281/zenodo.23843498). GitHub's
+"Cite this repository" button reads the same details from
+[CITATION.cff](CITATION.cff).
 
 ## License
 
