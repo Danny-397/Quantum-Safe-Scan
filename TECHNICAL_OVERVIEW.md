@@ -124,8 +124,8 @@ mechanism, which is exactly what makes the migration case credible.
 
 ## 2c. Evaluation
 
-The detector is measured, not assumed. `benchmark/` is a labeled corpus (12 files,
-9 languages, 24 ground-truth findings at (file, family) granularity) including
+The detector is measured, not assumed. `benchmark/` is a labeled corpus (18 files,
+9 languages, 26 ground-truth findings at (file, family) granularity) including
 adversarial decoys: crypto names that appear only in comments, and word-boundary
 traps (`md5sumLabel`, `rc4legacyName`, `dsaCount`). `benchmark/evaluate.py`
 computes precision/recall/F1 and prints the exact FPs/FNs; `tests/test_benchmark.py`
