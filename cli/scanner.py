@@ -136,19 +136,26 @@ RULES: list[Rule] = [
        r"\brsa[\s_\-]?4096\b|\b4096\b\s*(?:bit)?\s*rsa\b"),
     _r("rsa", "RSA", RISK_HIGH,
        "RSA public-key cryptography is broken by Shor's algorithm.",
-       r"\bRSA\b|generate_private_key.*rsa|crypto\.generateKeyPair(?:Sync)?\(\s*['\"]rsa['\"]|rsa\.GenerateKey|OpenSSL::PKey::RSA|RSACryptoServiceProvider|openssl_pkey_new|RsaKeyParameters"),
+       r"\bRSA\b|generate_private_key.*rsa|crypto\.generateKeyPair(?:Sync)?\(\s*['\"]rsa['\"]|rsa\.GenerateKey|OpenSSL::PKey::RSA|RSACryptoServiceProvider|openssl_pkey_new|RsaKeyParameters"
+       # Key classes and modules: RSAKey (paramiko), RSAPrivateKey / RSAPublicKey
+       # (cryptography), paramiko.rsakey. Found missing by the recall sample.
+       r"|\bRSA(?:Private|Public)?Key"),
     _r("ecc", "ECDSA", RISK_HIGH,
        "ECDSA signatures are broken by Shor's algorithm.",
-       r"\bECDSA\b|ecdsa\b"),
+       r"\bECDSA\b|ecdsa\b|\bECDSA(?:Private|Public)?Key"),
     _r("ecc", "ECDH", RISK_HIGH,
        "ECDH key exchange is broken by Shor's algorithm.",
        r"\bECDH\b|ecdh\b"),
     _r("ecc", "ECC", RISK_HIGH,
        "Elliptic-curve cryptography is broken by Shor's algorithm.",
-       r"\bECC\b|elliptic[\s_\-]?curve|EllipticCurve|ec\.generate_private_key|crypto/ecdsa|secp256[rk]1|prime256v1|NIST P-256"),
+       r"\bECC\b|elliptic[\s_\-]?curve|EllipticCurve|ec\.generate_private_key|crypto/ecdsa|secp256[rk]1|prime256v1|NIST P-256"
+       # Curve25519 / Curve448 in any spelling: X25519PrivateKey, Ed25519Key,
+       # import_x25519_private_key, ssh-ed25519. Not preceded by a letter or
+       # digit, so an underscore-joined name still counts.
+       r"|(?<![a-z0-9])(?:x|ed)(?:25519|448)(?![0-9])|\bEC(?:Private|Public)Key"),
     _r("dsa", "DSA", RISK_HIGH,
        "DSA signatures are broken by Shor's algorithm.",
-       r"\bDSA\b|dsa\.generate_private_key|crypto/dsa"),
+       r"\bDSA\b|dsa\.generate_private_key|crypto/dsa|\bDSA(?:Private|Public)?Key|\bDSSKey\b"),
     _r("dh", "Diffie-Hellman", RISK_HIGH,
        "Classic Diffie-Hellman key exchange is broken by Shor's algorithm.",
        r"\bDiffie[\s\-]?Hellman\b|\bDH\b|dh\.generate_parameters|DHParameterSpec|crypto/dh"),
@@ -614,6 +621,86 @@ def _string_arg_scan(orig_lines: list[str], masked_lines: list[str],
     return findings
 
 
+# --------------------------------------------------------------------------- #
+# Identifier literals
+# --------------------------------------------------------------------------- #
+#
+# Some string literals are not prose but the algorithm's own wire name: SSH key
+# and kex types ("ssh-rsa", "rsa-sha2-256", "ecdsa-sha2-nistp256"), JOSE values
+# ("kty": "RSA", "alg": "RS256", "crv": "P-256"), curve names. Masking strings
+# hid every one of them (the recall sample on real code missed paramiko's key
+# negotiation and PyJWT's JWKs this way). A literal counts only when its whole
+# content is one of these identifiers, so a sentence that mentions RSA stays out.
+
+_ID_LITERALS: list[tuple[re.Pattern, str]] = [
+    (re.compile(r"ssh-rsa(?:-cert-v01@openssh\.com)?|rsa-sha2-(?:256|512)(?:-cert-v01@openssh\.com)?"
+                r"|(?i:rsa)|RS(?:256|384|512)|PS(?:256|384|512)|RSA-OAEP(?:-256)?|RSA1_5"), "rsa"),
+    (re.compile(r"ecdsa-sha2-nistp(?:256|384|521)(?:-cert-v01@openssh\.com)?|ssh-ed(?:25519|448)(?:-cert-v01@openssh\.com)?"
+                r"|(?i:ecdsa|ecdh)|EC|ES(?:256K?|384|512)|EdDSA|(?i:ed25519|ed448|x25519|x448)"
+                r"|ECDH-ES(?:\+A(?:128|192|256)KW)?|P-(?:256|384|521)|secp(?:256[rk]1|384r1|521r1)|prime256v1"
+                r"|ecdh-sha2-nistp(?:256|384|521)|curve25519-sha256(?:@libssh\.org)?|curve448-sha512"), "ecc"),
+    (re.compile(r"ssh-dss|(?i:dsa)"), "dsa"),
+    (re.compile(r"diffie-hellman-group[\w-]*|DH|ffdhe(?:2048|3072|4096|6144|8192)"), "dh"),
+    (re.compile(r"(?i:md5)|MD5-sess|hmac-md5(?:-96)?"), "md5"),
+    (re.compile(r"(?i:sha-?1)|SHA1-sess|hmac-sha1(?:-96)?"), "sha1"),
+]
+_PY_STRING_PREFIX = re.compile(r"^[rRbBuU]{0,2}(['\"])")
+_QUOTED_ID_RE = re.compile(r"(['\"`])([A-Za-z0-9@._+\-]{2,48})\1")
+
+
+def _id_literal_family(value: str) -> str | None:
+    for pattern, family in _ID_LITERALS:
+        if pattern.fullmatch(value):
+            return family
+    return None
+
+
+def _id_literal_finding(family: str, rel_path: str, lineno: int, snippet: str) -> Finding:
+    algo, risk, why = _ALGO_INFO[family]
+    return Finding(rel_path, lineno, algo, risk, why, family, snippet=snippet, confidence="high")
+
+
+def _id_literal_scan_python(source: str, rel_path: str, lines: list[str]) -> list[Finding]:
+    findings: list[Finding] = []
+    try:
+        for tok in tokenize.generate_tokens(io.StringIO(source).readline):
+            if tok.type != tokenize.STRING or not _PY_STRING_PREFIX.match(tok.string):
+                continue  # f-strings and multi-part tokens are never a bare identifier
+            try:
+                value = ast.literal_eval(tok.string)
+            except (ValueError, SyntaxError):
+                continue
+            if isinstance(value, bytes):
+                value = value.decode("latin-1")
+            if not isinstance(value, str) or "\n" in value:
+                continue
+            family = _id_literal_family(value)
+            if family:
+                row = tok.start[0]
+                snippet = lines[row - 1].strip() if 0 < row <= len(lines) else ""
+                findings.append(_id_literal_finding(family, rel_path, row, snippet))
+    except (tokenize.TokenError, IndentationError, SyntaxError, ValueError):
+        pass
+    return findings
+
+
+def _id_literal_scan_generic(orig_lines: list[str], masked_lines: list[str],
+                             lang: str, rel_path: str) -> list[Finding]:
+    findings: list[Finding] = []
+    for idx, orig in enumerate(orig_lines):
+        masked = masked_lines[idx] if idx < len(masked_lines) else orig
+        if not masked.strip():
+            continue  # the whole line was comment
+        cut = _comment_start(orig, lang)
+        for m in _QUOTED_ID_RE.finditer(orig):
+            if cut is not None and m.start() >= cut:
+                break
+            family = _id_literal_family(m.group(2))
+            if family:
+                findings.append(_id_literal_finding(family, rel_path, idx + 1, orig.strip()))
+    return findings
+
+
 def _comment_start(line: str, lang: str) -> int | None:
     """Column where a line comment begins, or None. Used to reject trailing-comment
     matches without a full re-lex (the protocol tokens are the only consumer)."""
@@ -648,6 +735,8 @@ def _regex_scan(match_lines: list[str], orig_lines: list[str],
         line = raw.rstrip("\n")
         if not line.strip() or _is_comment_line(line, lang):
             continue
+        if lang == "python" and _PY_TEST_NAME_RE.match(line):
+            continue  # "def test_md5_digest(...)" names a test; it selects nothing
         orig = orig_lines[i - 1].strip() if i - 1 < len(orig_lines) else line.strip()
         for rule in RULES:
             if rule.languages and lang not in rule.languages:
@@ -716,6 +805,8 @@ def scan_file(abs_path: str, rel_path: str, mask_strings: bool = True,
     findings = _regex_scan(match_lines, lines, lang, rel_path)
     if lang == "python":
         findings += _ast_scan_python(source, rel_path, lines)
+        if mask_strings:
+            findings += _id_literal_scan_python(source, rel_path, lines)
         if taint:
             # Interprocedural data-flow pass: crypto reached through wrappers.
             from .taint import taint_scan_python
@@ -724,6 +815,26 @@ def scan_file(abs_path: str, rel_path: str, mask_strings: bool = True,
         # Recover genuine crypto usages whose algorithm was named inside a
         # (now-masked) string literal — e.g. getInstance("SHA-1").
         findings += _string_arg_scan(lines, match_lines, lang, rel_path)
+        findings += _id_literal_scan_generic(lines, match_lines, lang, rel_path)
+
+    # A post-quantum hybrid (ML-KEM-768 + X25519, X25519Kyber768) is the
+    # migration target, not exposure: its classical half is there on purpose.
+    # Flagging it HIGH would tell users to replace the fix. The TLS scanner
+    # already treats X25519MLKEM768 as quantum-safe; the code scanner agrees.
+    if findings:
+        findings = [
+            f for f in findings
+            if not (f.family == "ecc" and 0 < f.line_number <= len(lines)
+                    and _PQ_HYBRID_RE.search(lines[f.line_number - 1]))
+        ]
+    # Identifier literals in an algorithm-disable list name what is turned OFF
+    # (paramiko's disabled_algorithms), the same mitigation OP_NO_* flags are.
+    if findings:
+        findings = [
+            f for f in findings
+            if not (0 < f.line_number <= len(lines)
+                    and _DISABLE_RE.search(lines[f.line_number - 1]))
+        ]
 
     # Honor inline suppressions: a line containing "quantumsafe: ignore".
     if findings:
@@ -733,6 +844,10 @@ def scan_file(abs_path: str, rel_path: str, mask_strings: bool = True,
         ]
     return _dedupe(findings)
 
+
+_PY_TEST_NAME_RE = re.compile(r"\s*(?:async\s+def|def|class)\s+(?:test_?|Test)\w*\s*[(:]")
+_PQ_HYBRID_RE = re.compile(r"ml[-_]?kem|kyber", re.IGNORECASE)
+_DISABLE_RE = re.compile(r"\bdisabled?_(?:algorithms|algos|ciphers|kex|keys|macs)\b", re.IGNORECASE)
 
 # Inline suppression marker, e.g.  key = rsa.generate(...)  # quantumsafe: ignore
 _SUPPRESS_RE = re.compile(r"quantumsafe:\s*ignore", re.IGNORECASE)

@@ -5,6 +5,26 @@ All notable changes to QuantumSafe are documented here. This project follows
 
 ## [Unreleased]
 
+### Added
+- **Recall on real code** (`benchmark/recall_sample.py`): random files from the 37
+  pinned PyPI packages, every quantum-vulnerable usage labeled by hand before the
+  scanner runs. 0.3.1 found 68% (95% CI 49–82%) of the first sample's usages; a
+  held-out sample drawn and labeled after the fixes below finds 88% (71–96%).
+
+### Fixed
+- **Key classes and Curve25519 / Curve448 are detected.** `RSAKey`, `ECDSAKey`,
+  `Ed25519Key`, `RSAPrivateKey`, `X25519PrivateKey`, `import_x25519_private_key`
+  and other names that embed the algorithm were invisible to the word-bounded
+  rules, and X25519 / Ed25519 / X448 / Ed448 had no rule at all.
+- **Algorithm wire names in string literals are detected.** A literal whose whole
+  content is an identifier such as `"ssh-rsa"`, `"rsa-sha2-256"`, `"RS256"`,
+  `"P-256"` or `"diffie-hellman-group14-sha1"` counts as selecting the algorithm;
+  prose that mentions one still does not.
+- **Post-quantum hybrids are not flagged.** ECC on a line naming ML-KEM or Kyber
+  (`MLKEM768_X25519`, `X25519MLKEM768`) is the migration target, not exposure.
+- **Fewer false positives:** algorithm names in `disabled_algorithms` lists and in
+  Python test function / class names are no longer reported.
+
 ## [0.3.1] — 2026-10-28
 
 ### Fixed

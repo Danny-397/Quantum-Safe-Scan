@@ -309,3 +309,79 @@ def test_tls_old_selections_are_still_found(tmp_path, line, label):
     _write(tmp_path, "tls.py", "import ssl\n" + line)
     algos = {f.algorithm for f in scan_path(str(tmp_path)) if f.family == "tls_old"}
     assert label in algos
+
+
+# ---- Recall fixes from the real-code recall sample (benchmark/RESULTS-recall*.md) ----
+
+def _families_by_line(tmp_path, name, content):
+    _write(tmp_path, name, content)
+    out = {}
+    for f in scan_path(str(tmp_path)):
+        out.setdefault(f.line_number, set()).add(f.family)
+    return out
+
+
+@pytest.mark.parametrize("line, family", [
+    ("from paramiko.rsakey import RSAKey", "rsa"),
+    ("k = RSAKey.from_private_key_file(path)", "rsa"),
+    ("def load(k: RSAPrivateKey): ...", "rsa"),
+    ("from paramiko.ecdsakey import ECDSAKey", "ecc"),
+    ("k = Ed25519Key.from_private_key_file(path)", "ecc"),
+    ("from cryptography.hazmat.primitives.asymmetric.x25519 import X25519PrivateKey", "ecc"),
+    ("k = DH.import_x25519_private_key(data)", "ecc"),
+    ("k = DSSKey(filename=path)", "dsa"),
+])
+def test_key_classes_and_curve25519_are_found(tmp_path, line, family):
+    assert family in _families_by_line(tmp_path, "k.py", line + "\n").get(1, set())
+
+
+@pytest.mark.parametrize("line, family", [
+    ('if keytype == "ssh-rsa":', "rsa"),
+    ('opts.key_types = ("rsa-sha2-512",)', "rsa"),
+    ('jwk = {"kty": "RSA", "n": n}', "rsa"),
+    ('token = jwt.encode(payload, key, algorithm="ES256")', "ecc"),
+    ('key = ECC.generate(curve="P-256")', "ecc"),
+    ('kex = "diffie-hellman-group14-sha1"', "dh"),
+    ('opts.digests = ("hmac-md5-96",)', "md5"),
+])
+def test_identifier_literals_are_found(tmp_path, line, family):
+    assert family in _families_by_line(tmp_path, "s.py", line + "\n").get(1, set())
+
+
+@pytest.mark.parametrize("line", [
+    'log.info("falling back to RSA for this host")',   # prose: not a bare identifier
+    'raise ValueError("ECDSA keys are not supported")',
+    'name = "rsa.key"',                                # a filename, not the algorithm
+])
+def test_prose_strings_stay_out(tmp_path, line):
+    assert not _families_by_line(tmp_path, "p.py", line + "\n")
+
+
+def test_identifier_literals_in_other_languages(tmp_path):
+    lines = _families_by_line(tmp_path, "a.js",
+                              'const alg = "RS256";\n// const old = "ssh-rsa";\n')
+    assert "rsa" in lines.get(1, set())
+    assert 2 not in lines
+
+
+@pytest.mark.parametrize("line", [
+    "suite = HPKE(KEM.MLKEM768_X25519)",
+    "sk = MLKEM768X25519PrivateKey(mlkem_sk, x25519_sk)",
+    'group = "X25519MLKEM768"',
+])
+def test_pq_hybrids_are_not_flagged_as_ecc(tmp_path, line):
+    assert "ecc" not in _families_by_line(tmp_path, "h.py", line + "\n").get(1, set())
+
+
+def test_disabled_algorithm_lists_are_not_findings(tmp_path):
+    lines = _families_by_line(
+        tmp_path, "t.py",
+        'Transport(sock, disabled_algorithms={"keys": ["rsa-sha2-512"], "macs": ["hmac-md5"]})\n')
+    assert not lines
+
+
+def test_test_names_are_not_findings(tmp_path):
+    lines = _families_by_line(tmp_path, "test_x.py",
+                              "def test_sign_ed25519_key():\n    pass\n"
+                              "class TestMD5Digest:\n    pass\n")
+    assert not lines
