@@ -1,0 +1,465 @@
+{
+ "_note": "Labels were written by reading each sampled file in full, or for long files every line a broad search for algorithm names surfaced plus its surrounding code, before the scanner was run on the sample. A usage counts when executable code uses, configures, selects, imports or implements the algorithm; names in comments, docstrings and messages, and flags that turn an algorithm off, do not.",
+ "R01": {
+  "usages": [
+   {
+    "family": "md5",
+    "lines": [
+     38,
+     39
+    ],
+    "why": "HTTP Digest auth maps MD5 / MD5-SESS to hashlib.md5"
+   },
+   {
+    "family": "sha1",
+    "lines": [
+     40,
+     41,
+     332
+    ],
+    "why": "Digest auth maps SHA / SHA-SESS to hashlib.sha1; cnonce built with hashlib.sha1"
+   }
+  ]
+ },
+ "R02": {
+  "usages": [],
+  "notes": "Builds an ssl.SSLContext from the configured protocol; no algorithm is chosen in this file."
+ },
+ "R03": {
+  "usages": [
+   {
+    "family": "dsa",
+    "lines": [
+     16,
+     31,
+     34,
+     95,
+     98,
+     159,
+     161,
+     162,
+     163,
+     172
+    ],
+    "why": "The public DSA API: parameter, private and public key classes bound to the Rust DSA backend, and parameter generation"
+   }
+  ]
+ },
+ "R04": {
+  "usages": [],
+  "notes": "Argon2 KDF bindings only."
+ },
+ "R05": {
+  "usages": [],
+  "notes": "Scrypt KDF bindings only."
+ },
+ "R06": {
+  "usages": [],
+  "notes": "TOTP; the hash is chosen by the caller, not here."
+ },
+ "R07": {
+  "usages": [],
+  "notes": "Re-exports OID classes; no algorithm used."
+ },
+ "R08": {
+  "usages": [
+   {
+    "family": "ecc",
+    "lines": [
+     9,
+     10,
+     11,
+     26,
+     29
+    ],
+    "why": "X25519 (Curve25519 ECDH): imports X25519PrivateKey/PublicKey and builds keys for Wycheproof vectors"
+   }
+  ]
+ },
+ "R09": {
+  "usages": [
+   {
+    "family": "md5",
+    "lines": [
+     10,
+     134
+    ],
+    "why": "Cache file names from md5(key) (usedforsecurity=False, but MD5 is what runs)"
+   }
+  ]
+ },
+ "R10": {
+  "usages": [
+   {
+    "family": "ecc",
+    "lines": [
+     69,
+     120,
+     125,
+     360,
+     449,
+     544,
+     595,
+     646,
+     659
+    ],
+    "why": "Pure-Python ECDSA: imports ellipticcurve, recovers points, defines secp112..P-521 and secp256k1 curves"
+   },
+   {
+    "family": "sha1",
+    "lines": [
+     325,
+     327
+    ],
+    "why": "digest_integer() hashes with hashlib.sha1"
+   }
+  ]
+ },
+ "R11": {
+  "usages": [],
+  "notes": "Only type hints for ssl.SSLContext."
+ },
+ "R12": {
+  "usages": [
+   {
+    "family": "rsa",
+    "lines": [
+     37,
+     430,
+     431,
+     432,
+     433,
+     434,
+     690,
+     729
+    ],
+    "why": "SSH client: imports RSAKey, selects ssh-rsa / rsa-sha2-* key types, tries RSAKey when loading keys"
+   },
+   {
+    "family": "ecc",
+    "lines": [
+     34,
+     35,
+     690,
+     730,
+     731
+    ],
+    "why": "SSH client: imports ECDSAKey and Ed25519Key and tries both when loading keys"
+   }
+  ]
+ },
+ "R13": {
+  "usages": [],
+  "notes": "Utility helpers; no algorithm used."
+ },
+ "R14": {
+  "usages": [
+   {
+    "family": "rsa",
+    "lines": [
+     27,
+     154,
+     160,
+     169,
+     178,
+     187,
+     196,
+     199,
+     203,
+     206,
+     209,
+     213,
+     216
+    ],
+    "why": "Auth tests load RSAKey and negotiate rsa-sha2-256/512"
+   },
+   {
+    "family": "ecc",
+    "lines": [
+     20,
+     83,
+     293,
+     301
+    ],
+    "why": "Auth tests load Ed25519 keys"
+   }
+  ]
+ },
+ "R15": {
+  "usages": [
+   {
+    "family": "sha1",
+    "lines": [
+     26,
+     120
+    ],
+    "why": "MySQL 4.1 password hash: SHA1(SHA1(password))"
+   }
+  ]
+ },
+ "R16": {
+  "usages": [],
+  "notes": "Scrypt test vectors; 'NaCl' is a salt string."
+ },
+ "R17": {
+  "usages": [],
+  "notes": "CAST cipher, outside the labeled families."
+ },
+ "R18": {
+  "usages": [
+   {
+    "family": "rsa",
+    "lines": [
+     36,
+     56,
+     62,
+     72,
+     198,
+     244
+    ],
+    "why": "Implements RSA-OAEP: PKCS1OAEP_Cipher takes an RsaKey"
+   }
+  ]
+ },
+ "R19": {
+  "usages": [],
+  "notes": "SHA3-384."
+ },
+ "R20": {
+  "usages": [],
+  "notes": "cSHAKE256."
+ },
+ "R21": {
+  "usages": [
+   {
+    "family": "des",
+    "lines": [
+     28,
+     195,
+     208,
+     241
+    ],
+    "why": "Single DES self-test: imports Crypto.Cipher.DES and encrypts with DES.new (56-bit DES; no family for it in the scanner)"
+   }
+  ]
+ },
+ "R22": {
+  "usages": [
+   {
+    "family": "rsa",
+    "lines": [
+     29,
+     53,
+     266,
+     297,
+     427
+    ],
+    "why": "RSA-OAEP tests: RSA.generate(1024), RSA.construct, RSA.import_key"
+   },
+   {
+    "family": "sha1",
+    "lines": [
+     28,
+     105,
+     147,
+     191,
+     257,
+     329,
+     395,
+     412,
+     430
+    ],
+    "why": "OAEP with SHA-1 as hash and MGF1 hash"
+   },
+   {
+    "family": "md5",
+    "lines": [
+     28,
+     329
+    ],
+    "why": "OAEP exercised with MD5 as the hash"
+   }
+  ]
+ },
+ "R23": {
+  "usages": [
+   {
+    "family": "md5",
+    "lines": [
+     28,
+     62,
+     67,
+     73
+    ],
+    "why": "MD5 self-test: imports Crypto.Hash.MD5 and hashes with MD5.new"
+   }
+  ]
+ },
+ "R24": {
+  "usages": [
+   {
+    "family": "ecc",
+    "lines": [
+     13,
+     31,
+     36,
+     43,
+     79,
+     215,
+     222,
+     270
+    ],
+    "why": "X25519 inside the ML-KEM-768 + X25519 hybrid (X-Wing) and imported on its own to check the combiner"
+   }
+  ]
+ },
+ "R25": {
+  "usages": [
+   {
+    "family": "ecc",
+    "lines": [
+     267
+    ],
+    "why": "ECC.generate(curve='P-256') to check ML-KEM import rejects other algorithms"
+   }
+  ]
+ },
+ "R26": {
+  "usages": [],
+  "notes": "Thread-safety test; no algorithm in the labeled families."
+ },
+ "R27": {
+  "usages": [
+   {
+    "family": "ecc",
+    "lines": [
+     7,
+     8,
+     9,
+     10,
+     11,
+     60,
+     137,
+     169
+    ],
+    "why": "Generates C tests for the Curve25519 Montgomery ladder: ref() implements the ladder step mod 2^255-19; the name appears only in the emitted C"
+   }
+  ]
+ },
+ "R28": {
+  "usages": [
+   {
+    "family": "rsa",
+    "lines": [
+     36,
+     53,
+     267,
+     474
+    ],
+    "why": "JWKS client tests serve and check RSA JWKs (\"kty\": \"RSA\")"
+   }
+  ]
+ },
+ "R29": {
+  "usages": [],
+  "notes": "PROTOCOL_SSLv23 is the negotiate-highest default; OP_NO_SSLv2/3 turn old protocols off."
+ },
+ "R30": {
+  "usages": [],
+  "notes": "TLS client/server contexts at default protocol."
+ },
+ "R31": {
+  "usages": [],
+  "notes": "Redis client; 'protocol' is the RESP version."
+ },
+ "R32": {
+  "usages": [
+   {
+    "family": "md5",
+    "lines": [
+     67,
+     75,
+     139,
+     328,
+     424,
+     712
+    ],
+    "why": "File pipeline checksums: hashlib.md5 and GCS md5_hash"
+   },
+   {
+    "family": "sha1",
+    "lines": [
+     753
+    ],
+    "why": "Media file names from hashlib.sha1(url)"
+   }
+  ]
+ },
+ "R33": {
+  "usages": [
+   {
+    "family": "md5",
+    "lines": [
+     38
+    ],
+    "why": "Slot names hashed with hashlib.md5"
+   }
+  ]
+ },
+ "R34": {
+  "usages": [],
+  "notes": "SSH user auth works with whatever key type it is given; algorithm names only in docstrings."
+ },
+ "R35": {
+  "usages": [
+   {
+    "family": "md5",
+    "lines": [
+     18,
+     75,
+     1603
+    ],
+    "why": "POP3 APOP digest: md5(challenge + secret)"
+   }
+  ]
+ },
+ "R36": {
+  "usages": [
+   {
+    "family": "md5",
+    "lines": [
+     15,
+     103,
+     110,
+     246,
+     307
+    ],
+    "why": "Implements the DIGEST-MD5 SASL mechanism with hashlib.md5"
+   }
+  ]
+ },
+ "R37": {
+  "usages": [],
+  "notes": "Test TLS server at default settings."
+ },
+ "R38": {
+  "usages": [],
+  "notes": "Connection setup; protocol versions come from the caller."
+ },
+ "R39": {
+  "usages": [
+   {
+    "family": "tls_old",
+    "lines": [
+     304,
+     305
+    ],
+    "why": "Probes which TLS versions the server accepts by handshaking at TLS 1.0 and TLS 1.1"
+   }
+  ]
+ },
+ "R40": {
+  "usages": [],
+  "notes": "WebSocket client; no algorithm in the labeled families."
+ }
+}

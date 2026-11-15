@@ -12,7 +12,7 @@
   <img src="https://img.shields.io/github/license/Danny-397/Quantum-Safe-Scan?style=flat-square&color=3fb950" alt="License: MIT">
   <a href="https://doi.org/10.5281/zenodo.23843488"><img src="https://img.shields.io/badge/DOI-10.5281%2Fzenodo.23843488-5b73e8?style=flat-square" alt="DOI 10.5281/zenodo.23843488"></a>
   <br>
-  <img src="https://img.shields.io/badge/tests-560%20passing-3fb950?style=flat-square&logo=pytest&logoColor=white" alt="560 tests passing">
+  <img src="https://img.shields.io/badge/tests-584%20passing-3fb950?style=flat-square&logo=pytest&logoColor=white" alt="584 tests passing">
   <img src="https://img.shields.io/badge/benchmark-100%25%20precision-3fb950?style=flat-square" alt="100% precision on benchmark">
   <img src="https://img.shields.io/badge/SARIF%202.1.0-schema--validated-3fb950?style=flat-square" alt="SARIF schema-validated">
   <img src="https://img.shields.io/badge/NIST-FIPS%20203%2F204%2F205-5b73e8?style=flat-square" alt="NIST FIPS 203/204/205">
@@ -60,7 +60,7 @@ solution:
 | Layer | Module | What it does |
 |-------|--------|--------------|
 | **1. Attack** | [`quantum/`](quantum/) | Shor's and Grover's algorithms in **Qiskit**, run on a quantum simulator. At simulator scale Shor factors a small number and reconstructs a toy RSA key — an educational demonstration of *why* RSA/ECC are rated HIGH (not a break of real key sizes). |
-| **2. Detection** | [`cli/`](cli/) | A hybrid **AST + regex** static-analysis engine over 11 languages, with cross-language usage-awareness, **dependency + lockfile scanning**, **reachability ranking**, and **call-site-specific fixes**, that scores risk and produces a NIST-aligned migration plan. **100% precision on the labeled [benchmark](benchmark/)** (18 files), **100% recall on 50 seeded cases**, and **93% precision (95% CI 86–97%) on a random, hand-labeled sample of 100 findings in real PyPI packages** — see [methodology](benchmark/RESULTS.md) and [real-code precision](benchmark/RESULTS-precision.md). |
+| **2. Detection** | [`cli/`](cli/) | A hybrid **AST + regex** static-analysis engine over 11 languages, with cross-language usage-awareness, **dependency + lockfile scanning**, **reachability ranking**, and **call-site-specific fixes**, that scores risk and produces a NIST-aligned migration plan. **100% precision on the labeled [benchmark](benchmark/)** (18 files), **100% recall on 50 seeded cases**, and **93% precision (95% CI 86–97%) on a random, hand-labeled sample of 100 findings in real PyPI packages**, and **88% recall (95% CI 71–96%) on a held-out random sample of real files with every usage labeled by hand** — see [methodology](benchmark/RESULTS.md), [real-code precision](benchmark/RESULTS-precision.md) and [real-code recall](benchmark/README.md#recall-on-real-code-recall_samplepy). |
 | **3. Fix** | [`pqc/`](pqc/) | A from-scratch **lattice (LWE) key-encapsulation mechanism** — the math behind CRYSTALS-Kyber / ML-KEM — so the recommended fix is runnable and provable. |
 
 The detection layer ships through three surfaces that share **one** engine:
@@ -444,7 +444,13 @@ construction — 50 real quantum-vulnerable API calls (many idiomatic variants
 per family, 7 languages) that must be detected, plus 50 comment/string decoys
 that must not be. Latest run: **100% recall, 100% mutation precision**
 ([RESULTS-seeded.md](benchmark/RESULTS-seeded.md)), enforced by
-`tests/test_seeded.py`. Honest limits are documented in
+`tests/test_seeded.py`. Seeded cases only test the patterns someone thought to
+write, so recall is also measured on **real code**: random files from 37 pinned
+PyPI packages, every quantum-vulnerable usage labeled by hand before scanning. The
+first sample found 68%, and its misses drove the fixes; a held-out sample labeled
+afterwards finds **88% (95% CI 71–96%)**
+([how, and every miss](benchmark/README.md#recall-on-real-code-recall_samplepy)).
+Honest limits are documented in
 [benchmark/README.md](benchmark/README.md) — these are regression benchmarks, not
 a claim of perfection on arbitrary code.
 
@@ -813,7 +819,7 @@ docker compose up --build
 
 ```bash
 pip install -r requirements-dev.txt
-pytest -q                     # 560 tests; in-memory DB, no setup
+pytest -q                     # 584 tests; in-memory DB, no setup
 ```
 
 Seed a demo account so the dashboard is populated:

@@ -1,0 +1,325 @@
+{
+  "seed": 2027,
+  "pool_size": 833,
+  "versions": {
+    "requests": "2.34.2",
+    "urllib3": "2.8.0",
+    "flask": "3.1.3",
+    "werkzeug": "3.1.9",
+    "django": "6.1.2",
+    "aiohttp": "3.14.5",
+    "paramiko": "5.1.0",
+    "pyjwt": "2.15.1",
+    "oauthlib": "4.0.0",
+    "requests-oauthlib": "2.0.0",
+    "pyopenssl": "26.4.0",
+    "cryptography": "50.0.2",
+    "pycryptodome": "4.2.0",
+    "rsa": "4.9.1",
+    "ecdsa": "0.19.2",
+    "passlib": "1.7.4",
+    "bcrypt": "5.0.0",
+    "itsdangerous": "2.2.0",
+    "boto3": "1.43.120",
+    "botocore": "1.43.120",
+    "sqlalchemy": "2.1.6",
+    "redis": "8.1.0",
+    "pymongo": "4.19.0",
+    "elasticsearch": "9.5.1",
+    "celery": "5.6.3",
+    "tornado": "6.6",
+    "scrapy": "2.19.0",
+    "twisted": "26.4.0",
+    "pip": "26.2.2",
+    "setuptools": "84.2.1",
+    "docker": "7.2.0",
+    "kubernetes": "37.0.1",
+    "jinja2": "3.1.6",
+    "certifi": "2026.10.23",
+    "httpx": "0.28.1",
+    "websockets": "17.3",
+    "pyyaml": "6.0.3"
+  },
+  "sample": [
+    {
+      "package": "aiohttp",
+      "version": "3.14.5",
+      "path": "aiohttp-3.14.5/tests/test_client_fingerprint.py",
+      "lines": 87,
+      "id": "H01"
+    },
+    {
+      "package": "cryptography",
+      "version": "50.0.2",
+      "path": "cryptography-50.0.2/src/cryptography/hazmat/primitives/_cipheralgorithm.py",
+      "lines": 61,
+      "id": "H02"
+    },
+    {
+      "package": "cryptography",
+      "version": "50.0.2",
+      "path": "cryptography-50.0.2/src/cryptography/hazmat/primitives/asymmetric/ed25519.py",
+      "lines": 117,
+      "id": "H03"
+    },
+    {
+      "package": "cryptography",
+      "version": "50.0.2",
+      "path": "cryptography-50.0.2/src/cryptography/hazmat/primitives/poly1305.py",
+      "lines": 12,
+      "id": "H04"
+    },
+    {
+      "package": "cryptography",
+      "version": "50.0.2",
+      "path": "cryptography-50.0.2/src/cryptography/x509/certificate_transparency.py",
+      "lines": 36,
+      "id": "H05"
+    },
+    {
+      "package": "cryptography",
+      "version": "50.0.2",
+      "path": "cryptography-50.0.2/tests/hazmat/primitives/decrepit/test_3des.py",
+      "lines": 190,
+      "id": "H06"
+    },
+    {
+      "package": "cryptography",
+      "version": "50.0.2",
+      "path": "cryptography-50.0.2/tests/hazmat/primitives/test_hashes.py",
+      "lines": 273,
+      "id": "H07"
+    },
+    {
+      "package": "cryptography",
+      "version": "50.0.2",
+      "path": "cryptography-50.0.2/tests/hazmat/primitives/test_keywrap.py",
+      "lines": 185,
+      "id": "H08"
+    },
+    {
+      "package": "cryptography",
+      "version": "50.0.2",
+      "path": "cryptography-50.0.2/tests/hazmat/primitives/test_x963_vectors.py",
+      "lines": 64,
+      "id": "H09"
+    },
+    {
+      "package": "cryptography",
+      "version": "50.0.2",
+      "path": "cryptography-50.0.2/tests/hazmat/primitives/test_x963kdf.py",
+      "lines": 134,
+      "id": "H10"
+    },
+    {
+      "package": "django",
+      "version": "6.1.2",
+      "path": "django-6.1.2/django/test/runner.py",
+      "lines": 1297,
+      "id": "H11"
+    },
+    {
+      "package": "docker",
+      "version": "7.2.0",
+      "path": "docker-7.2.0/docker/transport/sshconn.py",
+      "lines": 251,
+      "id": "H12"
+    },
+    {
+      "package": "kubernetes",
+      "version": "37.0.1",
+      "path": "kubernetes-37.0.1/kubernetes/aio/dynamic/discovery.py",
+      "lines": 460,
+      "id": "H13"
+    },
+    {
+      "package": "kubernetes",
+      "version": "37.0.1",
+      "path": "kubernetes-37.0.1/kubernetes/client/configuration.py",
+      "lines": 706,
+      "id": "H14"
+    },
+    {
+      "package": "paramiko",
+      "version": "5.1.0",
+      "path": "paramiko-5.1.0/paramiko/config.py",
+      "lines": 697,
+      "id": "H15"
+    },
+    {
+      "package": "paramiko",
+      "version": "5.1.0",
+      "path": "paramiko-5.1.0/paramiko/packet.py",
+      "lines": 697,
+      "id": "H16"
+    },
+    {
+      "package": "paramiko",
+      "version": "5.1.0",
+      "path": "paramiko-5.1.0/paramiko/win_pageant.py",
+      "lines": 139,
+      "id": "H17"
+    },
+    {
+      "package": "paramiko",
+      "version": "5.1.0",
+      "path": "paramiko-5.1.0/tests/test_transport.py",
+      "lines": 1431,
+      "id": "H18"
+    },
+    {
+      "package": "passlib",
+      "version": "1.7.4",
+      "path": "passlib-1.7.4/passlib/handlers/sha2_crypt.py",
+      "lines": 535,
+      "id": "H19"
+    },
+    {
+      "package": "passlib",
+      "version": "1.7.4",
+      "path": "passlib-1.7.4/passlib/tests/test_crypto_digest.py",
+      "lines": 545,
+      "id": "H20"
+    },
+    {
+      "package": "pip",
+      "version": "26.2.2",
+      "path": "pip-26.2.2/src/pip/_internal/cache.py",
+      "lines": 295,
+      "id": "H21"
+    },
+    {
+      "package": "pip",
+      "version": "26.2.2",
+      "path": "pip-26.2.2/src/pip/_internal/self_outdated_check.py",
+      "lines": 247,
+      "id": "H22"
+    },
+    {
+      "package": "pycryptodome",
+      "version": "4.2.0",
+      "path": "pycryptodome-4.2.0/lib/Crypto/Cipher/ChaCha20.py",
+      "lines": 379,
+      "id": "H23"
+    },
+    {
+      "package": "pycryptodome",
+      "version": "4.2.0",
+      "path": "pycryptodome-4.2.0/lib/Crypto/Cipher/_mode_kwp.py",
+      "lines": 134,
+      "id": "H24"
+    },
+    {
+      "package": "pycryptodome",
+      "version": "4.2.0",
+      "path": "pycryptodome-4.2.0/lib/Crypto/Cipher/_mode_ocb.py",
+      "lines": 571,
+      "id": "H25"
+    },
+    {
+      "package": "pycryptodome",
+      "version": "4.2.0",
+      "path": "pycryptodome-4.2.0/lib/Crypto/Hash/CMAC.py",
+      "lines": 312,
+      "id": "H26"
+    },
+    {
+      "package": "pycryptodome",
+      "version": "4.2.0",
+      "path": "pycryptodome-4.2.0/lib/Crypto/Hash/SHAKE128.py",
+      "lines": 126,
+      "id": "H27"
+    },
+    {
+      "package": "pycryptodome",
+      "version": "4.2.0",
+      "path": "pycryptodome-4.2.0/lib/Crypto/PublicKey/_montgomery.py",
+      "lines": 142,
+      "id": "H28"
+    },
+    {
+      "package": "pycryptodome",
+      "version": "4.2.0",
+      "path": "pycryptodome-4.2.0/lib/Crypto/SelfTest/Cipher/test_CAST.py",
+      "lines": 86,
+      "id": "H29"
+    },
+    {
+      "package": "pycryptodome",
+      "version": "4.2.0",
+      "path": "pycryptodome-4.2.0/lib/Crypto/SelfTest/Hash/test_oneshot_digest.py",
+      "lines": 83,
+      "id": "H30"
+    },
+    {
+      "package": "pymongo",
+      "version": "4.19.0",
+      "path": "pymongo-4.19.0/test/test_pooling.py",
+      "lines": 941,
+      "id": "H31"
+    },
+    {
+      "package": "pyopenssl",
+      "version": "26.4.0",
+      "path": "pyopenssl-26.4.0/tests/test_debug.py",
+      "lines": 11,
+      "id": "H32"
+    },
+    {
+      "package": "redis",
+      "version": "8.1.0",
+      "path": "redis-8.1.0/tests/test_connection.py",
+      "lines": 1726,
+      "id": "H33"
+    },
+    {
+      "package": "requests-oauthlib",
+      "version": "2.0.0",
+      "path": "requests-oauthlib-2.0.0/tests/test_oauth1_session.py",
+      "lines": 332,
+      "id": "H34"
+    },
+    {
+      "package": "scrapy",
+      "version": "2.19.0",
+      "path": "scrapy-2.19.0/scrapy/pipelines/images.py",
+      "lines": 278,
+      "id": "H35"
+    },
+    {
+      "package": "scrapy",
+      "version": "2.19.0",
+      "path": "scrapy-2.19.0/scrapy/utils/_deps_compat.py",
+      "lines": 27,
+      "id": "H36"
+    },
+    {
+      "package": "scrapy",
+      "version": "2.19.0",
+      "path": "scrapy-2.19.0/tests/test_dupefilters.py",
+      "lines": 273,
+      "id": "H37"
+    },
+    {
+      "package": "tornado",
+      "version": "6.6",
+      "path": "tornado-6.6/tornado/test/iostream_test.py",
+      "lines": 1720,
+      "id": "H38"
+    },
+    {
+      "package": "twisted",
+      "version": "26.4.0",
+      "path": "twisted-26.4.0/src/twisted/words/protocols/jabber/xmlstream.py",
+      "lines": 1146,
+      "id": "H39"
+    },
+    {
+      "package": "urllib3",
+      "version": "2.8.0",
+      "path": "urllib3-2.8.0/test/test_util.py",
+      "lines": 1446,
+      "id": "H40"
+    }
+  ]
+}

@@ -68,6 +68,49 @@ python benchmark/precision_sample.py           # rescan, redraw (same seed, pinn
 python benchmark/precision_sample.py --score   # score the committed labels
 ```
 
+## Recall on real code (`recall_sample.py`)
+
+A sample of findings can only say how many findings are wrong; it cannot see what
+the scanner never reported. `recall_sample.py` measures the other half. It draws
+random Python files that import a crypto-capable module from the same 37 pinned
+packages (833 such files), labels **every** quantum-vulnerable usage in each one
+by reading the file before the scanner is run on it, and counts a usage as found
+when the scanner reports that family on one of its lines.
+
+| Sample | Scanner | Usages | Found | Recall | 95% CI |
+|---|---|--:|--:|--:|--:|
+| First, seed 2026, 40 files | 0.3.1, blind | 28 | 19 | **68%** | 49% to 82% |
+| Held-out, seed 2027, 40 other files | after the fixes below, blind | 26 | 23 | **88%** | 71% to 96% |
+
+The first sample's nine misses were patterns the scanner had no rule for:
+algorithm names inside identifiers (`RSAKey`, `ECDSAKey`, `X25519PrivateKey`;
+Curve25519 / Curve448 were not matched at all) and string literals that *are* the
+algorithm's wire name (`"ssh-rsa"`, `"rsa-sha2-256"`, `"kty": "RSA"`), which the
+prose filter masked along with real prose. Both are fixed. Re-scoring the first
+sample afterwards gives 93%, but that sample chose the fixes, so the held-out
+sample, drawn and labeled afterwards from files the fixes never saw, is the number
+to quote. Its three misses: a bytes literal listing several algorithms,
+RSA selected through an imported constant (`SIGNATURE_RSA`), and MD5 reached
+through a helper named `_md5sum`. Single DES (no scanner family) and code that
+implements a curve without naming it remain out of reach of a pattern scanner.
+
+**The new rules were checked for precision too.** Across the 37 packages they add
+about 3,700 findings. A random 60 of them, read by hand, held 58 real usages and 2
+false positives (a test function's name, and an RSA key type inside paramiko's
+`disabled_algorithms`); both patterns are now filtered. The same sample showed
+that `MLKEM768_X25519`-style post-quantum hybrids were being flagged as ECC, which
+would tell users to replace the fix, so ECC on a line naming ML-KEM / Kyber is no
+longer reported. The 93% precision above was measured on 0.3.1 and has not been
+re-drawn.
+
+```bash
+python benchmark/recall_sample.py --score              # first sample
+python benchmark/recall_sample.py --holdout --score    # held-out sample
+```
+
+Results with every miss listed: [RESULTS-recall-holdout.md](RESULTS-recall-holdout.md),
+[RESULTS-recall.md](RESULTS-recall.md).
+
 ## Real-world benchmark (`realworld.py`)
 
 `evaluate.py` measures **precision/recall** on a small labeled corpus.
