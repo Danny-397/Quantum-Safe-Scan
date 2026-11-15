@@ -1,8 +1,12 @@
 
-/* QuantumSafe — Enterprise Slate.
-   Graphite surfaces, one restrained indigo accent, hairline borders. System
-   type with tabular figures for data; monospace for the things that really
-   are code -- snippets, terminal output, URLs, cipher and algorithm names. */
+/* QuantumSafe — Enterprise Slate, "Lattice" edition.
+   Graphite surfaces, one indigo accent (with a periwinkle highlight), hairline
+   borders. System type with tabular figures for data; monospace for the things
+   that really are code -- snippets, terminal output, URLs, cipher and
+   algorithm names. The site's own motifs live in the "Lattice layer" at the
+   end of this file: a lattice point field (post-quantum KEMs are lattice
+   schemes), scan-frame corner brackets taken from the logo, and a slow scan
+   line on the terminal. */
 
 :root {
   /* Enterprise Slate — GitHub/Linear-style graphite, one restrained indigo accent. */
@@ -27,8 +31,15 @@
   --text: #e6edf3;
   --muted: #8b949e;
   --muted-2: #7d8794;   /* nudged lighter to clear AA contrast on the slate bg */
-  --r: 10px;
-  --r-sm: 6px;
+  --accent-hi: #8ea0f2;     /* periwinkle highlight: hovers, eyebrows, glows */
+  --well: #070a10;          /* code wells and inputs */
+  --lift: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0) 55%);
+  --edge: inset 0 1px 0 rgba(255,255,255,.05);
+  --shadow: 0 1px 2px rgba(0,0,0,.35), 0 22px 50px -30px rgba(0,0,0,.85);
+  --glow: 0 10px 30px -12px rgba(91,115,232,.65);
+  --lattice-dot: rgba(142,160,242,.26);
+  --r: 12px;
+  --r-sm: 8px;
   /* motion: hovers and toggles, panels, data (gauge, meters), entrances */
   --ease: cubic-bezier(.2, .7, .2, 1);
   --fast: .16s; --med: .24s; --data: .35s; --enter: .45s;
@@ -778,4 +789,250 @@ html.qs-anim .reveal.in { opacity: 1; transform: none; }
   .fix-item { grid-template-columns: auto 1fr; align-items: start; }
   .fix-count { grid-column: 2; }
   .fix-rec { white-space: normal; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Lattice layer — what makes QuantumSafe look like itself.
+   Same graphite + indigo palette; three motifs used sparingly:
+     1. Lattice point field: a dot grid behind the hero and closing CTA
+        (ML-KEM and ML-DSA are lattice schemes).
+     2. Scan-frame brackets: the logo's corner marks, framing the terminal and
+        the scanner as if in a viewfinder.
+     3. Scan line: a slow sweep down the hero terminal (off for reduced motion).
+   Surfaces lift by tone (top-light gradient + inner highlight), not outlines.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* The hero glow is full-bleed; clip (not hidden) keeps position:sticky working. */
+html, body { overflow-x: clip; }
+::selection { background: rgba(91,115,232,.38); color: #fff; }
+html { scrollbar-color: #2a313c transparent; }
+h1, h2, h3 { text-wrap: balance; }
+a:hover { color: var(--accent-hi); }
+
+/* ---- Eyebrows: mono, tracked, with a lattice node; section ones are numbered ---- */
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--mono); font-size: 11.5px; font-weight: 500;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--accent-hi);
+}
+.eyebrow::before {
+  content: ""; width: 6px; height: 6px; flex: none; transform: rotate(45deg);
+  background: var(--accent); box-shadow: 0 0 10px 1px rgba(91,115,232,.7);
+}
+main { counter-reset: qs-sec; }
+main > .section .section-head .eyebrow::before {
+  counter-increment: qs-sec; content: counter(qs-sec, decimal-leading-zero) " /";
+  width: auto; height: auto; transform: none; background: none; box-shadow: none;
+  color: var(--muted-2); letter-spacing: .06em;
+}
+
+/* ---- Nav ---- */
+.nav { background: rgba(13,17,23,.72); border-bottom-color: rgba(255,255,255,.06); }
+.brand { letter-spacing: -.01em; }
+.brand .logo { filter: drop-shadow(0 0 6px rgba(91,115,232,.45)); }
+
+/* ---- Buttons: lit from above, indigo glow on the primary ---- */
+.btn { background: rgba(255,255,255,.03); box-shadow: var(--edge); }
+.btn:hover { background: rgba(91,115,232,.08); box-shadow: var(--edge), 0 0 0 1px rgba(91,115,232,.25); }
+.btn-primary {
+  background: linear-gradient(180deg, #5468e6, #3f52d6);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.4), 0 8px 22px -12px rgba(63,82,214,.9);
+}
+.btn-primary:hover {
+  background: linear-gradient(180deg, #5d71ea, #4659de);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.24), 0 1px 2px rgba(0,0,0,.4), var(--glow);
+}
+.btn-ghost, .btn-ghost:hover { box-shadow: none; background: transparent; }
+.btn-danger { box-shadow: none; }
+.btn-link { transition: color var(--fast) var(--ease); }
+
+/* ---- Hero: lattice field + indigo aurora behind the terminal ---- */
+.hero { isolation: isolate; }
+.hero::before {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+  top: -90px; bottom: -40px; left: calc(50% - 50vw); right: calc(50% - 50vw);
+  background-image: radial-gradient(var(--lattice-dot) 1px, transparent 1.5px);
+  background-size: 24px 24px; background-position: center top;
+  -webkit-mask-image: radial-gradient(ellipse 55% 70% at 72% 42%, #000 0%, transparent 72%);
+          mask-image: radial-gradient(ellipse 55% 70% at 72% 42%, #000 0%, transparent 72%);
+}
+.hero::after {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+  width: 620px; height: 460px; right: -80px; top: 40px;
+  background: radial-gradient(closest-side, rgba(91,115,232,.26), rgba(91,115,232,0));
+  filter: blur(20px);
+}
+.hero h1 { font-size: 58px; letter-spacing: -.042em; line-height: 1.02; }
+.hero h1 .grn {
+  background: linear-gradient(100deg, #9fb0ff 0%, #5b73e8 55%, #7c8df0 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.hero .sub { color: #9aa4b2; }
+.hero-note { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; letter-spacing: .02em; }
+.hero-note::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--safe); box-shadow: 0 0 8px rgba(63,185,80,.7); }
+
+/* ---- Terminal: deep well, centred glow seam, scan-frame brackets, scan line ---- */
+.terminal {
+  overflow: visible; border-radius: var(--r);
+  background: radial-gradient(120% 80% at 50% 0%, #0d1324 0%, var(--well) 60%);
+  border-color: rgba(142,160,242,.18);
+  box-shadow: var(--edge), 0 40px 80px -40px rgba(0,0,0,.9), 0 0 0 1px rgba(0,0,0,.4);
+}
+.terminal::before {
+  left: 12%; right: 12%; opacity: 1;
+  background: linear-gradient(90deg, transparent, var(--accent-hi), transparent);
+}
+.term-head { border-radius: var(--r) var(--r) 0 0; background: rgba(255,255,255,.025); }
+.term-body { position: relative; }
+.term-body::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, rgba(91,115,232,0), rgba(91,115,232,.09) 50%, rgba(91,115,232,0));
+  background-size: 100% 90px; background-repeat: no-repeat;
+  animation: qs-scanline 6.5s cubic-bezier(.45,0,.55,1) infinite;
+}
+@keyframes qs-scanline { 0% { background-position: 0 -90px; } 70%, 100% { background-position: 0 calc(100% + 90px); } }
+@media (prefers-reduced-motion: reduce) { .term-body::after { animation: none; display: none; } }
+
+/* Scan-frame brackets: four L-marks drawn with gradients, sitting just outside
+   the panel like a viewfinder. Used on the terminal and the scanner only. */
+.terminal::after, .scan-primary::after {
+  content: ""; position: absolute; inset: -9px; pointer-events: none;
+  --bk: rgba(142,160,242,.55); --bl: 14px; --bw: 1.5px;
+  background:
+    linear-gradient(var(--bk), var(--bk)) top left / var(--bl) var(--bw),
+    linear-gradient(var(--bk), var(--bk)) top left / var(--bw) var(--bl),
+    linear-gradient(var(--bk), var(--bk)) top right / var(--bl) var(--bw),
+    linear-gradient(var(--bk), var(--bk)) top right / var(--bw) var(--bl),
+    linear-gradient(var(--bk), var(--bk)) bottom left / var(--bl) var(--bw),
+    linear-gradient(var(--bk), var(--bk)) bottom left / var(--bw) var(--bl),
+    linear-gradient(var(--bk), var(--bk)) bottom right / var(--bl) var(--bw),
+    linear-gradient(var(--bk), var(--bk)) bottom right / var(--bw) var(--bl);
+  background-repeat: no-repeat;
+}
+.term-caption { font-family: var(--mono); font-size: 11px; letter-spacing: .04em; margin-top: 16px; }
+
+/* ---- Section rhythm: fading hairlines instead of full-width rules ---- */
+.section, .footer { position: relative; border-top: 0; }
+.section::before, .footer::before {
+  content: ""; position: absolute; top: 0; left: 24px; right: 24px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-strong) 18%, var(--border-strong) 82%, transparent);
+}
+.section-head h2 { font-size: 40px; letter-spacing: -.035em; color: #f0f4fa; }
+.section-head .lead { color: #9aa4b2; }
+
+/* ---- Surfaces: tone + top light + inner highlight ---- */
+.card, .steps, .detect, .ci-block, .score-cycle-card, .demo-score-card, .demo-findings,
+.auth-card, .mig-item, .cta-band, .scan-tabs {
+  background-image: var(--lift); background-color: var(--panel);
+  box-shadow: var(--edge), var(--shadow);
+}
+.card { border-color: rgba(255,255,255,.07); }
+.card:hover { border-color: rgba(142,160,242,.22); box-shadow: var(--edge), var(--shadow); }
+.score-cycle-card::before, .demo-score-card::before, .auth-card::before {
+  left: 15%; right: 15%; opacity: 1;
+  background: linear-gradient(90deg, transparent, var(--accent-hi), transparent);
+}
+
+/* Wells: code, inputs, tracks share one deep tone with a sunk edge. */
+.code, .ci-yaml, .demo-input, .score-cycle-code, .field input, .home-scan-row input[type="text"],
+.toolbar select, .toolbar input, .scale-track, .demo-bar {
+  background-color: var(--well); box-shadow: inset 0 1px 2px rgba(0,0,0,.45);
+}
+.field input:focus, .home-scan-row input[type="text"]:focus, .demo-input:focus {
+  border-color: var(--accent); box-shadow: inset 0 1px 2px rgba(0,0,0,.45), 0 0 0 3px rgba(91,115,232,.18);
+}
+/* The YAML sample is a <code> inside .ci-block, whose inline-code rule set
+   nowrap and collapsed the workflow onto one line. Restore it. */
+.ci-block .ci-yaml code { white-space: pre; background: none; border: 0; padding: 0; color: inherit; font-size: inherit; }
+
+/* ---- Scanner ---- */
+.scan-tabs { padding: 4px; border-color: rgba(255,255,255,.07); }
+.scan-tab[aria-selected="true"] {
+  background: linear-gradient(180deg, #5468e6, #4b63e0);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 6px 16px -8px rgba(63,82,214,.9);
+}
+.scan-primary {
+  position: relative; padding: 26px;
+  border-color: rgba(91,115,232,.35);
+  background-image: radial-gradient(90% 60% at 50% 0%, rgba(91,115,232,.10), transparent 70%), var(--lift);
+  box-shadow: var(--edge), var(--shadow), 0 0 0 4px rgba(91,115,232,.04);
+}
+.scan-primary:hover { transform: none; border-color: rgba(91,115,232,.45); }
+.scan-primary-head h3 { font-size: 18px; }
+.scan-primary-tag { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+.scan-chip, .url-chip { background: rgba(91,115,232,.07); box-shadow: var(--edge); }
+
+/* ---- Detection rows: tinted level pills ---- */
+.detect-row { grid-template-columns: 112px 1fr; padding: 22px 26px; }
+.detect-tag {
+  justify-self: start; display: inline-flex; align-items: center; gap: 7px;
+  padding: 4px 10px; border-radius: 999px; font-family: var(--mono); font-size: 11px; letter-spacing: .08em;
+}
+.detect-tag::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; box-shadow: 0 0 8px currentColor; }
+.detect-tag.hi { background: rgba(248,81,73,.1); }
+.detect-tag.me { background: rgba(210,153,34,.1); }
+.detect-tag.lo { background: rgba(63,185,80,.1); }
+.detect-algos { font-size: 14.5px; }
+
+/* ---- Steps: numbered lattice nodes joined by a rail ---- */
+.step { padding: 30px 26px; }
+.step .n {
+  display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 9px;
+  font-family: var(--mono); font-size: 12px; color: var(--accent-hi);
+  background: rgba(91,115,232,.08); border: 1px solid rgba(142,160,242,.25);
+  box-shadow: 0 0 18px -6px rgba(91,115,232,.6); margin-bottom: 16px;
+}
+.step::after {
+  content: ""; position: absolute; top: 47px; left: 72px; right: 0; height: 1px;
+  background: linear-gradient(90deg, rgba(142,160,242,.3), transparent);
+}
+.step:last-child::after { display: none; }
+.step h3 { font-size: 17px; }
+
+/* ---- Big numbers: a faint glow in their own band colour ---- */
+.score-big, .demo-score, .stat { letter-spacing: -.04em; font-family: var(--display); }
+.score-big, .demo-score { text-shadow: 0 0 28px color-mix(in srgb, currentColor 35%, transparent); }
+.scale-marker { box-shadow: 0 0 10px rgba(255,255,255,.8), 0 0 0 3px rgba(255,255,255,.08); }
+
+/* ---- Closing CTA: the lattice again, with the glow from below ---- */
+.cta-band {
+  padding: 52px 48px; border-color: rgba(91,115,232,.3);
+  background-image:
+    radial-gradient(60% 120% at 100% 100%, rgba(91,115,232,.22), transparent 70%),
+    radial-gradient(var(--lattice-dot) 1px, transparent 1.5px),
+    var(--lift);
+  background-size: auto, 24px 24px, auto;
+}
+.cta-band::before { left: 10%; right: 10%; background: linear-gradient(90deg, transparent, var(--accent-hi), transparent); }
+.cta-band h2 { font-size: 30px; letter-spacing: -.03em; }
+
+/* ---- App shell ---- */
+.sidebar { background-image: var(--lift); }
+.sidebar nav a.active {
+  background: linear-gradient(90deg, rgba(91,115,232,.16), rgba(91,115,232,.03));
+  color: var(--accent-hi);
+}
+.page-head h1 { font-size: 26px; letter-spacing: -.03em; }
+.auth-shell { position: relative; isolation: isolate; }
+.auth-shell::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background-image: radial-gradient(var(--lattice-dot) 1px, transparent 1.5px);
+  background-size: 24px 24px;
+  -webkit-mask-image: radial-gradient(ellipse 45% 50% at 50% 50%, #000, transparent 75%);
+          mask-image: radial-gradient(ellipse 45% 50% at 50% 50%, #000, transparent 75%);
+}
+
+@media (max-width: 880px) {
+  .hero h1 { font-size: 40px; }
+  .hero::after { width: 380px; height: 320px; right: -60px; top: auto; bottom: 0; }
+  .step::after { display: none; }
+}
+@media (max-width: 640px) {
+  .hero h1 { font-size: 35px; }
+  .section-head h2 { font-size: 26px; }
+  .cta-band { padding: 32px 24px; }
+  .cta-band h2 { font-size: 24px; }
+  .detect-row { grid-template-columns: 1fr; gap: 10px; padding: 18px 20px; }
+  .terminal::after, .scan-primary::after { inset: -6px; --bl: 10px; }
+  .scan-primary { padding: 20px; }
 }
