@@ -686,7 +686,7 @@ jobs:
 | `output` | `quantumsafe.sarif` | Where to write the SARIF report |
 | `exclude` | *(none)* | Comma-separated globs to skip |
 | `fail-on-high` | `"false"` | Exit non-zero if any HIGH finding is present |
-| `version` | *(latest)* | Pin `quantumsafe-scan`, e.g. `0.3.1` |
+| `version` | *(latest)* | Pin `quantumsafe-scan`, e.g. `0.3.2` |
 
 Pin to a released tag rather than `@main` once one exists — `@main` moves under
 you, which is the same class of problem as an unpinned linter.
