@@ -938,8 +938,8 @@ not gates on the core detection, which is the part that should always be open.
 
 Every release is archived on Zenodo. To cite QuantumSafe, use
 [10.5281/zenodo.23843488](https://doi.org/10.5281/zenodo.23843488), which always
-resolves to the newest version; v0.3.1 on its own is
-[10.5281/zenodo.23843498](https://doi.org/10.5281/zenodo.23843498). GitHub's
+resolves to the newest version; v0.3.2 on its own is
+[10.5281/zenodo.24267519](https://doi.org/10.5281/zenodo.24267519). GitHub's
 "Cite this repository" button reads the same details from
 [CITATION.cff](CITATION.cff).
 
