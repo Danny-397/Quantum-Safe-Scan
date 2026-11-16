@@ -5,6 +5,8 @@ All notable changes to QuantumSafe are documented here. This project follows
 
 ## [Unreleased]
 
+## [0.3.2] — 2026-11-15
+
 ### Added
 - **Recall on real code** (`benchmark/recall_sample.py`): random files from the 37
   pinned PyPI packages, every quantum-vulnerable usage labeled by hand before the
@@ -229,7 +231,8 @@ All notable changes to QuantumSafe are documented here. This project follows
   security disclosure policy (SECURITY.md + security.txt).
 - **Quality:** 45-test pytest suite, GitHub Actions CI, demo seed script.
 
-[Unreleased]: https://github.com/Danny-397/Quantum-Safe-Scan/compare/v0.3.1...HEAD
+[Unreleased]: https://github.com/Danny-397/Quantum-Safe-Scan/compare/v0.3.2...HEAD
+[0.3.2]: https://github.com/Danny-397/Quantum-Safe-Scan/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/Danny-397/Quantum-Safe-Scan/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/Danny-397/Quantum-Safe-Scan/releases/tag/v0.3.0
 [0.2.0]: https://github.com/Danny-397/Quantum-Safe-Scan/releases/tag/v0.2.0
