@@ -5,6 +5,12 @@ All notable changes to QuantumSafe are documented here. This project follows
 
 ## [Unreleased]
 
+### Added
+- **Precision re-measured for 0.3.2** (`precision_sample.py --current`): a fresh
+  random sample of 100 findings (seed 2028) from the same pinned packages, labeled
+  by hand: 95% (95% CI 89–98%), against 93% for 0.3.1. Three true positives are the
+  classical half of a post-quantum hybrid; counted as false positives, 92%.
+
 ## [0.3.2] — 2026-11-15
 
 ### Added

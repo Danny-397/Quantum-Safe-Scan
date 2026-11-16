@@ -1,0 +1,402 @@
+{
+ "urllib3:urllib3-2.8.0/src/urllib3/contrib/pyopenssl.py:82:tls12": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "werkzeug:werkzeug-3.1.9/src/werkzeug/debug/__init__.py:45:sha1": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "django:django-6.1.2/django/db/backends/utils.py:309:md5": {
+  "label": "tp",
+  "reason": "md5(usedforsecurity=False) still computes MD5; executable use (the definition does not exempt non-security uses)."
+ },
+ "django:django-6.1.2/tests/utils_tests/test_crypto.py:45:sha1": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "aiohttp:aiohttp-3.14.5/tests/test_connector.py:2643:sha256": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "paramiko:paramiko-5.1.0/paramiko/hostkeys.py:25:sha1": {
+  "label": "tp",
+  "reason": "Imports the algorithm's implementation."
+ },
+ "paramiko:paramiko-5.1.0/paramiko/kex_mlkem.py:22:ecc": {
+  "label": "tp",
+  "reason": "Uses X25519 as the classical half of a post-quantum hybrid (paramiko kex_mlkem: mlkem768x25519-sha256 key exchange); executable use, so TP under this definition, but the scanner's own hybrid rule says it should not be reported (it is named on a nearby line, not this one)."
+ },
+ "paramiko:paramiko-5.1.0/paramiko/pkey.py:41:rsa": {
+  "label": "tp",
+  "reason": "Imports the algorithm's implementation."
+ },
+ "paramiko:paramiko-5.1.0/tests/pkey.py:150:rsa": {
+  "label": "tp",
+  "reason": "Literal is the SSH certificate key-type identifier the test compares against; selects RSA."
+ },
+ "paramiko:paramiko-5.1.0/tests/pkey.py:223:rsa": {
+  "label": "tp",
+  "reason": "Literal is an RSA SSH signature identifier in the expected identifiers list."
+ },
+ "pyjwt:pyjwt-2.15.1/jwt/algorithms.py:50:ecc": {
+  "label": "tp",
+  "reason": "Imports the algorithm's implementation."
+ },
+ "pyjwt:pyjwt-2.15.1/jwt/algorithms.py:950:ecc": {
+  "label": "tp",
+  "reason": "Ed25519 key class in the tuple of allowed key types the code checks against."
+ },
+ "pyjwt:pyjwt-2.15.1/tests/test_algorithms.py:966:sha256": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pyjwt:pyjwt-2.15.1/tests/test_algorithms.py:1565:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pyjwt:pyjwt-2.15.1/tests/test_api_jws.py:787:rsa": {
+  "label": "tp",
+  "reason": "'RS256' selects RSA PKCS#1 v1.5 signing in the parametrized test."
+ },
+ "pyopenssl:pyopenssl-26.4.0/tests/test_ssl.py:984:rsa": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/src/cryptography/hazmat/primitives/asymmetric/ec.py:98:ecc": {
+  "label": "tp",
+  "reason": "Signature/definition typed on or implementing this algorithm's keys."
+ },
+ "cryptography:cryptography-50.0.2/src/cryptography/hazmat/primitives/asymmetric/ed448.py:88:ecc": {
+  "label": "tp",
+  "reason": "Signature/definition typed on or implementing this algorithm's keys."
+ },
+ "cryptography:cryptography-50.0.2/src/cryptography/hazmat/primitives/asymmetric/types.py:42:ecc": {
+  "label": "tp",
+  "reason": "Ed25519 key class in the union of private key types the code acts on."
+ },
+ "cryptography:cryptography-50.0.2/src/rust/cryptography-key-parsing/src/utils.rs:12:dh": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/src/rust/src/backend/dh.rs:178:dh": {
+  "label": "tp",
+  "reason": "Signature/definition typed on or implementing this algorithm's keys."
+ },
+ "cryptography:cryptography-50.0.2/src/rust/src/backend/hpke.rs:1144:ecc": {
+  "label": "tp",
+  "reason": "Uses X25519 as the classical half of a post-quantum hybrid (MlKem768X25519PrivateKey.decapsulate in hpke.rs); executable use, so TP under this definition, but the scanner's own hybrid rule says it should not be reported (it is named on a nearby line, not this one)."
+ },
+ "cryptography:cryptography-50.0.2/src/rust/src/x509/sign.rs:593:rsa": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/doubles.py:8:rsa": {
+  "label": "tp",
+  "reason": "Imports the algorithm's implementation."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_dh.py:260:dh": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_dh.py:482:dh": {
+  "label": "tp",
+  "reason": "Loads DH test vectors that the test then exercises; executable use, but the match is on the vector directory name in the path."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_dsa.py:35:sha256": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_dsa.py:848:dsa": {
+  "label": "tp",
+  "reason": "Type check on a key of this algorithm; code acting on it."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_ec.py:361:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_ec.py:387:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_ec.py:504:ecc": {
+  "label": "tp",
+  "reason": "Loads ECDSA test vectors that the test then exercises; executable use, but the match is on the vector directory name in the path."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_ed25519.py:56:ecc": {
+  "label": "tp",
+  "reason": "Loads Ed25519 test vectors that the test then exercises; executable use, but the match is on the vector directory name in the path."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_ed448.py:231:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_hmac_vectors.py:34:sha1": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_hpke.py:264:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_hpke.py:767:ecc": {
+  "label": "tp",
+  "reason": "Uses P-384 as the classical half of a post-quantum hybrid (MLKEM1024P384 hybrid key in test_hpke.py); executable use, so TP under this definition, but the scanner's own hybrid rule says it should not be reported (it is named on a nearby line, not this one)."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_pkcs12.py:508:ecc": {
+  "label": "tp",
+  "reason": "Type check on a key of this algorithm; code acting on it."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_pkcs12.py:718:sha1": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_rsa.py:952:rsa": {
+  "label": "tp",
+  "reason": "Signature/definition typed on or implementing this algorithm's keys."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_rsa.py:995:sha1": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_rsa.py:1101:sha256": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_rsa.py:1371:sha256": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_rsa.py:2225:rsa": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_serialization.py:1228:dsa": {
+  "label": "tp",
+  "reason": "Type check on a key of this algorithm; code acting on it."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_x963_vectors.py:32:sha256": {
+  "label": "tp",
+  "reason": "Table entry mapping a name to the SHA-256 class, which the tests act on."
+ },
+ "cryptography:cryptography-50.0.2/tests/hazmat/primitives/twofactor/test_hotp.py:35:sha1": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/wycheproof/test_ecdh.py:21:ecc": {
+  "label": "tp",
+  "reason": "Table entry mapping a curve name to SECP521R1, which the tests act on."
+ },
+ "cryptography:cryptography-50.0.2/tests/x509/test_x509.py:2779:sha256": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/x509/test_x509.py:2929:sha256": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/x509/test_x509.py:5761:rsa": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/x509/test_x509_crlbuilder.py:1026:sha256": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "cryptography:cryptography-50.0.2/tests/x509/test_x509_ext.py:855:sha256": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/Doc/conf.py:52:ecc": {
+  "label": "fp",
+  "reason": "Sphinx doc-build stub (a lambda returning 0) named after an Ed448 C function; no Ed448 is used."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/PublicKey/DSA.py:36:sha256": {
+  "label": "tp",
+  "reason": "Imports the algorithm's implementation."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/Cipher/test_ARC4.py:462:rc4": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/Protocol/test_ecdh.py:636:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_DSA.py:191:dsa": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_ECC_Ed25519.py:67:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_ECC_Ed448.py:316:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_ECC_NIST.py:1308:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_RSA.py:193:rsa": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_Curve25519.py:139:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_Curve25519.py:210:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_ECC.py:254:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_ECC.py:836:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_ECC.py:1561:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_ECC.py:1672:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_ECC.py:2450:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_ECC.py:2915:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/Signature/test_dss.py:203:dsa": {
+  "label": "tp",
+  "reason": "Loads DSA test vectors that the test then exercises; executable use, but the match is on the vector directory name in the path."
+ },
+ "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/Signature/test_pss.py:7:sha1": {
+  "label": "tp",
+  "reason": "Imports the algorithm's implementation."
+ },
+ "pycryptodome:pycryptodome-4.2.0/src/ed448.c:196:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/src/test/test_curve448.c:132:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pycryptodome:pycryptodome-4.2.0/src/test/test_ed25519.c:481:ecc": {
+  "label": "tp",
+  "reason": "Frees an Ed25519 point in the C implementation's own tests; implementation code."
+ },
+ "pycryptodome:pycryptodome-4.2.0/src/test/test_ed448.c:450:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "rsa:rsa-4.9.1/rsa/cli.py:26:rsa": {
+  "label": "tp",
+  "reason": "Imports the algorithm's implementation."
+ },
+ "ecdsa:ecdsa-0.19.2/src/ecdsa/eddsa.py:140:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "ecdsa:ecdsa-0.19.2/src/ecdsa/test_ecdsa.py:11:ecc": {
+  "label": "tp",
+  "reason": "Imports the algorithm's implementation."
+ },
+ "ecdsa:ecdsa-0.19.2/src/ecdsa/test_eddsa.py:37:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "ecdsa:ecdsa-0.19.2/src/ecdsa/test_eddsa.py:349:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "ecdsa:ecdsa-0.19.2/src/ecdsa/test_eddsa.py:538:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "passlib:passlib-1.7.4/passlib/handlers/md5_crypt.py:100:md5": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "passlib:passlib-1.7.4/passlib/tests/test_handlers_pbkdf2.py:394:sha1": {
+  "label": "tp",
+  "reason": "'sha-1' in the list of digest algorithms the test asserts the hash used."
+ },
+ "passlib:passlib-1.7.4/passlib/tests/test_utils_pbkdf2.py:103:sha1": {
+  "label": "tp",
+  "reason": "PBKDF1 test vector row that selects SHA-1 for the computation."
+ },
+ "itsdangerous:itsdangerous-2.2.0/tests/test_itsdangerous/test_serializer.py:190:sha1": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "botocore:botocore-1.43.120/tests/unit/test_handlers.py:1436:md5": {
+  "label": "tp",
+  "reason": "Calls the handler that computes Content-MD5 (the digest is mocked in this test, but the line exercises the MD5 path, unlike a mock.patch target string)."
+ },
+ "redis:redis-8.1.0/redis/ocsp.py:259:sha256": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "pymongo:pymongo-4.19.0/test/test_gridfs_bucket.py:535:md5": {
+  "label": "fp",
+  "reason": "Asserts that a GridFS file's md5 attribute is None; nothing is computed with MD5."
+ },
+ "scrapy:scrapy-2.19.0/tests/test_downloader_handler_twisted_ftp.py:91:dh": {
+  "label": "fp",
+  "reason": "'dh' is a download-handler parameter (FTPDownloadHandler), not Diffie-Hellman."
+ },
+ "scrapy:scrapy-2.19.0/tests/test_downloader_handler_twisted_ftp.py:107:dh": {
+  "label": "fp",
+  "reason": "'dh' is a download-handler variable (dh.download_request), not Diffie-Hellman."
+ },
+ "twisted:twisted-26.4.0/src/twisted/conch/ssh/keys.py:916:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "twisted:twisted-26.4.0/src/twisted/conch/ssh/keys.py:1069:dsa": {
+  "label": "tp",
+  "reason": "Returns the key type name for a DSA key object (isinstance check on the line above)."
+ },
+ "twisted:twisted-26.4.0/src/twisted/conch/test/test_keys.py:1282:ecc": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "twisted:twisted-26.4.0/src/twisted/conch/test/test_keys.py:1595:dsa": {
+  "label": "tp",
+  "reason": "b'ssh-dss' selects DSA signing."
+ },
+ "twisted:twisted-26.4.0/src/twisted/conch/test/test_ssh.py:865:rsa": {
+  "label": "tp",
+  "reason": "b'ssh-rsa' keys the RSA host key the code serves."
+ },
+ "twisted:twisted-26.4.0/src/twisted/conch/test/test_telnet.py:202:ecc": {
+  "label": "fp",
+  "reason": "'EC' is the telnet Erase Character command, not elliptic curve."
+ },
+ "twisted:twisted-26.4.0/src/twisted/conch/test/test_transport.py:2332:sha1": {
+  "label": "tp",
+  "reason": "Executable code calling, constructing or selecting the algorithm."
+ },
+ "twisted:twisted-26.4.0/src/twisted/cred/_digest.py:18:md5": {
+  "label": "tp",
+  "reason": "Table entry mapping b'md5' to the md5 function the digest code calls."
+ },
+ "twisted:twisted-26.4.0/src/twisted/cred/test/test_digestauth.py:679:md5": {
+  "label": "tp",
+  "reason": "b'md5' selects the digest algorithm passed to calcHA1."
+ },
+ "setuptools:setuptools-84.2.1/setuptools/tests/integration/test_pip_install_sdist.py:22:md5": {
+  "label": "tp",
+  "reason": "Imports the algorithm's implementation."
+ }
+}
