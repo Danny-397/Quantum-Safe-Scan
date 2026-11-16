@@ -52,9 +52,10 @@ pinned), draws **100 findings at random** (seed 2026) from all 5,679, and every
 one is labeled by reading its source, with the reason recorded in
 [`precision_labels.json`](precision_labels.json).
 
-| Sample | TP | FP | Precision | 95% CI |
-|--:|--:|--:|--:|--:|
-| 100 | 93 | 7 | **93%** | 86% to 97% |
+| Sample | Scanner | TP | FP | Precision | 95% CI |
+|---|---|--:|--:|--:|--:|
+| First, seed 2026, 100 of 5,679 findings | 0.3.1 | 93 | 7 | **93%** | 86% to 97% |
+| Fresh, seed 2028, 100 of 8,909 findings | 0.3.2 | 95 | 5 | **95%** | 89% to 98% |
 
 Four of the seven false positives were the same defect: the TLS 1.0 rule matched
 `SSLv3` / `TLSv1` inside **disable** flags (`OP_NO_SSLv3`, `OP_NO_TLSv1`), which
@@ -63,9 +64,23 @@ its own token; regression tests cover both directions. The measurement above is
 the scanner **before** that fix, reported as measured. Full table and every false
 positive: [RESULTS-precision.md](RESULTS-precision.md).
 
+The second row is a **fresh draw for 0.3.2**, from the same pinned packages, so it
+measures the scanner after the recall fixes rather than re-scoring the sample whose
+mistakes chose them. The recall fixes raised the pool from 5,679 findings to 8,909,
+and precision held. Two things to read alongside it: three of the true positives are
+the classical half of a post-quantum hybrid (X25519 or P-384 next to ML-KEM, named on
+a nearby line), which the scanner's own hybrid rule says should not be reported, so
+counting them as false positives gives **92% (85% to 96%)**; and the remaining false
+positives are `dh` as a variable name (seen in the first sample too), telnet's `"EC"`
+command, a GridFS `md5` attribute and a Sphinx stub. They are left unfixed so the
+sample stays a measurement. Labels and reasons:
+[`precision_current_labels.json`](precision_current_labels.json); full table:
+[RESULTS-precision-current.md](RESULTS-precision-current.md).
+
 ```bash
 python benchmark/precision_sample.py           # rescan, redraw (same seed, pinned versions)
 python benchmark/precision_sample.py --score   # score the committed labels
+python benchmark/precision_sample.py --current --score   # the fresh 0.3.2 sample
 ```
 
 ## Recall on real code (`recall_sample.py`)
@@ -100,8 +115,8 @@ false positives (a test function's name, and an RSA key type inside paramiko's
 `disabled_algorithms`); both patterns are now filtered. The same sample showed
 that `MLKEM768_X25519`-style post-quantum hybrids were being flagged as ECC, which
 would tell users to replace the fix, so ECC on a line naming ML-KEM / Kyber is no
-longer reported. The 93% precision above was measured on 0.3.1 and has not been
-re-drawn.
+longer reported. Precision for the scanner with these rules is the fresh 0.3.2
+sample above: 95%.
 
 ```bash
 python benchmark/recall_sample.py --score              # first sample

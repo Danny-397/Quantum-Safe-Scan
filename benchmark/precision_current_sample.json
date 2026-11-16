@@ -1,0 +1,1842 @@
+{
+ "seed": 2028,
+ "pool_size": 8909,
+ "versions": {
+  "requests": "2.34.2",
+  "urllib3": "2.8.0",
+  "flask": "3.1.3",
+  "werkzeug": "3.1.9",
+  "django": "6.1.2",
+  "aiohttp": "3.14.5",
+  "paramiko": "5.1.0",
+  "pyjwt": "2.15.1",
+  "oauthlib": "4.0.0",
+  "requests-oauthlib": "2.0.0",
+  "pyopenssl": "26.4.0",
+  "cryptography": "50.0.2",
+  "pycryptodome": "4.2.0",
+  "rsa": "4.9.1",
+  "ecdsa": "0.19.2",
+  "passlib": "1.7.4",
+  "bcrypt": "5.0.0",
+  "itsdangerous": "2.2.0",
+  "boto3": "1.43.120",
+  "botocore": "1.43.120",
+  "sqlalchemy": "2.1.6",
+  "redis": "8.1.0",
+  "pymongo": "4.19.0",
+  "elasticsearch": "9.5.1",
+  "celery": "5.6.3",
+  "tornado": "6.6",
+  "scrapy": "2.19.0",
+  "twisted": "26.4.0",
+  "pip": "26.2.2",
+  "setuptools": "84.2.1",
+  "docker": "7.2.0",
+  "kubernetes": "37.0.1",
+  "jinja2": "3.1.6",
+  "certifi": "2026.10.23",
+  "httpx": "0.28.1",
+  "websockets": "17.3",
+  "pyyaml": "6.0.3"
+ },
+ "sample": [
+  {
+   "package": "urllib3",
+   "file": "urllib3-2.8.0/src/urllib3/contrib/pyopenssl.py",
+   "line": 82,
+   "algorithm": "TLS 1.2",
+   "family": "tls12",
+   "risk": "LOW",
+   "context": [
+    "   79      _openssl_versions[ssl.PROTOCOL_TLSv1_1] = OpenSSL.SSL.TLSv1_1_METHOD",
+    "   80  ",
+    "   81  if hasattr(ssl, \"PROTOCOL_TLSv1_2\") and hasattr(OpenSSL.SSL, \"TLSv1_2_METHOD\"):",
+    "   82>     _openssl_versions[ssl.PROTOCOL_TLSv1_2] = OpenSSL.SSL.TLSv1_2_METHOD",
+    "   83  ",
+    "   84  ",
+    "   85  _stdlib_to_openssl_verify = {"
+   ],
+   "id": "urllib3:urllib3-2.8.0/src/urllib3/contrib/pyopenssl.py:82:tls12"
+  },
+  {
+   "package": "werkzeug",
+   "file": "werkzeug-3.1.9/src/werkzeug/debug/__init__.py",
+   "line": 45,
+   "algorithm": "SHA-1",
+   "family": "sha1",
+   "risk": "HIGH",
+   "context": [
+    "   42  ",
+    "   43  ",
+    "   44  def hash_pin(pin: str) -> str:",
+    "   45>     return hashlib.sha1(f\"{pin} added salt\".encode(\"utf-8\", \"replace\")).hexdigest()[:12]",
+    "   46  ",
+    "   47  ",
+    "   48  _machine_id: str | bytes | None = None"
+   ],
+   "id": "werkzeug:werkzeug-3.1.9/src/werkzeug/debug/__init__.py:45:sha1"
+  },
+  {
+   "package": "django",
+   "file": "django-6.1.2/django/db/backends/utils.py",
+   "line": 309,
+   "algorithm": "MD5",
+   "family": "md5",
+   "risk": "HIGH",
+   "context": [
+    "  306      Generate a 32-bit digest of a set of arguments that can be used to shorten",
+    "  307      identifying names.",
+    "  308      \"\"\"",
+    "  309>     h = md5(usedforsecurity=False)",
+    "  310      for arg in args:",
+    "  311          h.update(arg.encode())",
+    "  312      return h.hexdigest()[:length]"
+   ],
+   "id": "django:django-6.1.2/django/db/backends/utils.py:309:md5"
+  },
+  {
+   "package": "django",
+   "file": "django-6.1.2/tests/utils_tests/test_crypto.py",
+   "line": 45,
+   "algorithm": "SHA-1",
+   "family": "sha1",
+   "risk": "HIGH",
+   "context": [
+    "   42              ),",
+    "   43              (",
+    "   44                  (\"salt\", \"value\"),",
+    "   45>                 {\"secret\": \"x\" * hashlib.sha1().block_size, \"algorithm\": \"sha1\"},",
+    "   46                  \"bd3749347b412b1b0a9ea65220e55767ac8e96b0\",",
+    "   47              ),",
+    "   48              ("
+   ],
+   "id": "django:django-6.1.2/tests/utils_tests/test_crypto.py:45:sha1"
+  },
+  {
+   "package": "aiohttp",
+   "file": "aiohttp-3.14.5/tests/test_connector.py",
+   "line": 2643,
+   "algorithm": "SHA-256",
+   "family": "sha256",
+   "risk": "LOW",
+   "context": [
+    " 2640  async def test_tcp_connector_ctor_fingerprint_valid(",
+    " 2641      loop: asyncio.AbstractEventLoop,",
+    " 2642  ) -> None:",
+    " 2643>     valid = aiohttp.Fingerprint(hashlib.sha256(b\"foo\").digest())",
+    " 2644      conn = aiohttp.TCPConnector(ssl=valid, loop=loop)",
+    " 2645      assert conn._ssl is valid",
+    " 2646  "
+   ],
+   "id": "aiohttp:aiohttp-3.14.5/tests/test_connector.py:2643:sha256"
+  },
+  {
+   "package": "paramiko",
+   "file": "paramiko-5.1.0/paramiko/hostkeys.py",
+   "line": 25,
+   "algorithm": "SHA-1",
+   "family": "sha1",
+   "risk": "HIGH",
+   "context": [
+    "   22  import re",
+    "   23  from base64 import decodebytes, encodebytes",
+    "   24  from collections.abc import MutableMapping",
+    "   25> from hashlib import sha1",
+    "   26  from hmac import HMAC",
+    "   27  ",
+    "   28  from paramiko.pkey import PKey, UnknownKeyType"
+   ],
+   "id": "paramiko:paramiko-5.1.0/paramiko/hostkeys.py:25:sha1"
+  },
+  {
+   "package": "paramiko",
+   "file": "paramiko-5.1.0/paramiko/kex_mlkem.py",
+   "line": 22,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "   19  from cryptography.hazmat.primitives import constant_time",
+    "   20  from cryptography.hazmat.primitives.asymmetric.x25519 import (",
+    "   21      X25519PrivateKey,",
+    "   22>     X25519PublicKey,",
+    "   23  )",
+    "   24  ",
+    "   25  try:"
+   ],
+   "id": "paramiko:paramiko-5.1.0/paramiko/kex_mlkem.py:22:ecc"
+  },
+  {
+   "package": "paramiko",
+   "file": "paramiko-5.1.0/paramiko/pkey.py",
+   "line": 41,
+   "algorithm": "RSA",
+   "family": "rsa",
+   "risk": "HIGH",
+   "context": [
+    "   38      EllipticCurvePrivateKey,",
+    "   39  )",
+    "   40  from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey",
+    "   41> from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey",
+    "   42  from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes",
+    "   43  ",
+    "   44  from paramiko import util"
+   ],
+   "id": "paramiko:paramiko-5.1.0/paramiko/pkey.py:41:rsa"
+  },
+  {
+   "package": "paramiko",
+   "file": "paramiko-5.1.0/tests/pkey.py",
+   "line": 150,
+   "algorithm": "RSA",
+   "family": "rsa",
+   "risk": "HIGH",
+   "context": [
+    "  147              assert key.public_blob.comment == \"test_rsa.key.pub\"",
+    "  148              msg = Message(key.public_blob.key_blob)",
+    "  149              # cert type",
+    "  150>             assert msg.get_text() == \"ssh-rsa-cert-v01@openssh.com\"",
+    "  151              # nonce",
+    "  152              msg.get_string()",
+    "  153              # public numbers"
+   ],
+   "id": "paramiko:paramiko-5.1.0/tests/pkey.py:150:rsa"
+  },
+  {
+   "package": "paramiko",
+   "file": "paramiko-5.1.0/tests/pkey.py",
+   "line": 223,
+   "algorithm": "RSA",
+   "family": "rsa",
+   "risk": "HIGH",
+   "context": [
+    "  220              assert RSAKey.identifiers() == [",
+    "  221                  \"rsa-sha2-256\",",
+    "  222                  \"rsa-sha2-256-cert-v01@openssh.com\",",
+    "  223>                 \"rsa-sha2-512\",",
+    "  224                  \"rsa-sha2-512-cert-v01@openssh.com\",",
+    "  225                  # Still required for identifying keys-not-algorithms! But now",
+    "  226                  # they come last."
+   ],
+   "id": "paramiko:paramiko-5.1.0/tests/pkey.py:223:rsa"
+  },
+  {
+   "package": "pyjwt",
+   "file": "pyjwt-2.15.1/jwt/algorithms.py",
+   "line": 50,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "   47          EllipticCurve,",
+    "   48          EllipticCurvePrivateKey,",
+    "   49          EllipticCurvePrivateNumbers,",
+    "   50>         EllipticCurvePublicKey,",
+    "   51          EllipticCurvePublicNumbers,",
+    "   52      )",
+    "   53      from cryptography.hazmat.primitives.asymmetric.ed448 import ("
+   ],
+   "id": "pyjwt:pyjwt-2.15.1/jwt/algorithms.py:50:ecc"
+  },
+  {
+   "package": "pyjwt",
+   "file": "pyjwt-2.15.1/jwt/algorithms.py",
+   "line": 950,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "  947              tuple[type[AllowedKeys], ...],",
+    "  948              get_args(",
+    "  949                  Union[",
+    "  950>                     Ed25519PrivateKey,",
+    "  951                      Ed25519PublicKey,",
+    "  952                      Ed448PrivateKey,",
+    "  953                      Ed448PublicKey,"
+   ],
+   "id": "pyjwt:pyjwt-2.15.1/jwt/algorithms.py:950:ecc"
+  },
+  {
+   "package": "pyjwt",
+   "file": "pyjwt-2.15.1/tests/test_algorithms.py",
+   "line": 966,
+   "algorithm": "SHA-256",
+   "family": "sha256",
+   "risk": "LOW",
+   "context": [
+    "  963  ",
+    "  964          signature = base64url_decode(b\"s0h6KThzkfBBBkLspW1h84VsJZFTsPPqMDA7g1Md7p0\")",
+    "  965  ",
+    "  966>         algo = HMACAlgorithm(HMACAlgorithm.SHA256)",
+    "  967          key = algo.prepare_key(load_hmac_key())",
+    "  968  ",
+    "  969          result = algo.verify(signing_input, key, signature)"
+   ],
+   "id": "pyjwt:pyjwt-2.15.1/tests/test_algorithms.py:966:sha256"
+  },
+  {
+   "package": "pyjwt",
+   "file": "pyjwt-2.15.1/tests/test_algorithms.py",
+   "line": 1565,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    " 1562          \"\"\"ES256K should accept secp256k1 keys.\"\"\"",
+    " 1563          from cryptography.hazmat.primitives.asymmetric.ec import SECP256K1",
+    " 1564  ",
+    " 1565>         algo = ECAlgorithm(ECAlgorithm.SHA256, SECP256K1)",
+    " 1566  ",
+    " 1567          with open(key_path(\"jwk_ec_key_secp256k1.json\")) as keyfile:",
+    " 1568              key = algo.from_jwk(keyfile.read())"
+   ],
+   "id": "pyjwt:pyjwt-2.15.1/tests/test_algorithms.py:1565:ecc"
+  },
+  {
+   "package": "pyjwt",
+   "file": "pyjwt-2.15.1/tests/test_api_jws.py",
+   "line": 787,
+   "algorithm": "RSA",
+   "family": "rsa",
+   "risk": "HIGH",
+   "context": [
+    "  784      @pytest.mark.parametrize(",
+    "  785          \"algo\",",
+    "  786          [",
+    "  787>             \"RS256\",",
+    "  788              \"RS384\",",
+    "  789              \"RS512\",",
+    "  790          ],"
+   ],
+   "id": "pyjwt:pyjwt-2.15.1/tests/test_api_jws.py:787:rsa"
+  },
+  {
+   "package": "pyopenssl",
+   "file": "pyopenssl-26.4.0/tests/test_ssl.py",
+   "line": 984,
+   "algorithm": "RSA <2048 (weak key size)",
+   "family": "rsa",
+   "risk": "MEDIUM",
+   "context": [
+    "  981          passphrase.  Return the path to the new file.",
+    "  982          \"\"\"",
+    "  983          key = PKey()",
+    "  984>         key.generate_key(TYPE_RSA, 1024)",
+    "  985          pem = dump_privatekey(FILETYPE_PEM, key, \"aes-256-cbc\", passphrase)",
+    "  986          with open(tmpfile, \"w\") as fObj:",
+    "  987              fObj.write(pem.decode(\"ascii\"))"
+   ],
+   "id": "pyopenssl:pyopenssl-26.4.0/tests/test_ssl.py:984:rsa"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/src/cryptography/hazmat/primitives/asymmetric/ec.py",
+   "line": 98,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "   95      def sign(",
+    "   96          self,",
+    "   97          data: utils.Buffer,",
+    "   98>         signature_algorithm: EllipticCurveSignatureAlgorithm,",
+    "   99      ) -> bytes:",
+    "  100          \"\"\"",
+    "  101          Signs the data"
+   ],
+   "id": "cryptography:cryptography-50.0.2/src/cryptography/hazmat/primitives/asymmetric/ec.py:98:ecc"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/src/cryptography/hazmat/primitives/asymmetric/ed448.py",
+   "line": 88,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "   85          return rust_openssl.ed448.generate_key()",
+    "   86  ",
+    "   87      @classmethod",
+    "   88>     def from_private_bytes(cls, data: Buffer) -> Ed448PrivateKey:",
+    "   89          from cryptography.hazmat.backends.openssl.backend import backend",
+    "   90  ",
+    "   91          if not backend.ed448_supported():"
+   ],
+   "id": "cryptography:cryptography-50.0.2/src/cryptography/hazmat/primitives/asymmetric/ed448.py:88:ecc"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/src/cryptography/hazmat/primitives/asymmetric/types.py",
+   "line": 42,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "   39  # Every asymmetric key type",
+    "   40  PrivateKeyTypes = typing.Union[",
+    "   41      dh._DHPrivateKey,",
+    "   42>     ed25519.Ed25519PrivateKey,",
+    "   43      ed448.Ed448PrivateKey,",
+    "   44      mldsa.MLDSA44PrivateKey,",
+    "   45      mldsa.MLDSA65PrivateKey,"
+   ],
+   "id": "cryptography:cryptography-50.0.2/src/cryptography/hazmat/primitives/asymmetric/types.py:42:ecc"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/src/rust/cryptography-key-parsing/src/utils.rs",
+   "line": 12,
+   "algorithm": "Diffie-Hellman",
+   "family": "dh",
+   "risk": "HIGH",
+   "context": [
+    "    9              CRYPTOGRAPHY_IS_BORINGSSL,",
+    "   10              CRYPTOGRAPHY_IS_AWSLC",
+    "   11          )))] {",
+    "   12>             id == openssl::pkey::Id::DH || id == openssl::pkey::Id::DHX",
+    "   13          } else {",
+    "   14              id == openssl::pkey::Id::DH",
+    "   15          }"
+   ],
+   "id": "cryptography:cryptography-50.0.2/src/rust/cryptography-key-parsing/src/utils.rs:12:dh"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/src/rust/src/backend/dh.rs",
+   "line": 178,
+   "algorithm": "Diffie-Hellman",
+   "family": "dh",
+   "risk": "HIGH",
+   "context": [
+    "  175  }",
+    "  176  ",
+    "  177  fn clone_dh<T: openssl::pkey::HasParams>(",
+    "  178>     dh: &openssl::dh::Dh<T>,",
+    "  179  ) -> CryptographyResult<openssl::dh::Dh<openssl::pkey::Params>> {",
+    "  180      let p = dh.prime_p().to_owned()?;",
+    "  181      let q = dh.prime_q().map(|q| q.to_owned()).transpose()?;"
+   ],
+   "id": "cryptography:cryptography-50.0.2/src/rust/src/backend/dh.rs:178:dh"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/src/rust/src/backend/hpke.rs",
+   "line": 1144,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    " 1141              )?",
+    " 1142              .extract::<pyo3::Bound<'_, pyo3::types::PyBytes>>()?;",
+    " 1143  ",
+    " 1144>         let x25519_key = self.x25519_key.bind(py);",
+    " 1145          let ct_x_pk = pyo3::Bound::new(py, x25519::from_public_bytes(ct_x)?)?;",
+    " 1146          let ss_x = x25519_key",
+    " 1147              .call_method1(pyo3::intern!(py, \"exchange\"), (ct_x_pk,))?"
+   ],
+   "id": "cryptography:cryptography-50.0.2/src/rust/src/backend/hpke.rs:1144:ecc"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/src/rust/src/x509/sign.rs",
+   "line": 593,
+   "algorithm": "RSA",
+   "family": "rsa",
+   "risk": "HIGH",
+   "context": [
+    "  590              ),",
+    "  591              (",
+    "  592                  &common::AlgorithmParameters::RsaWithSha256(Some(())),",
+    "  593>                 KeyType::Rsa,",
+    "  594              ),",
+    "  595              (",
+    "  596                  &common::AlgorithmParameters::RsaWithSha384(Some(())),"
+   ],
+   "id": "cryptography:cryptography-50.0.2/src/rust/src/x509/sign.rs:593:rsa"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/tests/doubles.py",
+   "line": 8,
+   "algorithm": "RSA",
+   "family": "rsa",
+   "risk": "HIGH",
+   "context": [
+    "    5  from __future__ import annotations",
+    "    6  ",
+    "    7  from cryptography.hazmat.primitives import hashes, serialization",
+    "    8> from cryptography.hazmat.primitives.asymmetric import ed25519, padding, rsa",
+    "    9  from cryptography.hazmat.primitives.asymmetric import utils as asym_utils",
+    "   10  from cryptography.hazmat.primitives.ciphers import (",
+    "   11      BlockCipherAlgorithm,"
+   ],
+   "id": "cryptography:cryptography-50.0.2/tests/doubles.py:8:rsa"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/tests/hazmat/primitives/test_dh.py",
+   "line": 260,
+   "algorithm": "Diffie-Hellman",
+   "family": "dh",
+   "risk": "HIGH",
+   "context": [
+    "  257          # fail such that we don't get a DH_NOT_SUITABLE_GENERATOR. We can cause",
+    "  258          # this by making sure p is not prime.",
+    "  259          params = dh.DHParameterNumbers(P_1536 + 1, 2)",
+    "  260>         public = dh.DHPublicNumbers(1, params)",
+    "  261          private = dh.DHPrivateNumbers(2, public)",
+    "  262  ",
+    "  263          with pytest.raises(ValueError):"
+   ],
+   "id": "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_dh.py:260:dh"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/tests/hazmat/primitives/test_dh.py",
+   "line": 482,
+   "algorithm": "Diffie-Hellman",
+   "family": "dh",
+   "risk": "HIGH",
+   "context": [
+    "  479  ",
+    "  480      def test_exchange_old_key(self):",
+    "  481          k = load_vectors_from_file(",
+    "  482>             os.path.join(\"asymmetric\", \"DH\", \"dhpub_cryptography_old.pem\"),",
+    "  483              lambda f: serialization.load_pem_public_key(f.read()),",
+    "  484              mode=\"rb\",",
+    "  485          )"
+   ],
+   "id": "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_dh.py:482:dh"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/tests/hazmat/primitives/test_dsa.py",
+   "line": 35,
+   "algorithm": "SHA-256",
+   "family": "sha256",
+   "risk": "LOW",
+   "context": [
+    "   32  _ALGORITHMS_DICT: dict[str, hashes.HashAlgorithm] = {",
+    "   33      \"SHA1\": hashes.SHA1(),",
+    "   34      \"SHA224\": hashes.SHA224(),",
+    "   35>     \"SHA256\": hashes.SHA256(),",
+    "   36      \"SHA384\": hashes.SHA384(),",
+    "   37      \"SHA512\": hashes.SHA512(),",
+    "   38  }"
+   ],
+   "id": "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_dsa.py:35:sha256"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/tests/hazmat/primitives/test_dsa.py",
+   "line": 848,
+   "algorithm": "DSA",
+   "family": "dsa",
+   "risk": "HIGH",
+   "context": [
+    "  845              lambda pemfile: pemfile.read().encode(),",
+    "  846          )",
+    "  847          key = serialization.load_pem_private_key(key_bytes, None)",
+    "  848>         assert isinstance(key, dsa.DSAPrivateKey)",
+    "  849          serialized = key.private_bytes(",
+    "  850              serialization.Encoding.DER,",
+    "  851              fmt,"
+   ],
+   "id": "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_dsa.py:848:dsa"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/tests/hazmat/primitives/test_ec.py",
+   "line": 361,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "  358      def test_unknown_signature_algoritm(self, backend):",
+    "  359          _skip_curve_unsupported(backend, ec.SECP192R1())",
+    "  360  ",
+    "  361>         key = ec.generate_private_key(ec.SECP192R1(), backend)",
+    "  362  ",
+    "  363          with raises_unsupported_algorithm(",
+    "  364              exceptions._Reasons.UNSUPPORTED_PUBLIC_KEY_ALGORITHM"
+   ],
+   "id": "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_ec.py:361:ecc"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/tests/hazmat/primitives/test_ec.py",
+   "line": 387,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "  384  ",
+    "  385          numbers = ec.EllipticCurvePrivateNumbers(",
+    "  386              357646505660320080863666618182642070958081774038609089496899025506,",
+    "  387>             ec.EllipticCurvePublicNumbers(",
+    "  388                  47250808410327023131573602008345894927686381772325561185532964,",
+    "  389                  1120253292479243545483756778742719537373113335231773536789915,",
+    "  390                  ec.SECP256R1(),"
+   ],
+   "id": "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_ec.py:387:ecc"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/tests/hazmat/primitives/test_ec.py",
+   "line": 504,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "  501          vectors = itertools.chain(",
+    "  502              load_vectors_from_file(",
+    "  503                  os.path.join(",
+    "  504>                     \"asymmetric\", \"ECDSA\", \"FIPS_186-3\", \"SigGen.txt\"",
+    "  505                  ),",
+    "  506                  load_fips_ecdsa_signing_vectors,",
+    "  507              ),"
+   ],
+   "id": "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_ec.py:504:ecc"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/tests/hazmat/primitives/test_ed25519.py",
+   "line": 56,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "   53  class TestEd25519Signing:",
+    "   54      def test_sign_verify_input(self, subtests):",
+    "   55          vectors = load_vectors_from_file(",
+    "   56>             os.path.join(\"asymmetric\", \"Ed25519\", \"sign.input\"),",
+    "   57              load_ed25519_vectors,",
+    "   58          )",
+    "   59          for vector in vectors:"
+   ],
+   "id": "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_ed25519.py:56:ecc"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/tests/hazmat/primitives/test_ed448.py",
+   "line": 231,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "  228              )",
+    "  229  ",
+    "  230      def test_invalid_public_bytes(self):",
+    "  231>         key = Ed448PrivateKey.generate().public_key()",
+    "  232          with pytest.raises(ValueError):",
+    "  233              key.public_bytes(",
+    "  234                  serialization.Encoding.Raw,"
+   ],
+   "id": "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_ed448.py:231:ecc"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/tests/hazmat/primitives/test_hmac_vectors.py",
+   "line": 34,
+   "algorithm": "SHA-1",
+   "family": "sha1",
+   "risk": "HIGH",
+   "context": [
+    "   31          load_hash_vectors,",
+    "   32          \"HMAC\",",
+    "   33          [\"rfc-2202-sha1.txt\"],",
+    "   34>         hashes.SHA1(),",
+    "   35      )",
+    "   36  ",
+    "   37  "
+   ],
+   "id": "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_hmac_vectors.py:34:sha1"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/tests/hazmat/primitives/test_hpke.py",
+   "line": 264,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "  261          assert plaintext == b\"Hello!\"",
+    "  262  ",
+    "  263      def test_wrong_key_x25519(self):",
+    "  264>         suite = Suite(KEM.X25519, KDF.HKDF_SHA256, AEAD.AES_128_GCM)",
+    "  265          sk_r = x25519.X25519PrivateKey.generate()",
+    "  266          pk_r = sk_r.public_key()",
+    "  267          ciphertext = suite.encrypt(b\"test\", pk_r)"
+   ],
+   "id": "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_hpke.py:264:ecc"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/tests/hazmat/primitives/test_hpke.py",
+   "line": 767,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "  764          # Hybrid public key with EC-based KEM suite should fail",
+    "  765          suite = Suite(KEM.P256, KDF.HKDF_SHA256, AEAD.AES_128_GCM)",
+    "  766          mlkem_sk = mlkem.MLKEM1024PrivateKey.generate()",
+    "  767>         p384_sk = ec.generate_private_key(ec.SECP384R1())",
+    "  768          hybrid_pk = MLKEM1024P384PublicKey(",
+    "  769              mlkem_sk.public_key(), p384_sk.public_key()",
+    "  770          )"
+   ],
+   "id": "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_hpke.py:767:ecc"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/tests/hazmat/primitives/test_pkcs12.py",
+   "line": 508,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "  505              p12, password",
+    "  506          )",
+    "  507          assert parsed_cert is None",
+    "  508>         assert isinstance(parsed_key, ec.EllipticCurvePrivateKey)",
+    "  509          assert parsed_key.private_numbers() == key.private_numbers()",
+    "  510          assert parsed_more_certs == []",
+    "  511  "
+   ],
+   "id": "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_pkcs12.py:508:ecc"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/tests/hazmat/primitives/test_pkcs12.py",
+   "line": 718,
+   "algorithm": "SHA-1",
+   "family": "sha1",
+   "risk": "HIGH",
+   "context": [
+    "  715              if isinstance(encryption_algorithm, serialization.NoEncryption)",
+    "  716              else 1",
+    "  717          )",
+    "  718>         assert p12.count(cert.fingerprint(hashes.SHA1())) == count",
+    "  719  ",
+    "  720      def test_invalid_utf8_password_pbes1(self):",
+    "  721          cert, key = _load_ca()"
+   ],
+   "id": "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_pkcs12.py:718:sha1"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/tests/hazmat/primitives/test_rsa.py",
+   "line": 952,
+   "algorithm": "RSA",
+   "family": "rsa",
+   "risk": "HIGH",
+   "context": [
+    "  949              )",
+    "  950  ",
+    "  951      def test_invalid_pkcs1v15_signature_wrong_key(",
+    "  952>         self, rsa_key_2048: rsa.RSAPrivateKey",
+    "  953      ):",
+    "  954          private_key = rsa_key_2048",
+    "  955          private_key2 = RSA_KEY_2048_ALT.private_key("
+   ],
+   "id": "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_rsa.py:952:rsa"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/tests/hazmat/primitives/test_rsa.py",
+   "line": 995,
+   "algorithm": "SHA-1",
+   "family": "sha1",
+   "risk": "HIGH",
+   "context": [
+    "  992                      binascii.unhexlify(example[\"signature\"]),",
+    "  993                      binascii.unhexlify(example[\"message\"]),",
+    "  994                      padding.PSS(",
+    "  995>                         mgf=padding.MGF1(algorithm=hashes.SHA1()),",
+    "  996                          salt_length=20,",
+    "  997                      ),",
+    "  998                      hashes.SHA1(),"
+   ],
+   "id": "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_rsa.py:995:sha1"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/tests/hazmat/primitives/test_rsa.py",
+   "line": 1101,
+   "algorithm": "SHA-256",
+   "family": "sha256",
+   "risk": "LOW",
+   "context": [
+    " 1098                      mgf=padding.MGF1(algorithm=hashes.SHA256()),",
+    " 1099                      salt_length=padding.PSS.MAX_LENGTH,",
+    " 1100                  ),",
+    " 1101>                 hashes.SHA256(),",
+    " 1102              )",
+    " 1103  ",
+    " 1104      @pytest.mark.supported("
+   ],
+   "id": "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_rsa.py:1101:sha256"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/tests/hazmat/primitives/test_rsa.py",
+   "line": 1371,
+   "algorithm": "SHA-256",
+   "family": "sha256",
+   "risk": "LOW",
+   "context": [
+    " 1368      test_rsa_pss_mgf1_sha256 = pytest.mark.supported(",
+    " 1369          only_if=lambda backend: backend.rsa_padding_supported(",
+    " 1370              padding.PSS(",
+    " 1371>                 mgf=padding.MGF1(hashes.SHA256()),",
+    " 1372                  salt_length=padding.PSS.MAX_LENGTH,",
+    " 1373              )",
+    " 1374          ),"
+   ],
+   "id": "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_rsa.py:1371:sha256"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/tests/hazmat/primitives/test_rsa.py",
+   "line": 2225,
+   "algorithm": "RSA",
+   "family": "rsa",
+   "risk": "HIGH",
+   "context": [
+    " 2222          public_key = RSA_KEY_1024.public_numbers.public_key()",
+    " 2223          assert public_key",
+    " 2224  ",
+    " 2225>         public_key = rsa.RSAPublicNumbers(n=10, e=3).public_key()",
+    " 2226          assert public_key",
+    " 2227  ",
+    " 2228      def test_public_numbers_invalid_types(self):"
+   ],
+   "id": "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_rsa.py:2225:rsa"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/tests/hazmat/primitives/test_serialization.py",
+   "line": 1228,
+   "algorithm": "DSA",
+   "family": "dsa",
+   "risk": "HIGH",
+   "context": [
+    " 1225              ),",
+    " 1226          )",
+    " 1227          assert key",
+    " 1228>         assert isinstance(key, dsa.DSAPrivateKey)",
+    " 1229  ",
+    " 1230          params = key.parameters()",
+    " 1231          assert isinstance(params, dsa.DSAParameters)"
+   ],
+   "id": "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_serialization.py:1228:dsa"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/tests/hazmat/primitives/test_x963_vectors.py",
+   "line": 32,
+   "algorithm": "SHA-256",
+   "family": "sha256",
+   "risk": "LOW",
+   "context": [
+    "   29      ] = {",
+    "   30          \"SHA-1\": hashes.SHA1,",
+    "   31          \"SHA-224\": hashes.SHA224,",
+    "   32>         \"SHA-256\": hashes.SHA256,",
+    "   33          \"SHA-384\": hashes.SHA384,",
+    "   34          \"SHA-512\": hashes.SHA512,",
+    "   35      }"
+   ],
+   "id": "cryptography:cryptography-50.0.2/tests/hazmat/primitives/test_x963_vectors.py:32:sha256"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/tests/hazmat/primitives/twofactor/test_hotp.py",
+   "line": 35,
+   "algorithm": "SHA-1",
+   "family": "sha1",
+   "risk": "HIGH",
+   "context": [
+    "   32          secret = os.urandom(16)",
+    "   33  ",
+    "   34          with pytest.raises(ValueError):",
+    "   35>             HOTP(secret, 4, SHA1())",
+    "   36  ",
+    "   37      def test_invalid_algorithm(self):",
+    "   38          secret = os.urandom(16)"
+   ],
+   "id": "cryptography:cryptography-50.0.2/tests/hazmat/primitives/twofactor/test_hotp.py:35:sha1"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/tests/wycheproof/test_ecdh.py",
+   "line": 21,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "   18      \"secp224r1\": ec.SECP224R1(),",
+    "   19      \"secp256r1\": ec.SECP256R1(),",
+    "   20      \"secp384r1\": ec.SECP384R1(),",
+    "   21>     \"secp521r1\": ec.SECP521R1(),",
+    "   22      \"secp224k1\": None,",
+    "   23      \"secp256k1\": ec.SECP256K1(),",
+    "   24      \"brainpoolP224r1\": None,"
+   ],
+   "id": "cryptography:cryptography-50.0.2/tests/wycheproof/test_ecdh.py:21:ecc"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/tests/x509/test_x509.py",
+   "line": 2779,
+   "algorithm": "SHA-256",
+   "family": "sha256",
+   "risk": "LOW",
+   "context": [
+    " 2776              .not_valid_before(not_valid_before)",
+    " 2777              .not_valid_after(not_valid_after)",
+    " 2778          )",
+    " 2779>         cert = builder.sign(private_key, hashes.SHA256())",
+    " 2780          _check_cert_times(",
+    " 2781              cert,",
+    " 2782              not_valid_before=not_valid_before,"
+   ],
+   "id": "cryptography:cryptography-50.0.2/tests/x509/test_x509.py:2779:sha256"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/tests/x509/test_x509.py",
+   "line": 2929,
+   "algorithm": "SHA-256",
+   "family": "sha256",
+   "risk": "LOW",
+   "context": [
+    " 2926              .not_valid_after(datetime.datetime(2038, 1, 1))",
+    " 2927          )",
+    " 2928          pss = padding.PSS(",
+    " 2929>             mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.AUTO",
+    " 2930          )",
+    " 2931          with pytest.raises(TypeError):",
+    " 2932              builder.sign(rsa_key_2048, hashes.SHA256(), rsa_padding=pss)"
+   ],
+   "id": "cryptography:cryptography-50.0.2/tests/x509/test_x509.py:2929:sha256"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/tests/x509/test_x509.py",
+   "line": 5761,
+   "algorithm": "RSA",
+   "family": "rsa",
+   "risk": "HIGH",
+   "context": [
+    " 5758              builder.sign(private_key, hashes.SHA256())",
+    " 5759  ",
+    " 5760      def test_subject_alt_name_unsupported_general_name(",
+    " 5761>         self, rsa_key_2048: rsa.RSAPrivateKey",
+    " 5762      ):",
+    " 5763          private_key = rsa_key_2048",
+    " 5764  "
+   ],
+   "id": "cryptography:cryptography-50.0.2/tests/x509/test_x509.py:5761:rsa"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/tests/x509/test_x509_crlbuilder.py",
+   "line": 1026,
+   "algorithm": "SHA-256",
+   "family": "sha256",
+   "risk": "LOW",
+   "context": [
+    " 1023          assert crl1.signature != crl_nondet.signature",
+    " 1024          assert crl_nondet.signature != crl_nondet2.signature",
+    " 1025          private_key.public_key().verify(",
+    " 1026>             crl1.signature, crl1.tbs_certlist_bytes, ec.ECDSA(hashes.SHA256())",
+    " 1027          )",
+    " 1028  ",
+    " 1029      def test_deterministic_signature_wrong_key_type(self, rsa_key_2048):"
+   ],
+   "id": "cryptography:cryptography-50.0.2/tests/x509/test_x509_crlbuilder.py:1026:sha256"
+  },
+  {
+   "package": "cryptography",
+   "file": "cryptography-50.0.2/tests/x509/test_x509_ext.py",
+   "line": 855,
+   "algorithm": "SHA-256",
+   "family": "sha256",
+   "risk": "LOW",
+   "context": [
+    "  852          )",
+    "  853  ",
+    "  854          with pytest.raises(ValueError, match=\"Qualifier\"):",
+    "  855>             builder.sign(issuer_private_key, hashes.SHA256())",
+    "  856  ",
+    "  857      def test_public_bytes(self):",
+    "  858          ext = x509.CertificatePolicies("
+   ],
+   "id": "cryptography:cryptography-50.0.2/tests/x509/test_x509_ext.py:855:sha256"
+  },
+  {
+   "package": "pycryptodome",
+   "file": "pycryptodome-4.2.0/Doc/conf.py",
+   "line": 52,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "   49      ed25519_free_point = lambda *x: None",
+    "   50      ed448_new_context = lambda *x: 0",
+    "   51      ed448_free_context = lambda *x: 0",
+    "   52>     ed448_new_point = lambda *x: 0",
+    "   53      ed448_free_point = lambda *x: 0",
+    "   54      curve25519_new_point = lambda *x: 0",
+    "   55      curve25519_free_point = lambda *x: 0"
+   ],
+   "id": "pycryptodome:pycryptodome-4.2.0/Doc/conf.py:52:ecc"
+  },
+  {
+   "package": "pycryptodome",
+   "file": "pycryptodome-4.2.0/lib/Crypto/PublicKey/DSA.py",
+   "line": 36,
+   "algorithm": "SHA-256",
+   "family": "sha256",
+   "risk": "LOW",
+   "context": [
+    "   33  import struct",
+    "   34  ",
+    "   35  from Crypto import IncorrectPassphraseError, KdfLimitError, PassphraseRequiredError, Random",
+    "   36> from Crypto.Hash import SHA256",
+    "   37  from Crypto.IO import PEM, PKCS8",
+    "   38  from Crypto.Math.Numbers import Integer",
+    "   39  from Crypto.Math.Primality import COMPOSITE, PROBABLY_PRIME, test_probable_prime"
+   ],
+   "id": "pycryptodome:pycryptodome-4.2.0/lib/Crypto/PublicKey/DSA.py:36:sha256"
+  },
+  {
+   "package": "pycryptodome",
+   "file": "pycryptodome-4.2.0/lib/Crypto/SelfTest/Cipher/test_ARC4.py",
+   "line": 462,
+   "algorithm": "RC4",
+   "family": "rc4",
+   "risk": "MEDIUM",
+   "context": [
+    "  459              ARC4.new(b\"\\x00\" * 257)",
+    "  460  ",
+    "  461  ",
+    "  462> TestVectors = make_stream_tests(ARC4, \"ARC4\", test_data)"
+   ],
+   "id": "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/Cipher/test_ARC4.py:462:rc4"
+  },
+  {
+   "package": "pycryptodome",
+   "file": "pycryptodome-4.2.0/lib/Crypto/SelfTest/Protocol/test_ecdh.py",
+   "line": 636,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "  633          elif tv.encoding in (\"XdhAsnComp\", \"XdhPemComp\"):",
+    "  634              try:",
+    "  635                  public_key = ECC.import_key(tv.public)",
+    "  636>                 private_key = ECC.import_key(tv.private)",
+    "  637              except ECC.UnsupportedEccFeature as e:",
+    "  638                  assert not tv.valid",
+    "  639                  assert \"Unsupported ECC\" in str(e)"
+   ],
+   "id": "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/Protocol/test_ecdh.py:636:ecc"
+  },
+  {
+   "package": "pycryptodome",
+   "file": "pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_DSA.py",
+   "line": 191,
+   "algorithm": "DSA",
+   "family": "dsa",
+   "risk": "HIGH",
+   "context": [
+    "  188          (y, g, p, q, x) = (",
+    "  189              bytes_to_long(a2b_hex(param)) for param in (self.y, self.g, self.p, self.q, self.x)",
+    "  190          )",
+    "  191>         key = self.dsa.construct((y, g, p, q, x))",
+    "  192          assert key == self.dsa.construct((y, g, p, q, x))",
+    "  193          assert key.public_key() == self.dsa.construct((y, g, p, q))",
+    "  194          assert key != key.public_key()"
+   ],
+   "id": "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_DSA.py:191:dsa"
+  },
+  {
+   "package": "pycryptodome",
+   "file": "pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_ECC_Ed25519.py",
+   "line": 67,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "   64  ",
+    "   65          # Catch if point is not on the curve",
+    "   66          with pytest.raises(ValueError):",
+    "   67>             EccPoint(34, 35, curve=\"Ed25519\")",
+    "   68  ",
+    "   69      def test_set(self):",
+    "   70          pointW = EccPoint(0, 1, curve=\"Ed25519\")"
+   ],
+   "id": "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_ECC_Ed25519.py:67:ecc"
+  },
+  {
+   "package": "pycryptodome",
+   "file": "pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_ECC_Ed448.py",
+   "line": 316,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "  313          from Crypto.PublicKey.ECC import _import_ed448_public_key",
+    "  314  ",
+    "  315          p = 2**448 - 2**224 - 1",
+    "  316>         x, y = _import_ed448_public_key(bytes(57))",
+    "  317          assert y == 0",
+    "  318          assert int(x) ** 2 % p == 1",
+    "  319          assert int(x) % 2 == 0"
+   ],
+   "id": "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_ECC_Ed448.py:316:ecc"
+  },
+  {
+   "package": "pycryptodome",
+   "file": "pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_ECC_NIST.py",
+   "line": 1308,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    " 1305          assert key.pointQ == EccPoint(_curves[\"p256\"].Gx, _curves[\"p256\"].Gy) * key.d, \"p256\"",
+    " 1306  ",
+    " 1307          # Other names",
+    " 1308>         ECC.generate(curve=\"secp256r1\")",
+    " 1309          ECC.generate(curve=\"prime256v1\")",
+    " 1310  ",
+    " 1311      def test_construct(self):"
+   ],
+   "id": "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_ECC_NIST.py:1308:ecc"
+  },
+  {
+   "package": "pycryptodome",
+   "file": "pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_RSA.py",
+   "line": 193,
+   "algorithm": "RSA",
+   "family": "rsa",
+   "risk": "HIGH",
+   "context": [
+    "  190      def test_construct_bad_key5(self):",
+    "  191          tup = (self.n, self.e, self.d, self.p, self.p)",
+    "  192          with pytest.raises(ValueError):",
+    "  193>             self.rsa.construct(tup)",
+    "  194  ",
+    "  195          tup = (self.p * self.p, self.e, self.p, self.p)",
+    "  196          with pytest.raises(ValueError):"
+   ],
+   "id": "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_RSA.py:193:rsa"
+  },
+  {
+   "package": "pycryptodome",
+   "file": "pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_Curve25519.py",
+   "line": 139,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "  136          key = ECC._import_der(key_file, None)",
+    "  137          assert self.ref_public == key",
+    "  138  ",
+    "  139>         key = ECC.import_key(key_file)",
+    "  140          assert self.ref_public == key",
+    "  141  ",
+    "  142      def test_import_public_pem(self):"
+   ],
+   "id": "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_Curve25519.py:139:ecc"
+  },
+  {
+   "package": "pycryptodome",
+   "file": "pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_Curve25519.py",
+   "line": 210,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "  207          with pytest.raises(ValueError):",
+    "  208              ECC._import_pkcs8(encoded, None)",
+    "  209  ",
+    "  210>         decoded = ECC._import_pkcs8(encoded, \"secret\")",
+    "  211          assert self.ref_private == decoded",
+    "  212  ",
+    "  213          # ---"
+   ],
+   "id": "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_Curve25519.py:210:ecc"
+  },
+  {
+   "package": "pycryptodome",
+   "file": "pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_ECC.py",
+   "line": 254,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "  251          key = ECC._import_der(key_file, \"secret\")",
+    "  252          assert self.ref_private == key",
+    "  253  ",
+    "  254>         key = ECC.import_key(key_file, \"secret\")",
+    "  255          assert self.ref_private == key",
+    "  256  ",
+    "  257      def test_import_private_pkcs8_encrypted_2(self):"
+   ],
+   "id": "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_ECC.py:254:ecc"
+  },
+  {
+   "package": "pycryptodome",
+   "file": "pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_ECC.py",
+   "line": 836,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "  833          key_file = load_file(\"ecc_p521_private_openssh.pem\")",
+    "  834          key_file_old = load_file(\"ecc_p521_private_openssh_old.pem\")",
+    "  835  ",
+    "  836>         key = ECC.import_key(key_file)",
+    "  837          key_old = ECC.import_key(key_file_old)",
+    "  838          assert key == key_old",
+    "  839  "
+   ],
+   "id": "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_ECC.py:836:ecc"
+  },
+  {
+   "package": "pycryptodome",
+   "file": "pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_ECC.py",
+   "line": 1561,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    " 1558          encoded = self.ref_private.export_key(",
+    " 1559              format=\"PEM\", passphrase=\"secret\", protection=\"PBKDF2WithHMAC-SHA1AndAES128-CBC\"",
+    " 1560          )",
+    " 1561>         decoded = ECC.import_key(encoded, \"secret\")",
+    " 1562          assert self.ref_private == decoded",
+    " 1563  ",
+    " 1564      def test_export_openssh_uncompressed(self):"
+   ],
+   "id": "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_ECC.py:1561:ecc"
+  },
+  {
+   "package": "pycryptodome",
+   "file": "pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_ECC.py",
+   "line": 1672,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    " 1669          AwEHoSQDIgADLpph1trTIlVfa8NJvlMUPyWvL+wP+pW3BJITUL/wj9A=",
+    " 1670          -----END EC PRIVATE KEY-----\"\"\"",
+    " 1671  ",
+    " 1672>         key1 = ECC.import_key(pem1)",
+    " 1673          low16 = int(key1.pointQ.y % 65536)",
+    " 1674          assert low16 == 0xA6FC",
+    " 1675  "
+   ],
+   "id": "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_ECC.py:1672:ecc"
+  },
+  {
+   "package": "pycryptodome",
+   "file": "pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_ECC.py",
+   "line": 2450,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    " 2447  ",
+    " 2448      def test_import_openssh_private_clear(self):",
+    " 2449          key_file = load_file(\"ecc_ed25519_private_openssh.pem\")",
+    " 2450>         ECC.import_key(key_file)",
+    " 2451  ",
+    " 2452      def test_import_openssh_private_password(self):",
+    " 2453          key_file = load_file(\"ecc_ed25519_private_openssh_pwd.pem\")"
+   ],
+   "id": "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_ECC.py:2450:ecc"
+  },
+  {
+   "package": "pycryptodome",
+   "file": "pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_ECC.py",
+   "line": 2915,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    " 2912          other = ECC.generate(curve=curve)",
+    " 2913          encoded = _pkcs8_v2(key, _public_key_bytes(other))",
+    " 2914          with pytest.raises(ValueError, match=\"do not match\"):",
+    " 2915>             ECC._import_pkcs8(encoded, None)",
+    " 2916          with pytest.raises(ValueError):",
+    " 2917              ECC.import_key(encoded)",
+    " 2918  "
+   ],
+   "id": "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/PublicKey/test_import_ECC.py:2915:ecc"
+  },
+  {
+   "package": "pycryptodome",
+   "file": "pycryptodome-4.2.0/lib/Crypto/SelfTest/Signature/test_dss.py",
+   "line": 203,
+   "algorithm": "DSA",
+   "family": "dsa",
+   "risk": "HIGH",
+   "context": [
+    "  200  ",
+    "  201  ",
+    "  202  test_vectors_sign = (",
+    "  203>     load_test_vectors((\"Signature\", \"DSA\"), \"FIPS_186_3_SigGen.txt\", \"Signature Creation 186-3\", {}) or []",
+    "  204  )",
+    "  205  ",
+    "  206  "
+   ],
+   "id": "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/Signature/test_dss.py:203:dsa"
+  },
+  {
+   "package": "pycryptodome",
+   "file": "pycryptodome-4.2.0/lib/Crypto/SelfTest/Signature/test_pss.py",
+   "line": 7,
+   "algorithm": "SHA-1",
+   "family": "sha1",
+   "risk": "HIGH",
+   "context": [
+    "    4  ",
+    "    5  import pytest",
+    "    6  ",
+    "    7> from Crypto.Hash import SHA1, SHA224, SHA256, SHA384, SHA512",
+    "    8  from Crypto.PublicKey import RSA",
+    "    9  from Crypto.SelfTest.loader import load_test_vectors, load_test_vectors_wycheproof, wycheproof_id",
+    "   10  from Crypto.SelfTest.st_common import wycheproof_warnings"
+   ],
+   "id": "pycryptodome:pycryptodome-4.2.0/lib/Crypto/SelfTest/Signature/test_pss.py:7:sha1"
+  },
+  {
+   "package": "pycryptodome",
+   "file": "pycryptodome-4.2.0/src/ed448.c",
+   "line": 196,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "  193                                     const uint64_t *x1, const uint64_t *y1, const uint64_t *z1,",
+    "  194                                     const uint64_t *x2, const uint64_t *y2)",
+    "  195  {",
+    "  196>     ed448_point_add(ws, g, x3, y3, z3, x1, y1, z1, x2, y2, NULL);",
+    "  197  }",
+    "  198  ",
+    "  199  #define NW ED448_WORDS"
+   ],
+   "id": "pycryptodome:pycryptodome-4.2.0/src/ed448.c:196:ecc"
+  },
+  {
+   "package": "pycryptodome",
+   "file": "pycryptodome-4.2.0/src/test/test_curve448.c",
+   "line": 132,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "  129      k[LEN - 1] = 5;",
+    "  130      memcpy(u, k, LEN);",
+    "  131      for (i=1; i<=1000; i++) {",
+    "  132>         x448(out, ctx, k, u);",
+    "  133          memcpy(u, k, LEN);",
+    "  134          memcpy(k, out, LEN);",
+    "  135          if (i == 1) {"
+   ],
+   "id": "pycryptodome:pycryptodome-4.2.0/src/test/test_curve448.c:132:ecc"
+  },
+  {
+   "package": "pycryptodome",
+   "file": "pycryptodome-4.2.0/src/test/test_ed25519.c",
+   "line": 481,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "  478          return;",
+    "  479      }",
+    "  480      assert(ed25519_cmp(Q, P) == 0);",
+    "  481>     ed25519_free_point(Q);",
+    "  482  }",
+    "  483  ",
+    "  484  void test_decode_point(void)"
+   ],
+   "id": "pycryptodome:pycryptodome-4.2.0/src/test/test_ed25519.c:481:ecc"
+  },
+  {
+   "package": "pycryptodome",
+   "file": "pycryptodome-4.2.0/src/test/test_ed448.c",
+   "line": 450,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "  447  ",
+    "  448  int main(void)",
+    "  449  {",
+    "  450>     Ed448Context *ctx;",
+    "  451  ",
+    "  452  #if defined(TEST_BMI2_ADX)",
+    "  453      if (!have_bmi2_adx()) {"
+   ],
+   "id": "pycryptodome:pycryptodome-4.2.0/src/test/test_ed448.c:450:ecc"
+  },
+  {
+   "package": "rsa",
+   "file": "rsa-4.9.1/rsa/cli.py",
+   "line": 26,
+   "algorithm": "RSA",
+   "family": "rsa",
+   "risk": "HIGH",
+   "context": [
+    "   23  import optparse",
+    "   24  ",
+    "   25  import rsa",
+    "   26> import rsa.key",
+    "   27  import rsa.pkcs1",
+    "   28  ",
+    "   29  HASH_METHODS = sorted(rsa.pkcs1.HASH_METHODS.keys())"
+   ],
+   "id": "rsa:rsa-4.9.1/rsa/cli.py:26:rsa"
+  },
+  {
+   "package": "ecdsa",
+   "file": "ecdsa-0.19.2/src/ecdsa/eddsa.py",
+   "line": 140,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "  137                      2 * self.baselen",
+    "  138                  )",
+    "  139              )",
+    "  140>         R = ellipticcurve.PointEdwards.from_bytes(",
+    "  141              self.curve, signature[: self.baselen]",
+    "  142          )",
+    "  143          S = bytes_to_int(signature[self.baselen :], \"little\")"
+   ],
+   "id": "ecdsa:ecdsa-0.19.2/src/ecdsa/eddsa.py:140:ecc"
+  },
+  {
+   "package": "ecdsa",
+   "file": "ecdsa-0.19.2/src/ecdsa/test_ecdsa.py",
+   "line": 11,
+   "algorithm": "ECDSA",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "    8  except ImportError:",
+    "    9      import unittest",
+    "   10  import pytest",
+    "   11> from .ecdsa import (",
+    "   12      Private_key,",
+    "   13      Public_key,",
+    "   14      Signature,"
+   ],
+   "id": "ecdsa:ecdsa-0.19.2/src/ecdsa/test_ecdsa.py:11:ecc"
+  },
+  {
+   "package": "ecdsa",
+   "file": "ecdsa-0.19.2/src/ecdsa/test_eddsa.py",
+   "line": 37,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "   34  ",
+    "   35  ",
+    "   36  def test_ed25519_and_ed448_compare():",
+    "   37>     assert curve_ed448 != curve_ed25519",
+    "   38  ",
+    "   39  ",
+    "   40  def test_ed25519_and_custom_curve_compare():"
+   ],
+   "id": "ecdsa:ecdsa-0.19.2/src/ecdsa/test_eddsa.py:37:ecc"
+  },
+  {
+   "package": "ecdsa",
+   "file": "ecdsa-0.19.2/src/ecdsa/test_eddsa.py",
+   "line": 349,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "  346  ",
+    "  347  ",
+    "  348  def test_ed25519_mul_by_zero():",
+    "  349>     z = generator_ed25519 * 0",
+    "  350  ",
+    "  351      assert z == INFINITY",
+    "  352  "
+   ],
+   "id": "ecdsa:ecdsa-0.19.2/src/ecdsa/test_eddsa.py:349:ecc"
+  },
+  {
+   "package": "ecdsa",
+   "file": "ecdsa-0.19.2/src/ecdsa/test_eddsa.py",
+   "line": 538,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "  535  class TestEdDSAEquality(unittest.TestCase):",
+    "  536      def test_equal_public_points(self):",
+    "  537          key1 = PublicKey(generator_ed25519, b\"\\x01\" * 32)",
+    "  538>         key2 = PublicKey(generator_ed25519, b\"\\x01\" * 32)",
+    "  539  ",
+    "  540          self.assertEqual(key1, key2)",
+    "  541          # verify that `__ne__` works as expected"
+   ],
+   "id": "ecdsa:ecdsa-0.19.2/src/ecdsa/test_eddsa.py:538:ecc"
+  },
+  {
+   "package": "passlib",
+   "file": "passlib-1.7.4/passlib/handlers/md5_crypt.py",
+   "line": 100,
+   "algorithm": "MD5",
+   "family": "md5",
+   "risk": "HIGH",
+   "context": [
+    "   97      # digest A - used to initialize first round of digest C",
+    "   98      #===================================================================",
+    "   99      # start out with pwd + magic + salt",
+    "  100>     a_ctx = md5(pwd + magic + salt)",
+    "  101      a_ctx_update = a_ctx.update",
+    "  102  ",
+    "  103      # add pwd_len bytes of b, repeating b as many times as needed."
+   ],
+   "id": "passlib:passlib-1.7.4/passlib/handlers/md5_crypt.py:100:md5"
+  },
+  {
+   "package": "passlib",
+   "file": "passlib-1.7.4/passlib/tests/test_handlers_pbkdf2.py",
+   "line": 394,
+   "algorithm": "SHA-1",
+   "family": "sha1",
+   "risk": "HIGH",
+   "context": [
+    "  391  ",
+    "  392          # test hash output",
+    "  393          h1 = subcls.hash(\"dummy\")",
+    "  394>         self.assertEqual(handler.extract_digest_algs(h1), [\"md5\", \"sha-1\"])",
+    "  395  ",
+    "  396      def test_94_using_w_algs(self):",
+    "  397          \"\"\"using() -- 'algs' parameter\"\"\""
+   ],
+   "id": "passlib:passlib-1.7.4/passlib/tests/test_handlers_pbkdf2.py:394:sha1"
+  },
+  {
+   "package": "passlib",
+   "file": "passlib-1.7.4/passlib/tests/test_utils_pbkdf2.py",
+   "line": 103,
+   "algorithm": "SHA-1",
+   "family": "sha1",
+   "risk": "HIGH",
+   "context": [
+    "  100          (b'password', b'salt', 1000, 8, 'md5',    hb('8475c6a8531a5d27')),",
+    "  101          (b'password', b'salt', 1000, 16, 'md5', hb('8475c6a8531a5d27e386cd496457812c')),",
+    "  102          (b'password', b'salt', 1000, None, 'md5', hb('8475c6a8531a5d27e386cd496457812c')),",
+    "  103>         (b'password', b'salt', 1000, None, 'sha1', hb('4a8fd48e426ed081b535be5769892fa396293efb')),",
+    "  104      ]",
+    "  105      if not JYTHON:",
+    "  106          pbkdf1_tests.append("
+   ],
+   "id": "passlib:passlib-1.7.4/passlib/tests/test_utils_pbkdf2.py:103:sha1"
+  },
+  {
+   "package": "itsdangerous",
+   "file": "itsdangerous-2.2.0/tests/test_itsdangerous/test_serializer.py",
+   "line": 190,
+   "algorithm": "SHA-1",
+   "family": "sha1",
+   "risk": "HIGH",
+   "context": [
+    "  187  def test_digests():",
+    "  188      factory = partial(Serializer, secret_key=\"dev key\", salt=\"dev salt\")",
+    "  189      default_value = factory(signer_kwargs={}).dumps([42])",
+    "  190>     sha1_value = factory(signer_kwargs={\"digest_method\": hashlib.sha1}).dumps([42])",
+    "  191      sha512_value = factory(signer_kwargs={\"digest_method\": hashlib.sha512}).dumps([42])",
+    "  192      assert default_value == sha1_value",
+    "  193      assert sha1_value == \"[42].-9cNi0CxsSB3hZPNCe9a2eEs1ZM\""
+   ],
+   "id": "itsdangerous:itsdangerous-2.2.0/tests/test_itsdangerous/test_serializer.py:190:sha1"
+  },
+  {
+   "package": "botocore",
+   "file": "botocore-1.43.120/tests/unit/test_handlers.py",
+   "line": 1436,
+   "algorithm": "MD5",
+   "family": "md5",
+   "risk": "HIGH",
+   "context": [
+    " 1433      def test_add_md5_with_empty_body(self):",
+    " 1434          request_dict = {'body': b'', 'headers': {}}",
+    " 1435          self.md5_digest.return_value = b'8X\\xf6\"0\\xac<\\x91_0\\x0cfC\\x12\\xc6?'",
+    " 1436>         conditionally_calculate_md5(request_dict)",
+    " 1437          self.assertEqual(",
+    " 1438              request_dict['headers']['Content-MD5'], 'OFj2IjCsPJFfMAxmQxLGPw=='",
+    " 1439          )"
+   ],
+   "id": "botocore:botocore-1.43.120/tests/unit/test_handlers.py:1436:md5"
+  },
+  {
+   "package": "redis",
+   "file": "redis-8.1.0/redis/ocsp.py",
+   "line": 259,
+   "algorithm": "SHA-256",
+   "family": "sha256",
+   "risk": "LOW",
+   "context": [
+    "  256  ",
+    "  257          # add_certificate returns an initialized OCSPRequestBuilder",
+    "  258          orb = orb.add_certificate(",
+    "  259>             cert, issuer_cert, cryptography.hazmat.primitives.hashes.SHA256()",
+    "  260          )",
+    "  261          request = orb.build()",
+    "  262  "
+   ],
+   "id": "redis:redis-8.1.0/redis/ocsp.py:259:sha256"
+  },
+  {
+   "package": "pymongo",
+   "file": "pymongo-4.19.0/test/test_gridfs_bucket.py",
+   "line": 535,
+   "algorithm": "MD5",
+   "family": "md5",
+   "risk": "HIGH",
+   "context": [
+    "  532          gin = self.fs.open_upload_stream_with_id(ObjectId(), \"also no md5\")",
+    "  533          gin.write(b\"also no md5 sum\")",
+    "  534          gin.close()",
+    "  535>         self.assertIsNone(gin.md5)",
+    "  536  ",
+    "  537          gout = self.fs.open_download_stream(gin._id)",
+    "  538          self.assertIsNone(gout.md5)"
+   ],
+   "id": "pymongo:pymongo-4.19.0/test/test_gridfs_bucket.py:535:md5"
+  },
+  {
+   "package": "scrapy",
+   "file": "scrapy-2.19.0/tests/test_downloader_handler_twisted_ftp.py",
+   "line": 91,
+   "algorithm": "Diffie-Hellman",
+   "family": "dh",
+   "risk": "HIGH",
+   "context": [
+    "   88  ",
+    "   89      @deferred_f_from_coro_f",
+    "   90      async def test_ftp_download_path_with_spaces(",
+    "   91>         self, server_url: str, dh: FTPDownloadHandler",
+    "   92      ) -> None:",
+    "   93          request = Request(",
+    "   94              url=server_url + \"file with spaces.txt\","
+   ],
+   "id": "scrapy:scrapy-2.19.0/tests/test_downloader_handler_twisted_ftp.py:91:dh"
+  },
+  {
+   "package": "scrapy",
+   "file": "scrapy-2.19.0/tests/test_downloader_handler_twisted_ftp.py",
+   "line": 107,
+   "algorithm": "Diffie-Hellman",
+   "family": "dh",
+   "risk": "HIGH",
+   "context": [
+    "  104          self, server_url: str, dh: FTPDownloadHandler",
+    "  105      ) -> None:",
+    "  106          request = Request(url=server_url + \"nonexistent.txt\", meta=self.req_meta)",
+    "  107>         r = await dh.download_request(request)",
+    "  108          assert r.status == 404",
+    "  109          assert r.body == b\"['550 nonexistent.txt: No such file or directory.']\"",
+    "  110  "
+   ],
+   "id": "scrapy:scrapy-2.19.0/tests/test_downloader_handler_twisted_ftp.py:107:dh"
+  },
+  {
+   "package": "twisted",
+   "file": "twisted-26.4.0/src/twisted/conch/ssh/keys.py",
+   "line": 916,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "  913              raise BadKeyError(\"Ed25519 keys not supported on this system\")",
+    "  914  ",
+    "  915          if k is None:",
+    "  916>             keyObject = Ed25519PublicKey.from_public_bytes(a)",
+    "  917          else:",
+    "  918              keyObject = Ed25519PrivateKey.from_private_bytes(k)",
+    "  919  "
+   ],
+   "id": "twisted:twisted-26.4.0/src/twisted/conch/ssh/keys.py:916:ecc"
+  },
+  {
+   "package": "twisted",
+   "file": "twisted-26.4.0/src/twisted/conch/ssh/keys.py",
+   "line": 1069,
+   "algorithm": "DSA",
+   "family": "dsa",
+   "risk": "HIGH",
+   "context": [
+    " 1066          if isinstance(self._keyObject, (rsa.RSAPublicKey, rsa.RSAPrivateKey)):",
+    " 1067              return \"RSA\"",
+    " 1068          elif isinstance(self._keyObject, (dsa.DSAPublicKey, dsa.DSAPrivateKey)):",
+    " 1069>             return \"DSA\"",
+    " 1070          elif isinstance(",
+    " 1071              self._keyObject, (ec.EllipticCurvePublicKey, ec.EllipticCurvePrivateKey)",
+    " 1072          ):"
+   ],
+   "id": "twisted:twisted-26.4.0/src/twisted/conch/ssh/keys.py:1069:dsa"
+  },
+  {
+   "package": "twisted",
+   "file": "twisted-26.4.0/src/twisted/conch/test/test_keys.py",
+   "line": 1282,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    " 1279          publicBytes = self.ed25519Obj.public_key().public_bytes(",
+    " 1280              serialization.Encoding.Raw, serialization.PublicFormat.Raw",
+    " 1281          )",
+    " 1282>         privateBytes = self.ed25519Obj.private_bytes(",
+    " 1283              serialization.Encoding.Raw,",
+    " 1284              serialization.PrivateFormat.Raw,",
+    " 1285              serialization.NoEncryption(),"
+   ],
+   "id": "twisted:twisted-26.4.0/src/twisted/conch/test/test_keys.py:1282:ecc"
+  },
+  {
+   "package": "twisted",
+   "file": "twisted-26.4.0/src/twisted/conch/test/test_keys.py",
+   "line": 1595,
+   "algorithm": "DSA",
+   "family": "dsa",
+   "risk": "HIGH",
+   "context": [
+    " 1592              keys.BadSignatureAlgorithmError,",
+    " 1593              key.sign,",
+    " 1594              b\"some data\",",
+    " 1595>             signatureType=b\"ssh-dss\",",
+    " 1596          )",
+    " 1597          key = keys.Key.fromString(keydata.privateECDSA_openssh)",
+    " 1598          self.assertRaises("
+   ],
+   "id": "twisted:twisted-26.4.0/src/twisted/conch/test/test_keys.py:1595:dsa"
+  },
+  {
+   "package": "twisted",
+   "file": "twisted-26.4.0/src/twisted/conch/test/test_ssh.py",
+   "line": 865,
+   "algorithm": "RSA",
+   "family": "rsa",
+   "risk": "HIGH",
+   "context": [
+    "  862          sshFactory = factory.SSHFactory()",
+    "  863          sshFactory.getPrimes = lambda: primes",
+    "  864          sshFactory.getPublicKeys = lambda: {",
+    "  865>             b\"ssh-rsa\": keys.Key.fromString(publicRSA_openssh)",
+    "  866          }",
+    "  867          sshFactory.getPrivateKeys = lambda: {",
+    "  868              b\"ssh-rsa\": keys.Key.fromString(privateRSA_openssh)"
+   ],
+   "id": "twisted:twisted-26.4.0/src/twisted/conch/test/test_ssh.py:865:rsa"
+  },
+  {
+   "package": "twisted",
+   "file": "twisted-26.4.0/src/twisted/conch/test/test_telnet.py",
+   "line": 202,
+   "algorithm": "ECC",
+   "family": "ecc",
+   "risk": "HIGH",
+   "context": [
+    "  199          self._simpleCommandTest(\"AYT\")",
+    "  200  ",
+    "  201      def testEraseCharacter(self):",
+    "  202>         self._simpleCommandTest(\"EC\")",
+    "  203  ",
+    "  204      def testEraseLine(self):",
+    "  205          self._simpleCommandTest(\"EL\")"
+   ],
+   "id": "twisted:twisted-26.4.0/src/twisted/conch/test/test_telnet.py:202:ecc"
+  },
+  {
+   "package": "twisted",
+   "file": "twisted-26.4.0/src/twisted/conch/test/test_transport.py",
+   "line": 2332,
+   "algorithm": "SHA-1",
+   "family": "sha1",
+   "risk": "HIGH",
+   "context": [
+    " 2329          x = self.proto.dhSecretKey.private_numbers().x",
+    " 2330          p = self.proto.p",
+    " 2331          sharedSecret = _MPpow(f, x, p)",
+    " 2332>         h = sha1()",
+    " 2333          h.update(common.NS(self.proto.ourVersionString) * 2)",
+    " 2334          h.update(common.NS(self.proto.ourKexInitPayload) * 2)",
+    " 2335          h.update(common.NS(self.blob))"
+   ],
+   "id": "twisted:twisted-26.4.0/src/twisted/conch/test/test_transport.py:2332:sha1"
+  },
+  {
+   "package": "twisted",
+   "file": "twisted-26.4.0/src/twisted/cred/_digest.py",
+   "line": 18,
+   "algorithm": "MD5",
+   "family": "md5",
+   "risk": "HIGH",
+   "context": [
+    "   15  # The digest math",
+    "   16  ",
+    "   17  algorithms = {",
+    "   18>     b\"md5\": md5,",
+    "   19      # md5-sess is more complicated than just another algorithm.  It requires",
+    "   20      # H(A1) state to be remembered from the first WWW-Authenticate challenge",
+    "   21      # issued and re-used to process any Authorization header in response to"
+   ],
+   "id": "twisted:twisted-26.4.0/src/twisted/cred/_digest.py:18:md5"
+  },
+  {
+   "package": "twisted",
+   "file": "twisted-26.4.0/src/twisted/cred/test/test_digestauth.py",
+   "line": 679,
+   "algorithm": "MD5",
+   "family": "md5",
+   "risk": "HIGH",
+   "context": [
+    "  676              self.assertRaises(",
+    "  677                  TypeError,",
+    "  678                  calcHA1,",
+    "  679>                 b\"md5\",",
+    "  680                  pszUsername,",
+    "  681                  pszRealm,",
+    "  682                  pszPassword,"
+   ],
+   "id": "twisted:twisted-26.4.0/src/twisted/cred/test/test_digestauth.py:679:md5"
+  },
+  {
+   "package": "setuptools",
+   "file": "setuptools-84.2.1/setuptools/tests/integration/test_pip_install_sdist.py",
+   "line": 22,
+   "algorithm": "MD5",
+   "family": "md5",
+   "risk": "HIGH",
+   "context": [
+    "   19  import sys",
+    "   20  from enum import Enum",
+    "   21  from glob import glob",
+    "   22> from hashlib import md5",
+    "   23  from urllib.request import urlopen",
+    "   24  ",
+    "   25  import pytest"
+   ],
+   "id": "setuptools:setuptools-84.2.1/setuptools/tests/integration/test_pip_install_sdist.py:22:md5"
+  }
+ ]
+}
