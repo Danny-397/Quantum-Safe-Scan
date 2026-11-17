@@ -133,7 +133,7 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
   display: flex; align-items: center; justify-content: space-between;
   padding: 15px 28px; border-bottom: 1px solid var(--border);
   position: sticky; top: 0; z-index: 20;
-  background: rgba(13,17,23,.8); backdrop-filter: blur(12px) saturate(140%);
+  background: #0d1117;
 }
 .brand { display: flex; align-items: center; gap: 9px; font-family: var(--display); font-weight: 700; font-size: 16px; }
 .brand .logo { width: 24px; height: 24px; display: block; flex: none; }
@@ -447,7 +447,7 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
 .scale-track .s-high { background: var(--high); }
 .scale-track .s-crit { background: var(--danger); }
 .scale-marker { position: absolute; top: 0; width: 3px; height: 16px; background: #fff;
-  border-radius: 2px; box-shadow: 0 0 8px rgba(255,255,255,.75); transform: translateX(-1.5px); transition: left var(--data) var(--ease); }
+  border-radius: 2px; box-shadow: 0 0 0 2px var(--well); transform: translateX(-1.5px); transition: left var(--data) var(--ease); }
 .scale-legend { display: flex; justify-content: space-between; margin-top: 10px;
   font-family: var(--sans); font-size: 11.5px; gap: 8px; flex-wrap: wrap; font-variant-numeric: tabular-nums; }
 .scale-legend span { white-space: nowrap; }
@@ -522,7 +522,7 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; font-weight: 6
 .score-demo-tag { display: inline-flex; align-items: center; gap: 7px; margin-bottom: 10px;
   font-family: var(--sans); font-size: 11px; color: var(--muted-2); font-variant-numeric: tabular-nums; }
 .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex: none;
-  box-shadow: 0 0 0 0 rgba(91,115,232,.5); animation: qs-pulse 1.9s infinite; }
+  display: none; }
 @keyframes qs-pulse { 0% { box-shadow: 0 0 0 0 rgba(91,115,232,.5); }
   70% { box-shadow: 0 0 0 8px rgba(91,115,232,0); } 100% { box-shadow: 0 0 0 0 rgba(91,115,232,0); } }
 @media (prefers-reduced-motion: reduce) { .live-dot { animation: none; } }
@@ -671,7 +671,7 @@ html.qs-anim .reveal.in { opacity: 1; transform: none; }
   .sidebar {
     position: sticky; top: 0; z-index: 20; height: auto;
     border-right: none; border-bottom: 1px solid var(--border);
-    padding: 12px 24px; background: rgba(13,17,23,.92); backdrop-filter: blur(12px) saturate(140%);
+    padding: 12px 24px; background: #0d1117;
   }
   .sidebar .brand { margin: 0 0 10px; }
   .sidebar nav { flex-direction: row; gap: 2px; overflow-x: auto; -webkit-overflow-scrolling: touch;
@@ -693,7 +693,7 @@ html.qs-anim .reveal.in { opacity: 1; transform: none; }
   .nav-links {
     display: none; position: absolute; top: 100%; left: 0; right: 0;
     flex-direction: column; align-items: stretch; gap: 0;
-    background: rgba(13,17,23,.98); backdrop-filter: blur(12px) saturate(140%);
+    background: #0d1117;
     border-bottom: 1px solid var(--border); padding: 6px 24px 14px;
     box-shadow: 0 24px 40px -30px rgba(0,0,0,.8);
   }
@@ -793,16 +793,11 @@ html.qs-anim .reveal.in { opacity: 1; transform: none; }
 
 /* ══════════════════════════════════════════════════════════════════════════
    Lattice layer — what makes QuantumSafe look like itself.
-   Same graphite + indigo palette; three motifs used sparingly:
-     1. Lattice point field: a dot grid behind the hero and closing CTA
-        (ML-KEM and ML-DSA are lattice schemes).
-     2. Scan-frame brackets: the logo's corner marks, framing the terminal and
-        the scanner as if in a viewfinder.
-     3. Scan line: a slow sweep down the hero terminal (off for reduced motion).
-   Surfaces lift by tone (top-light gradient + inner highlight), not outlines.
+   Same graphite + indigo palette, kept flat: no glows, blurs, glass or
+   gradient text. One motif: scan-frame brackets (the logo's corner marks)
+   around the terminal and the scanner. Surfaces lift by tone, not outlines.
    ══════════════════════════════════════════════════════════════════════════ */
 
-/* The hero glow is full-bleed; clip (not hidden) keeps position:sticky working. */
 html, body { overflow-x: clip; }
 ::selection { background: rgba(91,115,232,.38); color: #fff; }
 html { scrollbar-color: #2a313c transparent; }
@@ -816,8 +811,7 @@ a:hover { color: var(--accent-hi); }
   letter-spacing: .14em; text-transform: uppercase; color: var(--accent-hi);
 }
 .eyebrow::before {
-  content: ""; width: 6px; height: 6px; flex: none; transform: rotate(45deg);
-  background: var(--accent); box-shadow: 0 0 10px 1px rgba(91,115,232,.7);
+  content: none;
 }
 main { counter-reset: qs-sec; }
 main > .section .section-head .eyebrow::before {
@@ -827,71 +821,38 @@ main > .section .section-head .eyebrow::before {
 }
 
 /* ---- Nav ---- */
-.nav { background: rgba(13,17,23,.72); border-bottom-color: rgba(255,255,255,.06); }
+.nav { background: #0d1117; border-bottom-color: rgba(255,255,255,.06); }
 .brand { letter-spacing: -.01em; }
-.brand .logo { filter: drop-shadow(0 0 6px rgba(91,115,232,.45)); }
 
 /* ---- Buttons: lit from above, indigo glow on the primary ---- */
 .btn { background: rgba(255,255,255,.03); box-shadow: var(--edge); }
-.btn:hover { background: rgba(91,115,232,.08); box-shadow: var(--edge), 0 0 0 1px rgba(91,115,232,.25); }
+.btn:hover { background: rgba(91,115,232,.08); box-shadow: var(--edge); }
 .btn-primary {
-  background: linear-gradient(180deg, #5468e6, #3f52d6);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.4), 0 8px 22px -12px rgba(63,82,214,.9);
+  background: #4659de; box-shadow: none;
 }
 .btn-primary:hover {
-  background: linear-gradient(180deg, #5d71ea, #4659de);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.24), 0 1px 2px rgba(0,0,0,.4), var(--glow);
+  background: #5468e6; box-shadow: none; transform: none;
 }
 .btn-ghost, .btn-ghost:hover { box-shadow: none; background: transparent; }
 .btn-danger { box-shadow: none; }
 .btn-link { transition: color var(--fast) var(--ease); }
 
-/* ---- Hero: lattice field + indigo aurora behind the terminal ---- */
-.hero { isolation: isolate; }
-.hero::before {
-  content: ""; position: absolute; z-index: -1; pointer-events: none;
-  top: -90px; bottom: -40px; left: calc(50% - 50vw); right: calc(50% - 50vw);
-  background-image: radial-gradient(var(--lattice-dot) 1px, transparent 1.5px);
-  background-size: 24px 24px; background-position: center top;
-  -webkit-mask-image: radial-gradient(ellipse 55% 70% at 72% 42%, #000 0%, transparent 72%);
-          mask-image: radial-gradient(ellipse 55% 70% at 72% 42%, #000 0%, transparent 72%);
-}
-.hero::after {
-  content: ""; position: absolute; z-index: -1; pointer-events: none;
-  width: 620px; height: 460px; right: -80px; top: 40px;
-  background: radial-gradient(closest-side, rgba(91,115,232,.26), rgba(91,115,232,0));
-  filter: blur(20px);
-}
+/* ---- Hero ---- */
 .hero h1 { font-size: 58px; letter-spacing: -.042em; line-height: 1.02; }
-.hero h1 .grn {
-  background: linear-gradient(100deg, #9fb0ff 0%, #5b73e8 55%, #7c8df0 100%);
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-}
+.hero h1 .grn { background: none; color: var(--accent-hi); -webkit-text-fill-color: currentColor; }
 .hero .sub { color: #9aa4b2; }
 .hero-note { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; letter-spacing: .02em; }
-.hero-note::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--safe); box-shadow: 0 0 8px rgba(63,185,80,.7); }
 
 /* ---- Terminal: deep well, centred glow seam, scan-frame brackets, scan line ---- */
 .terminal {
   overflow: visible; border-radius: var(--r);
-  background: radial-gradient(120% 80% at 50% 0%, #0d1324 0%, var(--well) 60%);
+  background: var(--well);
   border-color: rgba(142,160,242,.18);
-  box-shadow: var(--edge), 0 40px 80px -40px rgba(0,0,0,.9), 0 0 0 1px rgba(0,0,0,.4);
+  box-shadow: 0 24px 48px -32px rgba(0,0,0,.8);
 }
-.terminal::before {
-  left: 12%; right: 12%; opacity: 1;
-  background: linear-gradient(90deg, transparent, var(--accent-hi), transparent);
-}
+.terminal::before { display: none; }
 .term-head { border-radius: var(--r) var(--r) 0 0; background: rgba(255,255,255,.025); }
 .term-body { position: relative; }
-.term-body::after {
-  content: ""; position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(180deg, rgba(91,115,232,0), rgba(91,115,232,.09) 50%, rgba(91,115,232,0));
-  background-size: 100% 90px; background-repeat: no-repeat;
-  animation: qs-scanline 6.5s cubic-bezier(.45,0,.55,1) infinite;
-}
-@keyframes qs-scanline { 0% { background-position: 0 -90px; } 70%, 100% { background-position: 0 calc(100% + 90px); } }
-@media (prefers-reduced-motion: reduce) { .term-body::after { animation: none; display: none; } }
 
 /* Scan-frame brackets: four L-marks drawn with gradients, sitting just outside
    the panel like a viewfinder. Used on the terminal and the scanner only. */
@@ -928,10 +889,7 @@ main > .section .section-head .eyebrow::before {
 }
 .card { border-color: rgba(255,255,255,.07); }
 .card:hover { border-color: rgba(142,160,242,.22); box-shadow: var(--edge), var(--shadow); }
-.score-cycle-card::before, .demo-score-card::before, .auth-card::before {
-  left: 15%; right: 15%; opacity: 1;
-  background: linear-gradient(90deg, transparent, var(--accent-hi), transparent);
-}
+.score-cycle-card::before, .demo-score-card::before, .auth-card::before, .cta-band::before { display: none; }
 
 /* Wells: code, inputs, tracks share one deep tone with a sunk edge. */
 .code, .ci-yaml, .demo-input, .score-cycle-code, .field input, .home-scan-row input[type="text"],
@@ -949,13 +907,13 @@ main > .section .section-head .eyebrow::before {
 .scan-tabs { padding: 4px; border-color: rgba(255,255,255,.07); }
 .scan-tab[aria-selected="true"] {
   background: linear-gradient(180deg, #5468e6, #4b63e0);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 6px 16px -8px rgba(63,82,214,.9);
+  background: #4659de; box-shadow: none;
 }
 .scan-primary {
   position: relative; padding: 26px;
   border-color: rgba(91,115,232,.35);
-  background-image: radial-gradient(90% 60% at 50% 0%, rgba(91,115,232,.10), transparent 70%), var(--lift);
-  box-shadow: var(--edge), var(--shadow), 0 0 0 4px rgba(91,115,232,.04);
+  background-image: var(--lift);
+  box-shadow: var(--edge), var(--shadow);
 }
 .scan-primary:hover { transform: none; border-color: rgba(91,115,232,.45); }
 .scan-primary-head h3 { font-size: 18px; }
@@ -968,7 +926,6 @@ main > .section .section-head .eyebrow::before {
   justify-self: start; display: inline-flex; align-items: center; gap: 7px;
   padding: 4px 10px; border-radius: 999px; font-family: var(--mono); font-size: 11px; letter-spacing: .08em;
 }
-.detect-tag::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; box-shadow: 0 0 8px currentColor; }
 .detect-tag.hi { background: rgba(248,81,73,.1); }
 .detect-tag.me { background: rgba(210,153,34,.1); }
 .detect-tag.lo { background: rgba(63,185,80,.1); }
@@ -980,7 +937,7 @@ main > .section .section-head .eyebrow::before {
   display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 9px;
   font-family: var(--mono); font-size: 12px; color: var(--accent-hi);
   background: rgba(91,115,232,.08); border: 1px solid rgba(142,160,242,.25);
-  box-shadow: 0 0 18px -6px rgba(91,115,232,.6); margin-bottom: 16px;
+  margin-bottom: 16px;
 }
 .step::after {
   content: ""; position: absolute; top: 47px; left: 72px; right: 0; height: 1px;
@@ -989,21 +946,12 @@ main > .section .section-head .eyebrow::before {
 .step:last-child::after { display: none; }
 .step h3 { font-size: 17px; }
 
-/* ---- Big numbers: a faint glow in their own band colour ---- */
+/* ---- Big numbers ---- */
 .score-big, .demo-score, .stat { letter-spacing: -.04em; font-family: var(--display); }
-.score-big, .demo-score { text-shadow: 0 0 28px color-mix(in srgb, currentColor 35%, transparent); }
-.scale-marker { box-shadow: 0 0 10px rgba(255,255,255,.8), 0 0 0 3px rgba(255,255,255,.08); }
+.scale-marker { box-shadow: 0 0 0 2px var(--well); }
 
-/* ---- Closing CTA: the lattice again, with the glow from below ---- */
-.cta-band {
-  padding: 52px 48px; border-color: rgba(91,115,232,.3);
-  background-image:
-    radial-gradient(60% 120% at 100% 100%, rgba(91,115,232,.22), transparent 70%),
-    radial-gradient(var(--lattice-dot) 1px, transparent 1.5px),
-    var(--lift);
-  background-size: auto, 24px 24px, auto;
-}
-.cta-band::before { left: 10%; right: 10%; background: linear-gradient(90deg, transparent, var(--accent-hi), transparent); }
+/* ---- Closing CTA ---- */
+.cta-band { padding: 52px 48px; border-color: rgba(91,115,232,.3); }
 .cta-band h2 { font-size: 30px; letter-spacing: -.03em; }
 
 /* ---- App shell ---- */
@@ -1014,17 +962,9 @@ main > .section .section-head .eyebrow::before {
 }
 .page-head h1 { font-size: 26px; letter-spacing: -.03em; }
 .auth-shell { position: relative; isolation: isolate; }
-.auth-shell::before {
-  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
-  background-image: radial-gradient(var(--lattice-dot) 1px, transparent 1.5px);
-  background-size: 24px 24px;
-  -webkit-mask-image: radial-gradient(ellipse 45% 50% at 50% 50%, #000, transparent 75%);
-          mask-image: radial-gradient(ellipse 45% 50% at 50% 50%, #000, transparent 75%);
-}
 
 @media (max-width: 880px) {
   .hero h1 { font-size: 40px; }
-  .hero::after { width: 380px; height: 320px; right: -60px; top: auto; bottom: 0; }
   .step::after { display: none; }
 }
 @media (max-width: 640px) {
