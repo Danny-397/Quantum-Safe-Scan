@@ -7,16 +7,14 @@
   <img src="https://img.shields.io/pypi/pyversions/quantumsafe-scan?style=flat-square&logo=python&logoColor=white" alt="Python versions">
   <a href="https://github.com/Danny-397/Quantum-Safe-Scan/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Danny-397/Quantum-Safe-Scan/ci.yml?branch=main&style=flat-square&logo=githubactions&logoColor=white&label=CI" alt="CI status"></a>
   <a href="https://github.com/Danny-397/Quantum-Safe-Scan/tags"><img src="https://img.shields.io/github/v/tag/Danny-397/Quantum-Safe-Scan?style=flat-square&logo=github&label=version&color=5b73e8" alt="Latest version"></a>
-  <a href="https://github.com/Danny-397/Quantum-Safe-Scan"><img src="https://img.shields.io/github/stars/Danny-397/Quantum-Safe-Scan?style=flat-square&logo=github" alt="Stars"></a>
-  <img src="https://img.shields.io/github/last-commit/Danny-397/Quantum-Safe-Scan?style=flat-square&color=555" alt="Last commit">
   <img src="https://img.shields.io/github/license/Danny-397/Quantum-Safe-Scan?style=flat-square&color=3fb950" alt="License: MIT">
   <a href="https://doi.org/10.5281/zenodo.23843488"><img src="https://img.shields.io/badge/DOI-10.5281%2Fzenodo.23843488-5b73e8?style=flat-square" alt="DOI 10.5281/zenodo.23843488"></a>
   <br>
   <img src="https://img.shields.io/badge/tests-584%20passing-3fb950?style=flat-square&logo=pytest&logoColor=white" alt="584 tests passing">
-  <img src="https://img.shields.io/badge/benchmark-100%25%20precision-3fb950?style=flat-square" alt="100% precision on benchmark">
+  <a href="benchmark/RESULTS-precision-current.md"><img src="https://img.shields.io/badge/real--code%20precision-95%25-3fb950?style=flat-square" alt="95% precision on a random sample of real-code findings"></a>
+  <a href="benchmark/README.md#recall-on-real-code-recall_samplepy"><img src="https://img.shields.io/badge/held--out%20recall-88%25-3fb950?style=flat-square" alt="88% recall on held-out real code"></a>
   <img src="https://img.shields.io/badge/SARIF%202.1.0-schema--validated-3fb950?style=flat-square" alt="SARIF schema-validated">
   <img src="https://img.shields.io/badge/NIST-FIPS%20203%2F204%2F205-5b73e8?style=flat-square" alt="NIST FIPS 203/204/205">
-  <img src="https://img.shields.io/badge/PRs-welcome-5b73e8?style=flat-square" alt="PRs welcome">
 </p>
 
 <strong>Scan your code for the encryption quantum computers will break, score it 0&ndash;100, and get the NIST-approved replacement for every finding &mdash; free &amp; open source.</strong>
@@ -60,7 +58,7 @@ solution:
 | Layer | Module | What it does |
 |-------|--------|--------------|
 | **1. Attack** | [`quantum/`](quantum/) | Shor's and Grover's algorithms in **Qiskit**, run on a quantum simulator. At simulator scale Shor factors a small number and reconstructs a toy RSA key — an educational demonstration of *why* RSA/ECC are rated HIGH (not a break of real key sizes). |
-| **2. Detection** | [`cli/`](cli/) | A hybrid **AST + regex** static-analysis engine over 11 languages, with cross-language usage-awareness, **dependency + lockfile scanning**, **reachability ranking**, and **call-site-specific fixes**, that scores risk and produces a NIST-aligned migration plan. **100% precision on the labeled [benchmark](benchmark/)** (18 files), **100% recall on 50 seeded cases**, and **93% precision (95% CI 86–97%) on a random, hand-labeled sample of 100 findings in real PyPI packages**, and **88% recall (95% CI 71–96%) on a held-out random sample of real files with every usage labeled by hand** — see [methodology](benchmark/RESULTS.md), [real-code precision](benchmark/RESULTS-precision.md) and [real-code recall](benchmark/README.md#recall-on-real-code-recall_samplepy). |
+| **2. Detection** | [`cli/`](cli/) | A hybrid **AST + regex** static-analysis engine over 11 languages, with cross-language usage-awareness, **dependency + lockfile scanning**, **reachability ranking**, and **call-site-specific fixes**, that scores risk and produces a NIST-aligned migration plan. **100% precision on the labeled [benchmark](benchmark/)** (18 files), **100% recall on 50 seeded cases**, and **95% precision (95% CI 89–98%) on a fresh random, hand-labeled sample of 100 findings in real PyPI packages, scanned with 0.3.2** (0.3.1 scored 93% on an earlier sample), and **88% recall (95% CI 71–96%) on a held-out random sample of real files with every usage labeled by hand** — see [methodology](benchmark/RESULTS.md), [real-code precision](benchmark/RESULTS-precision-current.md) and [real-code recall](benchmark/README.md#recall-on-real-code-recall_samplepy). |
 | **3. Fix** | [`pqc/`](pqc/) | A from-scratch **lattice (LWE) key-encapsulation mechanism** — the math behind CRYSTALS-Kyber / ML-KEM — so the recommended fix is runnable and provable. |
 
 The detection layer ships through three surfaces that share **one** engine:
