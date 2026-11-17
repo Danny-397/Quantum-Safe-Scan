@@ -794,8 +794,9 @@ html.qs-anim .reveal.in { opacity: 1; transform: none; }
 /* ══════════════════════════════════════════════════════════════════════════
    Lattice layer — what makes QuantumSafe look like itself.
    Same graphite + indigo palette, kept flat: no glows, blurs, glass or
-   gradient text. One motif: scan-frame brackets (the logo's corner marks)
-   around the terminal and the scanner. Surfaces lift by tone, not outlines.
+   gradient text. Two motifs: scan-frame brackets (the logo's corner marks)
+   around the terminal and the scanner, and a slow scan line down the hero
+   terminal (off for reduced motion). Surfaces lift by tone, not outlines.
    ══════════════════════════════════════════════════════════════════════════ */
 
 html, body { overflow-x: clip; }
@@ -853,6 +854,14 @@ main > .section .section-head .eyebrow::before {
 .terminal::before { display: none; }
 .term-head { border-radius: var(--r) var(--r) 0 0; background: rgba(255,255,255,.025); }
 .term-body { position: relative; }
+.term-body::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, rgba(91,115,232,0), rgba(91,115,232,.09) 50%, rgba(91,115,232,0));
+  background-size: 100% 90px; background-repeat: no-repeat;
+  animation: qs-scanline 6.5s cubic-bezier(.45,0,.55,1) infinite;
+}
+@keyframes qs-scanline { 0% { background-position: 0 -90px; } 70%, 100% { background-position: 0 calc(100% + 90px); } }
+@media (prefers-reduced-motion: reduce) { .term-body::after { animation: none; display: none; } }
 
 /* Scan-frame brackets: four L-marks drawn with gradients, sitting just outside
    the panel like a viewfinder. Used on the terminal and the scanner only. */
