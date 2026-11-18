@@ -667,7 +667,7 @@ html.qs-anim .reveal.in { opacity: 1; transform: none; }
 
   /* Dashboard shell: sidebar collapses into a sticky top bar with a
      horizontally-scrolling nav strip so it never eats the whole first screen. */
-  .app { grid-template-columns: 1fr; }
+  .app { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
   .sidebar {
     position: sticky; top: 0; z-index: 20; height: auto;
     border-right: none; border-bottom: 1px solid var(--border);
@@ -985,3 +985,10 @@ main > .section .section-head .eyebrow::before {
   .terminal::after, .scan-primary::after { inset: -6px; --bl: 10px; }
   .scan-primary { padding: 20px; }
 }
+
+/* Phones: fit the illustrative terminal instead of clipping its RISK column. */
+@media (max-width: 480px) {
+  .terminal .term-body { font-size: 10.5px; padding: 14px 12px 16px; }
+  .terminal .wrap-sm { display: block; padding-left: 4ch; }
+}
+@media (max-width: 340px) { .terminal .term-body { font-size: 9px; } }
