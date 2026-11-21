@@ -8,7 +8,9 @@ The score is derived purely from real findings — never hardcoded:
 
 The total is capped at 100. Bands:
 
-    0-30   Low      — good quantum hygiene
+    0-30   Low      — good quantum hygiene (only with no HIGH finding;
+                       otherwise Medium: one HIGH finding is already
+                       cryptography a quantum computer breaks)
     31-60  Medium   — plan migration
     61-80  High     — prioritize migration
     81-100 Critical — immediate action required
@@ -35,8 +37,8 @@ def calculate_score(findings: list[Finding]) -> int:
     return min(total, MAX_SCORE)
 
 
-def risk_band(score: int) -> str:
-    if score <= 30:
+def risk_band(score: int, high: int = 0) -> str:
+    if score <= 30 and not high:
         return "Low"
     if score <= 60:
         return "Medium"

@@ -18,6 +18,7 @@ from sqlalchemy import func
 from auth import api_key_or_jwt, current_user, optional_user, send_email
 from extensions import db, limiter
 from models import Scan, User, generate_api_key
+from quantumsafe import __version__
 from quantumsafe.recommender import recommend
 from quantumsafe.reporter import build_report, to_badge_svg, to_cbom, to_html, to_sarif
 from quantumsafe.scanner import EXT_TO_LANG, scan_path
@@ -254,7 +255,7 @@ def _render_export(report: dict, fmt: str, filename_base: str):
     """
     report = dict(report)
     report.setdefault("tool", "quantumsafe")
-    report.setdefault("version", "0.1.0")
+    report.setdefault("version", __version__)
     report.setdefault("target", "scan")
     report.setdefault("generated_at", "")
     report.setdefault("risk_message", "")
@@ -313,7 +314,7 @@ def export_scan(scan_id: int):
         return jsonify(scan.to_dict(include_findings=True))
 
     report = {
-        "tool": "quantumsafe", "version": "0.1.0", "target": scan.repo_url,
+        "tool": "quantumsafe", "version": __version__, "target": scan.repo_url,
         "generated_at": scan.created_at.isoformat() if scan.created_at else "",
         "risk_score": scan.risk_score, "risk_band": scan.risk_band,
         "risk_message": "", "summary": scan.to_dict()["summary"],

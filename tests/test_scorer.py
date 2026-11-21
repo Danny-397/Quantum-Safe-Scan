@@ -52,3 +52,18 @@ def test_recommend_known_family():
 def test_recommend_unknown_family_falls_back():
     rec = recommend("does-not-exist")
     assert rec.replacement and rec.nist_reference
+
+
+def test_a_high_finding_is_never_low():
+    assert risk_band(15, high=1) == "Medium"
+    assert risk_band(30, high=2) == "Medium"
+    assert risk_band(30, high=0) == "Low"
+
+
+def test_report_with_two_high_findings_is_medium_not_good_hygiene():
+    from quantumsafe.reporter import build_report
+
+    report = build_report([_f(RISK_HIGH), _f(RISK_HIGH)], "t")
+    assert report["risk_score"] == 30
+    assert report["risk_band"] == "Medium"
+    assert "hygiene" not in report["risk_message"].lower()

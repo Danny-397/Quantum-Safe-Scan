@@ -10,7 +10,7 @@
   <img src="https://img.shields.io/github/license/Danny-397/Quantum-Safe-Scan?style=flat-square&color=3fb950" alt="License: MIT">
   <a href="https://doi.org/10.5281/zenodo.23843488"><img src="https://img.shields.io/badge/DOI-10.5281%2Fzenodo.23843488-5b73e8?style=flat-square" alt="DOI 10.5281/zenodo.23843488"></a>
   <br>
-  <img src="https://img.shields.io/badge/tests-584%20passing-3fb950?style=flat-square&logo=pytest&logoColor=white" alt="584 tests passing">
+  <img src="https://img.shields.io/badge/tests-587%20passing-3fb950?style=flat-square&logo=pytest&logoColor=white" alt="587 tests passing">
   <a href="benchmark/RESULTS-precision-current.md"><img src="https://img.shields.io/badge/real--code%20precision-95%25-3fb950?style=flat-square" alt="95% precision on a random sample of real-code findings"></a>
   <a href="benchmark/README.md#recall-on-real-code-recall_samplepy"><img src="https://img.shields.io/badge/held--out%20recall-88%25-3fb950?style=flat-square" alt="88% recall on held-out real code"></a>
   <img src="https://img.shields.io/badge/SARIF%202.1.0-schema--validated-3fb950?style=flat-square" alt="SARIF schema-validated">
@@ -174,6 +174,8 @@ score = min(100, 15*HIGH + 5*MEDIUM + 1*LOW)
 | 31–60 | Medium | Plan migration |
 | 61–80 | High | Prioritize migration |
 | 81–100 | Critical | Immediate action required |
+
+Any HIGH finding makes the band at least **Medium**: a score of 15 or 30 from one or two HIGH findings is still cryptography a quantum computer breaks.
 
 ---
 
@@ -817,7 +819,7 @@ docker compose up --build
 
 ```bash
 pip install -r requirements-dev.txt
-pytest -q                     # 584 tests; in-memory DB, no setup
+pytest -q                     # 587 tests; in-memory DB, no setup
 ```
 
 Seed a demo account so the dashboard is populated:

@@ -36,8 +36,8 @@ def build_report(
     asked for, because it needs an input only the caller knows.
     """
     score = calculate_score(findings)
-    band = risk_band(score)
     counts = count_by_severity(findings)
+    band = risk_band(score, counts[RISK_HIGH])
     # Rank by risk, then by reachability (exploitable findings surface first when
     # reachability ranking was requested), then by location for stable output.
     ordered = sorted(

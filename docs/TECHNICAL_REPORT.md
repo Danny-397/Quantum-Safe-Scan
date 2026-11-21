@@ -122,7 +122,7 @@ score = min(100, 15·HIGH + 5·MEDIUM + 1·LOW)
 HIGH (Shor-breakable: RSA/ECC/DSA/DH, MD5/SHA-1) is weighted 15× LOW (Grover-weakened
 but still secure: SHA-256, AES-128) because the two threats are qualitatively different
 — one is catastrophic, the other a sizing concern. Bands: 0–30 Low · 31–60 Medium ·
-61–80 High · 81–100 Critical.
+61–80 High · 81–100 Critical; any HIGH finding makes it at least Medium.
 
 **Six export formats:** terminal table, JSON, **SARIF** (validated against the OASIS
 2.1.0 JSON Schema in the test suite, so GitHub code-scanning ingests it), **CycloneDX
@@ -294,7 +294,7 @@ refused.
 
 ## 7. Engineering
 
-One shared engine behind CLI + API + dashboard; **584 automated tests**; CI; Docker and
+One shared engine behind CLI + API + dashboard; **587 automated tests**; CI; Docker and
 `docker-compose`; a reusable **GitHub Action** (`action.yml`) that fails a build over a
 risk threshold; multi-service deploy configs; and a published PyPI package
 (`pip install quantumsafe-scan`, v0.3.0). The benchmark, real-world study, seeded recall

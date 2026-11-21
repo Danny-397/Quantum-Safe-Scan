@@ -333,7 +333,8 @@
 
     function render(snip) {
       const res = scanDemo(snip.code);
-      const band = res.score <= 30 ? "Low" : res.score <= 60 ? "Medium"
+      // A HIGH finding is never "Low" (cli/scorer.py risk_band).
+      const band = res.score <= 30 && !res.counts.HIGH ? "Low" : res.score <= 60 ? "Medium"
         : res.score <= 80 ? "High" : "Critical";
       fileEl.textContent = snip.file;
       codeEl.innerHTML = codeHTML(snip.code, res.findings);
@@ -341,7 +342,7 @@
       bandEl.className = "score-band";
       msgEl.textContent = BAND_MEANING[band] || "";
       scoreEl.className = "score-big mono band-" + band;
-      scaleEl.innerHTML = scaleHTML(res.score);
+      scaleEl.innerHTML = scaleHTML(res.score, band);
       hi.textContent = res.counts.HIGH; me.textContent = res.counts.MEDIUM; lo.textContent = res.counts.LOW;
       // Make the freshly-rendered tier cards keyboard-focusable.
       scaleEl.querySelectorAll(".tier").forEach((t) => {
@@ -471,9 +472,9 @@
     return { findings, counts, score: Math.min(100, score) };
   }
 
-  function demoBand(score) {
+  function demoBand(score, high) {
     if (score === 0) return ["No risk detected", "var(--safe)"];
-    if (score <= 30) return ["Low risk", "var(--safe)"];
+    if (score <= 30 && !high) return ["Low risk", "var(--safe)"];
     if (score <= 60) return ["Medium risk", "var(--warning)"];
     if (score <= 80) return ["High risk", "var(--high)"];
     return ["Critical risk", "var(--danger)"];
@@ -501,9 +502,11 @@
     High: "prioritize migration",
     Critical: "immediate action required",
   };
-  function scaleHTML(score) {
+  const BAND_TIER = { Low: "low", Medium: "med", High: "high", Critical: "crit" };
+  function scaleHTML(score, band) {
     const x = Math.max(0, Math.min(100, Number(score) || 0));
-    const active = x <= 30 ? "low" : x <= 60 ? "med" : x <= 80 ? "high" : "crit";
+    // Light the band actually shown: a HIGH finding lifts a 0-30 score to Medium.
+    const active = BAND_TIER[band] || (x <= 30 ? "low" : x <= 60 ? "med" : x <= 80 ? "high" : "crit");
     const tier = (key, range, name) =>
       `<div class="tier t-${key}${active === key ? " on" : ""}">` +
       `<span class="tier-range">${range}</span><span class="tier-name">${name}</span></div>`;
@@ -520,11 +523,11 @@
     const m = $(ids.meaning);
     if (m) m.textContent = BAND_MEANING[band] || "";
     const sc = $(ids.scale);
-    if (sc) sc.innerHTML = scaleHTML(score);
+    if (sc) sc.innerHTML = scaleHTML(score, band);
   }
 
   function paintDemo(findings, counts, score, emptyMsg) {
-    const [bandText, color] = demoBand(score);
+    const [bandText, color] = demoBand(score, counts.HIGH);
     animateScore(score);
     const scoreEl = $("#demo-score");
     if (scoreEl) scoreEl.style.color = color;

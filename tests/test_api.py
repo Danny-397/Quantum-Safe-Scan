@@ -219,6 +219,13 @@ def test_anonymous_export_sarif(client):
     assert '"version": "2.1.0"' in text and "runs" in text
 
 
+def test_export_carries_the_real_package_version(client):
+    from quantumsafe import __version__
+
+    r = client.post("/api/v1/export", json={"report": _anon_report(client), "format": "json"})
+    assert r.status_code == 200 and r.get_json()["version"] == __version__
+
+
 def test_anonymous_export_rejects_bad_format(client):
     r = client.post("/api/v1/export", json={"report": _anon_report(client), "format": "docx"})
     assert r.status_code == 400
