@@ -5,6 +5,15 @@ All notable changes to QuantumSafe are documented here. This project follows
 
 ## [Unreleased]
 
+## [0.3.3] — 2026-11-21
+
+### Changed
+- **A HIGH finding is never "Low".** The score adds 15 per HIGH finding and 0–30
+  was the Low band ("Good quantum hygiene"), so one or two Shor-breakable
+  primitives, such as RSA key generation, were reported as good hygiene. Any HIGH
+  finding now makes the band at least Medium (`risk_band(score, high)`). Scores are
+  unchanged.
+
 ### Added
 - **Precision re-measured for 0.3.2** (`precision_sample.py --current`): a fresh
   random sample of 100 findings (seed 2028) from the same pinned packages, labeled
@@ -237,7 +246,8 @@ All notable changes to QuantumSafe are documented here. This project follows
   security disclosure policy (SECURITY.md + security.txt).
 - **Quality:** 45-test pytest suite, GitHub Actions CI, demo seed script.
 
-[Unreleased]: https://github.com/Danny-397/Quantum-Safe-Scan/compare/v0.3.2...HEAD
+[Unreleased]: https://github.com/Danny-397/Quantum-Safe-Scan/compare/v0.3.3...HEAD
+[0.3.3]: https://github.com/Danny-397/Quantum-Safe-Scan/compare/v0.3.2...v0.3.3
 [0.3.2]: https://github.com/Danny-397/Quantum-Safe-Scan/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/Danny-397/Quantum-Safe-Scan/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/Danny-397/Quantum-Safe-Scan/releases/tag/v0.3.0
