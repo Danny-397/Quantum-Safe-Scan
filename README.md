@@ -686,7 +686,7 @@ jobs:
 | `output` | `quantumsafe.sarif` | Where to write the SARIF report |
 | `exclude` | *(none)* | Comma-separated globs to skip |
 | `fail-on-high` | `"false"` | Exit non-zero if any HIGH finding is present |
-| `version` | *(latest)* | Pin `quantumsafe-scan`, e.g. `0.3.2` |
+| `version` | *(latest)* | Pin `quantumsafe-scan`, e.g. `0.3.3` |
 
 Pin to a released tag rather than `@main` once one exists — `@main` moves under
 you, which is the same class of problem as an unpinned linter.
@@ -938,8 +938,8 @@ not gates on the core detection, which is the part that should always be open.
 
 Every release is archived on Zenodo. To cite QuantumSafe, use
 [10.5281/zenodo.23843488](https://doi.org/10.5281/zenodo.23843488), which always
-resolves to the newest version; v0.3.2 on its own is
-[10.5281/zenodo.24267519](https://doi.org/10.5281/zenodo.24267519). GitHub's
+resolves to the newest version; v0.3.3 on its own is
+[10.5281/zenodo.24410766](https://doi.org/10.5281/zenodo.24410766). GitHub's
 "Cite this repository" button reads the same details from
 [CITATION.cff](CITATION.cff).
 
