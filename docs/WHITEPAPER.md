@@ -181,6 +181,9 @@ score = min(100, 15·HIGH + 5·MEDIUM + 1·LOW)
 | 61–80  | High     | Prioritize migration          |
 | 81–100 | Critical | Immediate action required     |
 
+Any HIGH finding makes the band at least Medium, so one or two Shor-breakable
+primitives (score 15 or 30) are never reported as good hygiene.
+
 The weighting reflects the qualitative difference between the two quantum threats:
 a HIGH finding (Shor-breakable; e.g. RSA, ECC) is weighted 15× a LOW finding
 (Grover-weakened but still secure; e.g. SHA-256, AES-128), because the former is
