@@ -1001,3 +1001,16 @@ main > .section .section-head .eyebrow::before {
 .scan-progress-fill { height: 100%; width: 0; background: var(--accent); transition: width .2s linear; }
 .scan-progress-pct { min-width: 4ch; text-align: right; font-family: var(--mono); font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
 @media (prefers-reduced-motion: reduce) { .scan-progress-fill { transition: none; } }
+
+/* ── Touch screens: finger-sized targets (about 44px) ─────────────────────
+   Desktop is unchanged. Chips grow; text links keep their look and get a
+   larger invisible hit area via ::after, so nothing reflows. */
+@media (pointer: coarse) {
+  .scan-chip, .url-chip { min-height: 40px; }
+  .btn-link, .brand, .footer a, .side-legal a, .auth-switch a { position: relative; }
+  .btn-link::after, .brand::after, .footer a::after, .side-legal a::after, .auth-switch a::after {
+    content: ""; position: absolute; inset: -12px -6px;
+  }
+}
+/* Phones: results table headers at 12px, not 11. */
+@media (max-width: 640px) { table.tbl th, .why-label { font-size: 12px; } }
