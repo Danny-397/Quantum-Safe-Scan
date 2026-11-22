@@ -992,3 +992,12 @@ main > .section .section-head .eyebrow::before {
   .terminal .wrap-sm { display: block; padding-left: 4ch; }
 }
 @media (max-width: 340px) { .terminal .term-body { font-size: 9px; } }
+
+/* Scan progress: an estimated bar with the percentage beside it. Flat, no glow. */
+.scan-progress { display: flex; align-items: center; gap: 12px; margin: 16px 0; }
+.msg.success + .scan-progress, .msg.error + .scan-progress { margin-top: -6px; }
+.scan-progress[hidden] { display: none; }
+.scan-progress-track { flex: 1; height: 6px; background: var(--well); border: 1px solid var(--border); border-radius: 3px; overflow: hidden; }
+.scan-progress-fill { height: 100%; width: 0; background: var(--accent); transition: width .2s linear; }
+.scan-progress-pct { min-width: 4ch; text-align: right; font-family: var(--mono); font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: reduce) { .scan-progress-fill { transition: none; } }
