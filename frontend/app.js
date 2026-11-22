@@ -51,6 +51,44 @@
   }
   function hideMsg(el) { if (el) el.style.display = "none"; }
 
+  // Progress bar with a percentage beside it, shown under a scan's message.
+  // A scan is one request and the server reports no progress, so this is an
+  // estimate: it eases toward 95% on a time curve (63% at `tau` ms) and only
+  // reaches 100% when the result actually arrives. Returns done(ok).
+  function scanProgress(afterEl, tau) {
+    if (!afterEl) return () => {};
+    let bar = afterEl.nextElementSibling;
+    if (!bar || !bar.classList.contains("scan-progress")) {
+      bar = document.createElement("div");
+      bar.className = "scan-progress";
+      bar.setAttribute("role", "progressbar");
+      bar.setAttribute("aria-label", "Scan progress (estimated)");
+      bar.setAttribute("aria-valuemin", "0");
+      bar.setAttribute("aria-valuemax", "100");
+      bar.innerHTML = '<div class="scan-progress-track"><div class="scan-progress-fill"></div></div>' +
+        '<span class="scan-progress-pct">0%</span>';
+      afterEl.after(bar);
+    }
+    const fill = bar.querySelector(".scan-progress-fill");
+    const pct = bar.querySelector(".scan-progress-pct");
+    const set = (v) => {
+      const n = Math.round(v);
+      fill.style.width = n + "%";
+      pct.textContent = n + "%";
+      bar.setAttribute("aria-valuenow", String(n));
+    };
+    clearTimeout(bar._hide);
+    bar.hidden = false;
+    set(0);
+    const t0 = Date.now();
+    const tick = setInterval(() => set(95 * (1 - Math.exp(-(Date.now() - t0) / tau))), 200);
+    return (ok) => {
+      clearInterval(tick);
+      if (ok) { set(100); bar._hide = setTimeout(() => { bar.hidden = true; }, 700); }
+      else bar.hidden = true;
+    };
+  }
+
   // Fill a table body with shimmering skeleton rows while data loads.
   function skelRows(tbody, rows = 5, cols = 5) {
     if (!tbody) return;
@@ -679,6 +717,8 @@
     }
     setLoading(btn, true, "Scanning");
     if (msg) msg.textContent = "Opening one TLS handshake…";
+    const progress = scanProgress(msg, 4000);
+    let ok = false;
     const call = () => api("/api/v1/scan-url", {
       noAuth: true, noRedirect: true, json: { url: target },
     });
@@ -695,6 +735,7 @@
         d = await call();
       }
       paintTlsResult(d.report);
+      ok = true;
       if (msg) msg.textContent = "";
     } catch (err) {
       const box = $("#url-scan-result");
@@ -705,6 +746,7 @@
           : "Could not scan that host right now.";
       }
     } finally {
+      progress(ok);
       setLoading(btn, false);
     }
   }
@@ -1170,6 +1212,7 @@
     if (!repo && !file) { showMsg(msgEl, "Provide a GitHub URL or a .zip file."); return; }
     setLoading(btn, true, "Scanning");
     showMsg(msgEl, "Waking the scanner…", "success");
+    const bar = scanProgress(msgEl, 20000);
     const stopProgress = stagedProgress(msgEl, [
       { after: 2500, text: "Cloning and analyzing your code…" },
       { after: 12000, text: "First scan of the day can take ~40s while the server wakes up — hang tight." },
@@ -1184,6 +1227,7 @@
       await api("/health", { noAuth: true, noRedirect: true, timeoutMs: 70000 });
     } catch (_) {
       stopProgress();
+      bar(false);
       showMsg(msgEl,
         "The hosted repo scanner is offline right now. The snippet scanner on the home page" +
         " runs entirely in your browser and still works, and the full scanner runs locally:" +
@@ -1206,6 +1250,7 @@
         res = await api("/api/v1/scan", { method: "POST", json: { repo_url: repo }, noRedirect: true, timeoutMs: SCAN_TIMEOUT_MS });
       }
       stopProgress();
+      bar(true);
       if (res.scan_id) {
         location.href = "scan.html?id=" + res.scan_id;   // saved to the account
       } else {
@@ -1214,6 +1259,7 @@
       }
     } catch (err) {
       stopProgress();
+      bar(false);
       showMsg(msgEl, err.message);
       setLoading(btn, false);
     }
